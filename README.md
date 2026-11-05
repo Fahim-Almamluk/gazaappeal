@@ -1,58 +1,107 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# نداء كهرباء غزة
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+موقع نداء كهرباء غزة ولوحة التحكم الخاصة به (Laravel 13، عربي وإنجليزي).
 
-## About Laravel
+جميع الحقوق محفوظة © شركة كهرباء غزة.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## المتطلبات
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.5
+- Composer
+- Node.js 20 أو أحدث
+- MySQL أو MariaDB (مثلًا من XAMPP)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+ضع المشروع **خارج** سطح المكتب ومجلدات OneDrive (مثل `C:\dev`)، فالمزامنة تجعل الموقع بطيئًا جدًا.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## التثبيت
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/fahim-almamluk/gazaappeal.git
+cd gazaappeal
+composer install
+npm install
+copy .env.example .env
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+ملف `.env.example` مضبوط للإنتاج، فعدّل هذه القيم في `.env` للتشغيل المحلي:
 
-## Contributing
+```env
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+LOG_LEVEL=debug
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+DB_USERNAME=root
+DB_PASSWORD=
 
-## Code of Conduct
+SESSION_SECURE_COOKIE=false
+SESSION_ENCRYPT=false
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+ADMIN_NAME=Admin
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+```
 
-## Security Vulnerabilities
+كلمة مرور المدير 12 حرفًا على الأقل، فيها حروف كبيرة وصغيرة وأرقام ورموز. لا تشاركها في أي مكان غير `.env`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+أنشئ قاعدة بيانات باسم `gazaappeal` (من phpMyAdmin مثلًا)، ثم افتح الطرفية **كمسؤول** (Run as administrator) ونفّذ:
 
-## License
+```bash
+php artisan key:generate
+php artisan migrate
+php artisan db:seed
+php artisan db:seed --class=DemoContentSeeder
+php artisan storage:link
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+`DemoContentSeeder` يضيف محتوى تجريبيًا بصور، ولا يُستعمل على الخادم الحقيقي.
+
+## التشغيل
+
+في نافذتين منفصلتين:
+
+```bash
+php artisan serve
+```
+
+```bash
+npm run dev
+```
+
+- الموقع: `http://127.0.0.1:8000`
+- لوحة التحكم: `http://127.0.0.1:8000/login` ثم `/admin` ببيانات `ADMIN_EMAIL` و`ADMIN_PASSWORD`.
+
+أبقِ `npm run dev` يعمل أثناء التطوير؛ الصفحة تتحدّث تلقائيًا عند تعديل الواجهة.
+
+## الاختبارات
+
+```bash
+php artisan test --compact
+```
+
+## حل المشاكل الشائعة
+
+| المشكلة | الحل |
+|---|---|
+| `Vite manifest not found` | شغّل `npm run dev`، أو `npm run build` مرة واحدة |
+| الصفحة تظهر بلا تنسيق | أعد تشغيل `npm run dev`، واحذف الملف `public\hot` إن بقي بعد إيقافه |
+| الصور ترجع 403 أو لا تظهر | `cmd /c rmdir public\storage` ثم `php artisan storage:link` من طرفية كمسؤول |
+| خطأ 500 | `php artisan optimize:clear` وراجع `storage\logs\laravel.log` |
+| الصفحات بطيئة جدًا | انقل المشروع خارج سطح المكتب وOneDrive، واستثنِه من فحص Windows Defender |
+
+> لا تحذف `public\storage` بأمر `rmdir` أو `Remove-Item` في PowerShell؛ قد يحذف الصور الأصلية داخل `storage\app\public`. استعمل `cmd /c rmdir` فقط.
+
+## النشر
+
+قبل الرفع على الخادم: `APP_ENV=production` و`APP_DEBUG=false` و`APP_URL` الحقيقي، ومستخدم قاعدة بيانات بكلمة مرور، ثم:
+
+```bash
+composer install --no-dev --optimize-autoloader
+npm run build
+php artisan migrate --force
+php artisan optimize
+```
+
+فعّل ضغط gzip أو brotli على الخادم.
+
+توثيق البنية والقرارات في [`docs/PROJECT.md`](docs/PROJECT.md).

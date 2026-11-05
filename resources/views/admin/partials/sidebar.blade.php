@@ -43,13 +43,13 @@
                 $panel = 'nav-group-'.$group['key'];
             @endphp
 
-            <div @if ($collapsible) x-data="navGroup" data-open="{{ $group['current'] ? 'true' : 'false' }}" @endif>
+            <div @if ($collapsible) x-data="navGroup" data-open="true" @endif>
                 @if ($collapsible)
                     <button
                         type="button"
                         x-on:click="toggle"
                         x-bind:aria-expanded="open"
-                        aria-expanded="{{ $group['current'] ? 'true' : 'false' }}"
+                        aria-expanded="true"
                         aria-controls="{{ $panel }}"
                         aria-label="{{ __('ui.nav.toggle_group', ['name' => __($group['label'])]) }}"
                         class="group/head flex h-9 w-full items-center gap-2 rounded-lg px-3 text-start text-[11px] font-bold tracking-wide text-ink-subtle transition hover:text-ink lg:group-data-[collapsed=true]/shell:hidden"
@@ -67,8 +67,7 @@
                 <div
                     id="{{ $panel }}"
                     @if ($collapsible) x-bind:data-open="shown" x-bind:inert="closed" @endif
-                    @if ($collapsible && $group['current']) data-open="true" @endif
-                    @if ($collapsible && ! $group['current']) inert @endif
+                    @if ($collapsible) data-open="true" @endif
                     @class([
                         'grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out-soft data-[open=true]:grid-rows-[1fr] lg:group-data-[collapsed=true]/shell:grid-rows-[1fr]' => $collapsible,
                     ])

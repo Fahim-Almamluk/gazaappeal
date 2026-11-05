@@ -13,10 +13,10 @@
         <div class="hero-leave text-center lg:text-start">
             <h1 class="text-[38px] leading-[1.3] font-extrabold tracking-tight text-brand-900 sm:text-[52px] xl:text-[60px] dark:text-white">
                 @foreach ($words as $word)
-                    <span class="hero-word inline-block overflow-hidden pb-1 align-bottom"><span class="inline-block">{{ $word }}</span></span>
+                    <span class="hero-word inline-block overflow-hidden pb-1 align-bottom"><span @class(['inline-block', 'bg-linear-to-l from-emerald-700 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-300 dark:to-emerald-400' => $loop->first && $accent])>{{ $word }}</span></span>
                 @endforeach
                 @if ($accent)
-                    <span class="hero-word inline-block overflow-hidden pb-1 align-bottom"><span class="inline-block"><span class="animate-shimmer bg-linear-to-l from-orange-600 via-amber-500 to-orange-600 bg-[length:200%_auto] bg-clip-text text-transparent motion-reduce:animate-none dark:from-amber-300 dark:via-yellow-100 dark:to-amber-300">{{ $accent }}</span></span></span>
+                    <span class="hero-word inline-block overflow-hidden pb-1 align-bottom"><span class="inline-block"><span class="animate-shimmer bg-linear-to-l from-amber-600 via-yellow-500 to-amber-600 bg-[length:200%_auto] bg-clip-text text-transparent motion-reduce:animate-none dark:from-amber-300 dark:via-yellow-200 dark:to-amber-300">{{ $accent }}</span></span></span>
                 @endif
             </h1>
 

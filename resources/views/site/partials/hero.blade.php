@@ -10,7 +10,7 @@
 
     <div class="mx-auto grid w-full max-w-[1280px] flex-1 content-center items-center gap-6 px-5 pt-10 pb-12 sm:px-8 lg:grid-cols-[1fr_1.15fr] lg:pt-6">
         <div class="hero-leave text-center lg:text-start">
-            <h1 class="text-[38px] leading-[1.3] font-extrabold tracking-tight text-brand-900 sm:text-[52px] xl:text-[60px] dark:text-white">
+            <h1 class="text-[38px] leading-[1.3] font-extrabold tracking-tight text-primary sm:text-[52px] xl:text-[60px]">
                 @foreach ($words as $word)
                     <span class="hero-word inline-block overflow-hidden pb-1 align-bottom"><span class="inline-block">{{ $word }}</span></span>
                 @endforeach

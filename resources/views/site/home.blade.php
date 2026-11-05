@@ -3,7 +3,7 @@
 @php
     $impact = [
         ['value' => $settings->get('impact_people'), 'label' => __('site.hero.stats.people')],
-        ['value' => $settings->get('impact_duration'), 'label' => __('site.hero.stats.duration')],
+        ['value' => $settings->get('impact_duration'), 'label' => __('site.hero.stats.duration'), 'featured' => true],
         ['value' => number_format($projectsCount), 'label' => __('site.hero.stats.projects')],
     ];
 @endphp

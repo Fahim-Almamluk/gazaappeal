@@ -21,7 +21,7 @@
 
                 @if ($partner->logo)
                     <span class="flex h-16 w-full items-center justify-center dark:rounded-xl dark:bg-white/90 dark:p-2">
-                        <img src="{{ $partner->imageUrl() }}" alt="{{ $partner->name }}" loading="lazy" decoding="async" class="max-h-full max-w-[80%] object-contain opacity-75 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0">
+                        <img src="{{ $partner->imageUrl() }}" alt="{{ $partner->name }}" loading="lazy" decoding="async" class="max-h-full max-w-[80%] object-contain transition duration-300 group-hover:scale-105">
                     </span>
                 @else
                     <span class="flex size-16 items-center justify-center rounded-2xl border border-line bg-bg text-ink-subtle transition duration-300 group-hover:border-primary/30 group-hover:text-primary">

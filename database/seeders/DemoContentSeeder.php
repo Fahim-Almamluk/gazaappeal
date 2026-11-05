@@ -167,17 +167,21 @@ final class DemoContentSeeder extends Seeder
     private function seedPartners(): void
     {
         $partners = [
-            ['مؤسسة نور للتنمية', 'Noor Development Foundation'],
-            ['صندوق الطاقة الإنسانية', 'Humanitarian Energy Fund'],
-            ['جمعية المياه النظيفة', 'Clean Water Association'],
-            ['مبادرة شمس غزة', 'Gaza Sun Initiative'],
+            ['مؤسسة نور للتنمية', 'Noor Development Foundation', 'partner-noor'],
+            ['صندوق الطاقة الإنسانية', 'Humanitarian Energy Fund', 'partner-energy'],
+            ['جمعية المياه النظيفة', 'Clean Water Association', 'partner-water'],
+            ['مبادرة شمس غزة', 'Gaza Sun Initiative', 'partner-sun'],
         ];
 
-        foreach ($partners as $index => [$name, $nameEn]) {
-            $this->seedTranslated(Partner::class, ['name', ['ar' => $name, 'en' => $nameEn]], [
+        foreach ($partners as $index => [$name, $nameEn, $logo]) {
+            $partner = $this->seedTranslated(Partner::class, ['name', ['ar' => $name, 'en' => $nameEn]], [
                 'is_published' => true,
                 'sort_order' => $index + 1,
             ]);
+
+            if ($partner->logo === null) {
+                $partner->update(['logo' => $this->publish($logo, 'partners', 'png')]);
+            }
         }
     }
 
@@ -308,12 +312,12 @@ final class DemoContentSeeder extends Seeder
         }
     }
 
-    private function publish(string $name, string $folder): string
+    private function publish(string $name, string $folder, string $extension = 'jpg'): string
     {
-        $path = "{$folder}/demo-{$name}.jpg";
+        $path = "{$folder}/demo-{$name}.{$extension}";
 
         if (! Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->putFileAs($folder, new File(database_path("data/demo-images/{$name}.jpg")), "demo-{$name}.jpg");
+            Storage::disk('public')->putFileAs($folder, new File(database_path("data/demo-images/{$name}.{$extension}")), "demo-{$name}.{$extension}");
         }
 
         return $path;

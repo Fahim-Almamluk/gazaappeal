@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Damage;
 use App\Models\DonationMethod;
 use App\Models\GalleryItem;
+use App\Models\Partner;
 use App\Models\Project;
 use App\Models\Story;
 use Illuminate\View\View;
@@ -23,6 +24,7 @@ final class HomeController extends Controller
             'methods' => DonationMethod::query()->published()->ordered()->get(),
             'gallery' => GalleryItem::query()->published()->ordered()->take(7)->get(),
             'stories' => Story::query()->published()->latest()->take(3)->get(),
+            'partners' => Partner::query()->published()->ordered()->take(12)->get(['id', 'name', 'logo', 'website']),
         ]);
     }
 }

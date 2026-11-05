@@ -107,6 +107,11 @@ return [
         'next' => 'Next photo',
     ],
 
+    'partners_section' => [
+        'title' => 'Our Partners',
+        'subtitle' => 'Organisations standing with us to bring light back to Gaza.',
+    ],
+
     'stories_section' => [
         'title' => 'Success Stories',
         'subtitle' => 'The real-world impact of your donations.',
@@ -243,6 +248,7 @@ return [
         'copied' => 'Copied',
         'note_title' => 'Before you transfer',
         'note' => 'Double-check the account number, IBAN and SWIFT code before sending your transfer, and feel free to message us to confirm it arrived.',
+        'banks' => 'Bank accounts',
         'bank' => [
             'bank_name' => 'Bank name',
             'beneficiary' => 'Beneficiary',

@@ -110,6 +110,18 @@ final class PublicSiteTest extends TestCase
         $this->get(route('home'))->assertOk()->assertSee('صورة ظاهرة')->assertDontSee('صورة مخفية');
     }
 
+    public function test_home_shows_only_published_partners(): void
+    {
+        Partner::factory()->create(['name' => 'شريك ظاهر', 'website' => 'https://partner.example']);
+        Partner::factory()->create(['name' => 'شريك مخفي', 'is_published' => false]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('شريك ظاهر')
+            ->assertSee('https://partner.example')
+            ->assertDontSee('شريك مخفي');
+    }
+
     public function test_hidden_project_and_story_are_not_found(): void
     {
         $project = Project::factory()->hidden()->create();
@@ -124,6 +136,19 @@ final class PublicSiteTest extends TestCase
         $bank = DonationMethod::factory()->bank()->create();
 
         $this->get('/ar/donate')->assertSee($bank->bankDetail('iban'));
+    }
+
+    public function test_donate_page_shows_tabs_for_several_bank_accounts(): void
+    {
+        DonationMethod::factory()->bank()->create(['bank_details' => ['bank_name' => 'بنك أول', 'iban' => 'PS05PALS045400274280013000000']]);
+        DonationMethod::factory()->bank()->create(['bank_details' => ['bank_name' => 'بنك ثان', 'iban' => 'PS11QUDS000000000000000000000']]);
+
+        $this->get('/ar/donate')
+            ->assertOk()
+            ->assertSee('role="tablist"', false)
+            ->assertSee('بنك أول')
+            ->assertSee('بنك ثان')
+            ->assertSee('PS05 PALS 0454 0027 4280 0130 0000 0');
     }
 
     public function test_donate_page_renders_qr_codes(): void

@@ -3,7 +3,6 @@
 
     $links = $methods->reject->isBankTransfer();
     $banks = $methods->filter->isBankTransfer();
-    $ltrFields = ['account_number', 'swift_code', 'iban'];
     $trust = ['shield-check' => __('site.giving.trust.official'), 'lock' => __('site.giving.trust.secure'), 'mail' => __('site.giving.trust.confirm')];
 @endphp
 
@@ -18,40 +17,50 @@
         </section>
     @endif
 
-    @foreach ($banks as $bank)
-        <section class="mx-auto mt-10 w-full max-w-[1280px] px-5 sm:px-8">
-            <div class="reveal grid items-center gap-12 lg:grid-cols-[minmax(0,460px)_minmax(0,1fr)]">
-                <div class="flex flex-col items-center">
-                    <x-site.bank-card :method="$bank" />
-                    <x-site.bank-copy :method="$bank" class="mt-4" />
+    @if ($banks->isNotEmpty())
+        <section class="mx-auto mt-10 w-full max-w-[1280px] px-5 sm:px-8" x-data="tabs" data-open="{{ $banks->first()->id }}">
+            @if ($banks->count() > 1)
+                <div role="tablist" aria-label="{{ __('site.donate.banks') }}" class="reveal mx-auto mb-10 flex w-fit max-w-full gap-1 overflow-x-auto rounded-2xl border border-line bg-surface p-1.5 shadow-elevated">
+                    @foreach ($banks as $bank)
+                        <button
+                            type="button"
+                            role="tab"
+                            data-tab="{{ $bank->id }}"
+                            aria-selected="{{ $loop->first ? 'true' : 'false' }}"
+                            x-on:click="select"
+                            class="inline-flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold whitespace-nowrap text-ink-muted transition hover:text-ink aria-selected:bg-primary aria-selected:text-primary-fg"
+                        >
+                            <x-ui.icon name="landmark" :size="16" />
+                            {{ $bank->bankDetail('bank_name') ?: $bank->name }}
+                        </button>
+                    @endforeach
                 </div>
+            @endif
 
-                <div class="space-y-5">
-                    <div>
-                        <p class="text-sm font-bold text-primary">{{ __('site.donate.bank_eyebrow') }}</p>
-                        <h2 class="mt-1 text-[26px] leading-tight font-extrabold text-ink sm:text-[30px]">{{ $bank->name }}</h2>
-                        @if ($bank->description)
-                            <p class="mt-2 text-ink-muted">{{ $bank->description }}</p>
-                        @endif
+            @foreach ($banks as $bank)
+                <div data-tab-panel="{{ $bank->id }}" role="{{ $banks->count() > 1 ? 'tabpanel' : 'region' }}" @unless ($loop->first) hidden @endunless class="reveal grid items-center gap-12 lg:grid-cols-[minmax(0,460px)_minmax(0,1fr)]">
+                    <div class="flex flex-col items-center">
+                        <x-site.bank-card :method="$bank" />
+                        <x-site.bank-copy :method="$bank" class="mt-4" />
                     </div>
 
-                    <dl class="overflow-hidden rounded-card border border-line bg-surface shadow-elevated">
-                        @foreach ($bank->filledBankDetails() as $field => $value)
-                            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3.5 last:border-b-0">
-                                <dt class="text-sm font-semibold text-ink-subtle">{{ __("site.donate.bank.{$field}") }}</dt>
-                                <dd class="flex items-center gap-2">
-                                    <span @if (in_array($field, $ltrFields, true)) dir="ltr" @endif class="tabular font-bold break-all text-ink">{{ $value }}</span>
-                                    @if (in_array($field, $ltrFields, true))
-                                        <span x-data="copyText" data-text="{{ $value }}" data-copy="{{ __('site.donate.copy') }}" data-copied="{{ __('site.donate.copied') }}">
-                                            <button type="button" x-on:click="copy" x-bind:aria-label="label" x-bind:title="label" aria-label="{{ __('site.donate.copy') }}" class="flex size-8 items-center justify-center rounded-lg text-ink-subtle transition hover:bg-primary-soft hover:text-primary">
-                                                <span x-show="idle"><x-ui.icon name="copy" :size="16" /></span>
-                                                <span x-show="copied" x-cloak class="text-success"><x-ui.icon name="check" :size="16" /></span>
-                                            </button>
-                                        </span>
-                                    @endif
-                                </dd>
-                            </div>
-                        @endforeach
+                    <div class="space-y-5">
+                        <div>
+                            <p class="text-sm font-bold text-primary">{{ __('site.donate.bank_eyebrow') }}</p>
+                            <h2 class="mt-1 text-[26px] leading-tight font-extrabold text-ink sm:text-[30px]">{{ $bank->name }}</h2>
+                            @if ($bank->description)
+                                <p class="mt-2 text-ink-muted">{{ $bank->description }}</p>
+                            @endif
+                        </div>
+
+                        <x-site.bank-details :method="$bank" />
+
+                        <x-ui.alert tone="info" :title="__('site.donate.note_title')">{{ __('site.donate.note') }}</x-ui.alert>
+                    </div>
+                </div>
+            @endforeach
+        </section>
+    @endif
                     </dl>
 
                     <x-ui.alert tone="info" :title="__('site.donate.note_title')">{{ __('site.donate.note') }}</x-ui.alert>

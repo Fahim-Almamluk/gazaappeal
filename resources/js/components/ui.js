@@ -114,6 +114,27 @@ export const localeTabs = () => ({
     },
 });
 
+export const tabs = () => ({
+    active: '',
+
+    init() {
+        this.active = this.$root.dataset.open;
+        this.sync();
+    },
+
+    select(event) {
+        this.active = event.currentTarget.dataset.tab;
+        this.sync();
+    },
+
+    sync() {
+        this.$root.querySelectorAll('[data-tab]').forEach((tab) => tab.setAttribute('aria-selected', String(tab.dataset.tab === this.active)));
+        this.$root.querySelectorAll('[data-tab-panel]').forEach((panel) => {
+            panel.hidden = panel.dataset.tabPanel !== this.active;
+        });
+    },
+});
+
 export const imagePreview = () => ({
     url: null,
 

@@ -42,11 +42,11 @@
     ];
 
     $pins = [
-        ['icon' => 'solar-panel', 'label' => __('site.scene.panels'), 'from' => [318, 150], 'to' => [318, 70], 'position' => 'left-[53%] top-[15.6%] -translate-y-full', 'class' => 'story-pin [animation-delay:1.97s]'],
-        ['icon' => 'droplets', 'label' => __('site.scene.water'), 'from' => [439, 196], 'to' => [439, 120], 'position' => 'left-[73.2%] top-[26.7%] -translate-y-full', 'class' => 'story-pin [animation-delay:2.63s]'],
-        ['icon' => 'battery-charging', 'label' => __('site.scene.battery'), 'from' => [409, 205], 'to' => [409, 170], 'position' => 'left-[68.2%] top-[37.8%] -translate-y-full', 'class' => 'story-pin [animation-delay:2.13s]'],
-        ['icon' => 'tent', 'label' => __('site.scene.tent'), 'from' => [157, 262], 'to' => [157, 336], 'position' => 'left-[26.2%] top-[74.7%]', 'class' => 'story-pin [animation-delay:2.78s]'],
-        ['icon' => 'heart-pulse', 'label' => __('site.scene.clinic'), 'from' => [287, 326], 'to' => [287, 405], 'position' => 'left-[47.8%] top-[90%]', 'class' => 'story-pin [animation-delay:3.03s]'],
+        ['icon' => 'solar-panel', 'label' => __('site.scene.panels'), 'from' => [318, 150], 'to' => [318, 70], 'position' => 'left-[53%] top-[15.6%] -translate-y-full', 'class' => 'story-pin [animation-delay:1.58s]'],
+        ['icon' => 'droplets', 'label' => __('site.scene.water'), 'from' => [439, 196], 'to' => [439, 120], 'position' => 'left-[73.2%] top-[26.7%] -translate-y-full', 'class' => 'story-pin [animation-delay:2.1s]'],
+        ['icon' => 'battery-charging', 'label' => __('site.scene.battery'), 'from' => [409, 205], 'to' => [409, 170], 'position' => 'left-[68.2%] top-[37.8%] -translate-y-full', 'class' => 'story-pin [animation-delay:1.7s]'],
+        ['icon' => 'tent', 'label' => __('site.scene.tent'), 'from' => [157, 262], 'to' => [157, 336], 'position' => 'left-[26.2%] top-[74.7%]', 'class' => 'story-pin [animation-delay:2.22s]'],
+        ['icon' => 'heart-pulse', 'label' => __('site.scene.clinic'), 'from' => [287, 326], 'to' => [287, 405], 'position' => 'left-[47.8%] top-[90%]', 'class' => 'story-pin [animation-delay:2.42s]'],
     ];
 
     $shafts = collect(range(0, 11))->map(fn (int $i): array => ['angle' => $i * 30 + 8, 'length' => $i % 2 === 0 ? 118 : 78, 'width' => $i % 2 === 0 ? 9 : 6])->all();
@@ -104,6 +104,23 @@
             <stop offset=".6" stop-color="#FDE68A" stop-opacity=".18"/>
             <stop offset="1" stop-color="#FDE68A" stop-opacity="0"/>
         </linearGradient>
+        <linearGradient id="solar-scene-dawn" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1E2A4A"/>
+            <stop offset=".42" stop-color="#4B5583"/>
+            <stop offset=".72" stop-color="#C9879A"/>
+            <stop offset="1" stop-color="#F7C59F"/>
+        </linearGradient>
+        <radialGradient id="solar-scene-horizon" cx=".16" cy=".72" r=".55">
+            <stop offset="0" stop-color="#FDBA74" stop-opacity=".7"/>
+            <stop offset="1" stop-color="#FDBA74" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="solar-scene-dawn-edge">
+            <stop offset=".45" stop-color="#FFFFFF"/>
+            <stop offset="1" stop-color="#000000"/>
+        </radialGradient>
+        <mask id="solar-scene-dawn-mask">
+            <rect width="600" height="450" fill="url(#solar-scene-dawn-edge)"/>
+        </mask>
         <mask id="solar-scene-crescent">
             <rect x="40" y="20" width="120" height="110" fill="#FFFFFF"/>
             <circle cx="107" cy="65" r="17" fill="#000000"/>
@@ -111,6 +128,16 @@
     </x-slot:defs>
 
     <x-slot:sky>
+        <g class="dark:hidden" mask="url(#solar-scene-dawn-mask)">
+            <g class="story-dawn">
+                <rect width="600" height="450" fill="url(#solar-scene-dawn)"/>
+                <rect width="600" height="450" fill="url(#solar-scene-horizon)" class="story-horizon"/>
+                @foreach ($stars as $star)
+                    <circle cx="{{ $star[0] + 60 }}" cy="{{ $star[1] + 40 }}" r="{{ $star[2] * 0.8 }}" fill="#FFFFFF" fill-opacity=".8"/>
+                @endforeach
+            </g>
+        </g>
+
         <g class="celestial opacity-0 dark:opacity-100 dark:[transition-delay:350ms]">
             @foreach ($stars as $star)
                 <circle cx="{{ $star[0] }}" cy="{{ $star[1] }}" r="{{ $star[2] }}" fill="#E9ECF5" class="animate-glow origin-center [transform-box:fill-box] motion-reduce:animate-none {{ $star[3] }}"/>
@@ -150,7 +177,7 @@
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
         @foreach ($wires as $index => $wire)
             <path d="{{ $wire }}" class="stroke-brand-200 dark:stroke-brand-800" stroke-width="6"/>
-            <g @class(['story-on', ['[animation-delay:2.07s]', '[animation-delay:2.28s]', '[animation-delay:2.48s]'][$index]])>
+            <g @class(['story-on', ['[animation-delay:1.66s]', '[animation-delay:1.82s]', '[animation-delay:1.98s]'][$index]])>
                 <path d="{{ $wire }}" stroke="#2F8FE0" stroke-width="2.5" stroke-dasharray="5 9" class="animate-flow motion-reduce:animate-none"/>
             </g>
         @endforeach
@@ -160,14 +187,14 @@
         <path d="{{ $panel['legs'] }}" class="stroke-ink-subtle" stroke-width="2" fill="none"/>
         <polygon points="{{ $panel['face'] }}" fill="url(#solar-scene-panel)" stroke="#94BDF0" stroke-width="1"/>
         <path d="{{ $panel['cells'] }}" stroke="#C6DBF8" stroke-opacity=".55" stroke-width=".8" fill="none"/>
-        <polygon points="{{ $panel['face'] }}" fill="#FFF7D6" @class(['story-glint', ['[animation-delay:1.67s]', '[animation-delay:1.73s]', '[animation-delay:1.79s]', '[animation-delay:1.85s]', '[animation-delay:1.91s]', '[animation-delay:1.97s]'][$index]])/>
+        <polygon points="{{ $panel['face'] }}" fill="#FFF7D6" @class(['story-glint', ['[animation-delay:1.34s]', '[animation-delay:1.38s]', '[animation-delay:1.43s]', '[animation-delay:1.48s]', '[animation-delay:1.53s]', '[animation-delay:1.58s]'][$index]])/>
     @endforeach
 
     <g class="opacity-0 dark:opacity-100">
         <ellipse cx="{{ $battery['glow'][0] }}" cy="{{ $battery['glow'][1] - 6 }}" rx="46" ry="22" fill="url(#solar-scene-warm)" class="animate-glow origin-center [transform-box:fill-box] motion-reduce:animate-none"/>
     </g>
     <path d="{{ $battery['cable'] }}" class="stroke-brand-200 dark:stroke-brand-800" stroke-width="6" stroke-linecap="round" fill="none"/>
-    <g class="story-on [animation-delay:1.73s]">
+    <g class="story-on [animation-delay:1.38s]">
         <path d="{{ $battery['cable'] }}" stroke="#2F8FE0" stroke-width="2.5" stroke-dasharray="5 9" stroke-linecap="round" fill="none" class="animate-flow motion-reduce:animate-none"/>
     </g>
     <polygon points="{{ $battery['right'] }}" class="fill-slate-600 dark:fill-slate-700"/>
@@ -175,7 +202,7 @@
     <polygon points="{{ $battery['top'] }}" class="fill-slate-400 dark:fill-slate-500"/>
     @foreach ($battery['levels'] as $index => $level)
         <polygon points="{{ $level }}" class="fill-slate-700 dark:fill-slate-800"/>
-        <polygon points="{{ $level }}" @class(['story-on fill-success', ['[animation-delay:1.84s]', '[animation-delay:1.99s]', '[animation-delay:2.13s]'][$index]])/>
+        <polygon points="{{ $level }}" @class(['story-on fill-success', ['[animation-delay:1.47s]', '[animation-delay:1.59s]', '[animation-delay:1.7s]'][$index]])/>
     @endforeach
     <polygon points="{{ $battery['bolt'][0] + 1 }},{{ $battery['bolt'][1] - 6 }} {{ $battery['bolt'][0] - 3 }},{{ $battery['bolt'][1] + 1 }} {{ $battery['bolt'][0] - 0.5 }},{{ $battery['bolt'][1] + 1 }} {{ $battery['bolt'][0] - 1.5 }},{{ $battery['bolt'][1] + 6 }} {{ $battery['bolt'][0] + 3 }},{{ $battery['bolt'][1] - 1 }} {{ $battery['bolt'][0] + 0.5 }},{{ $battery['bolt'][1] - 1 }}" class="fill-sun"/>
 
@@ -186,25 +213,25 @@
     <rect x="{{ $tank[0] - 24 }}" y="{{ $tank[1] - 62 }}" width="48" height="62" fill="#C6DBF8"/>
     <rect x="{{ $tank[0] - 24 }}" y="{{ $tank[1] - 62 }}" width="48" height="62" fill="url(#solar-scene-tank)" class="story-water"/>
     <ellipse cx="{{ $tank[0] }}" cy="{{ $tank[1] - 62 }}" rx="24" ry="12" fill="#C6DBF8"/>
-    <path d="M{{ $tank[0] }} {{ $tank[1] - 44 }}c-6 8 -9 12 -9 16a9 9 0 0 0 18 0c0 -4 -3 -8 -9 -16z" fill="#FFFFFF" fill-opacity=".9" class="story-on [animation-delay:3.69s]"/>
+    <path d="M{{ $tank[0] }} {{ $tank[1] - 44 }}c-6 8 -9 12 -9 16a9 9 0 0 0 18 0c0 -4 -3 -8 -9 -16z" fill="#FFFFFF" fill-opacity=".9" class="story-on [animation-delay:2.95s]"/>
 
-    <g class="story-on [animation-delay:2.63s]">
+    <g class="story-on [animation-delay:2.1s]">
         <ellipse cx="{{ $tent['glow'][0] }}" cy="{{ $tent['glow'][1] - 8 }}" rx="58" ry="28" fill="url(#solar-scene-warm)" class="animate-glow origin-center [transform-box:fill-box] motion-reduce:animate-none"/>
     </g>
     <polygon points="{{ $tent['back'] }}" class="fill-brand-100 dark:fill-brand-800"/>
     <polygon points="{{ $tent['front'] }}" class="fill-brand-200 dark:fill-brand-700"/>
     <polygon points="{{ $tent['gable'] }}" class="fill-surface dark:fill-brand-900"/>
     <polygon points="{{ $tent['door'] }}" class="fill-brand-300 dark:fill-brand-800"/>
-    <polygon points="{{ $tent['door'] }}" class="story-on fill-sun [animation-delay:2.63s]"/>
+    <polygon points="{{ $tent['door'] }}" class="story-on fill-sun [animation-delay:2.1s]"/>
 
     <polygon points="{{ $clinic['right'] }}" class="fill-brand-100 dark:fill-surface-hover"/>
     <polygon points="{{ $clinic['left'] }}" class="fill-surface dark:fill-surface-2"/>
     <polygon points="{{ $clinic['top'] }}" class="fill-brand-50 stroke-brand-200 dark:fill-surface dark:stroke-line" stroke-width="1"/>
     @foreach ($windows as $index => $window)
         <polygon points="{{ $window }}" class="fill-brand-200 dark:fill-brand-800"/>
-        <polygon points="{{ $window }}" @class(['story-on fill-sun', ['[animation-delay:2.78s]', '[animation-delay:2.84s]', '[animation-delay:2.91s]', '[animation-delay:2.96s]', '[animation-delay:2.83s]', '[animation-delay:2.93s]'][$index]])/>
+        <polygon points="{{ $window }}" @class(['story-on fill-sun', ['[animation-delay:2.22s]', '[animation-delay:2.27s]', '[animation-delay:2.33s]', '[animation-delay:2.37s]', '[animation-delay:2.26s]', '[animation-delay:2.34s]'][$index]])/>
     @endforeach
     @foreach ($cross as $bar)
-        <polygon points="{{ $bar }}" class="story-on fill-success [animation-delay:3.03s]"/>
+        <polygon points="{{ $bar }}" class="story-on fill-success [animation-delay:2.42s]"/>
     @endforeach
 </x-scene.frame>

@@ -12,7 +12,7 @@
     $socials = $settings->socials();
 @endphp
 
-<footer class="mt-20 border-t border-line bg-surface">
+<footer class="border-t border-line bg-surface">
     <div class="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-5 px-5 py-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
         <a href="{{ route('home') }}" class="flex flex-col items-center gap-1 lg:items-start">
             <x-brand.logo class="h-12" />

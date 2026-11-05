@@ -178,3 +178,22 @@ export const methodFields = () => ({
     },
 });
 
+export const navGroup = () => ({
+    open: false,
+
+    init() {
+        this.open = this.$el.dataset.open === 'true';
+    },
+
+    toggle() {
+        this.open = !this.open;
+    },
+
+    get shown() {
+        return this.open || (this.collapsed && window.matchMedia('(min-width: 1024px)').matches);
+    },
+
+    get closed() {
+        return !this.shown;
+    },
+});

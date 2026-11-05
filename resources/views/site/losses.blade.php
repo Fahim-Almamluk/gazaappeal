@@ -1,3 +1,5 @@
+@inject('pages', 'App\Support\PageContent')
+
 @php
     $states = [
         'danger' => ['dot' => 'bg-danger-solid', 'text' => 'text-danger'],
@@ -51,11 +53,11 @@
             @endif
 
             <ul class="flex flex-wrap gap-x-8 gap-y-3 border-t border-line bg-surface-2/50 px-6 py-5 text-sm sm:px-9">
-                @foreach (__('site.losses.status.items') as $item)
+                @foreach (__('site.losses.status.items') as $key => $item)
                     <li class="flex items-center gap-2">
                         <span class="size-1.5 rounded-full {{ $states[$item['tone']]['dot'] }}"></span>
-                        <span class="text-ink-muted">{{ $item['label'] }}</span>
-                        <span class="font-bold {{ $states[$item['tone']]['text'] }}">{{ $item['state'] }}</span>
+                        <span class="text-ink-muted">{{ $pages->text("losses.status.items.{$key}.label") }}</span>
+                        <span class="font-bold {{ $states[$item['tone']]['text'] }}">{{ $pages->text("losses.status.items.{$key}.state") }}</span>
                     </li>
                 @endforeach
             </ul>
@@ -68,7 +70,7 @@
             <h2 class="mt-2 text-[26px] leading-tight font-extrabold text-ink sm:text-[30px]">{{ __('site.losses.timeline.title') }}</h2>
 
             <ol class="mt-8">
-                @foreach (__('site.losses.timeline.items') as $item)
+                @foreach (array_keys(__('site.losses.timeline.items')) as $key)
                     <li class="relative flex gap-4 pb-7 last:pb-0">
                         @unless ($loop->last)
                             <span class="absolute top-6 bottom-0 start-[9px] w-0.5 bg-line" aria-hidden="true"></span>
@@ -79,8 +81,8 @@
                             'bg-success ring-success/25' => $loop->last,
                         ])></span>
                         <div class="flex flex-1 flex-wrap items-baseline justify-between gap-x-4 gap-y-1 rounded-2xl border border-line bg-surface px-5 py-4 shadow-elevated">
-                            <p class="font-extrabold text-ink">{{ $item['title'] }}</p>
-                            <p @class(['text-xs font-bold', 'text-danger' => ! $loop->last, 'text-success' => $loop->last])>{{ $item['when'] }}</p>
+                            <p class="font-extrabold text-ink">{{ $pages->text("losses.timeline.items.{$key}.title") }}</p>
+                            <p @class(['text-xs font-bold', 'text-danger' => ! $loop->last, 'text-success' => $loop->last])>{{ $pages->text("losses.timeline.items.{$key}.when") }}</p>
                         </div>
                     </li>
                 @endforeach
@@ -92,14 +94,14 @@
             <h2 class="mt-2 text-[26px] leading-tight font-extrabold text-ink sm:text-[30px]">{{ __('site.losses.impact.title') }}</h2>
 
             <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                @foreach (__('site.losses.impact.items') as $key => $item)
+                @foreach (array_keys(__('site.losses.impact.items')) as $key)
                     <article class="flex items-start gap-4 rounded-[22px] border border-line bg-surface p-5 shadow-elevated transition hover:-translate-y-0.5 hover:shadow-overlay">
                         <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl {{ $impacts[$key]['tone'] }}">
                             <x-ui.icon :name="$impacts[$key]['icon']" :size="22" />
                         </span>
                         <div class="min-w-0">
-                            <h3 class="font-extrabold text-ink">{{ $item['title'] }}</h3>
-                            <p class="mt-1 text-sm leading-6 text-ink-muted">{{ $item['body'] }}</p>
+                            <h3 class="font-extrabold text-ink">{{ $pages->text("losses.impact.items.{$key}.title") }}</h3>
+                            <p class="mt-1 text-sm leading-6 text-ink-muted">{{ $pages->text("losses.impact.items.{$key}.body") }}</p>
                         </div>
                     </article>
                 @endforeach
@@ -114,8 +116,8 @@
                     <x-ui.icon name="solar-panel" :size="26" />
                 </span>
                 <div>
-                    <h2 class="text-xl font-extrabold text-ink sm:text-2xl">{{ __('site.losses.cta.title') }}</h2>
-                    <p class="mt-1.5 text-ink-muted">{{ __('site.losses.cta.body') }}</p>
+                    <h2 class="text-xl font-extrabold text-ink sm:text-2xl">{{ $pages->text('losses.cta.title') }}</h2>
+                    <p class="mt-1.5 text-ink-muted">{{ $pages->text('losses.cta.body') }}</p>
                 </div>
             </div>
             <div class="flex shrink-0 flex-wrap gap-3">

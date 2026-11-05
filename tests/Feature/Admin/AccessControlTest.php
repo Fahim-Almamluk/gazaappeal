@@ -29,6 +29,8 @@ final class AccessControlTest extends TestCase
         $this->patch(route('admin.users.toggle', $other))->assertForbidden();
         $this->get(route('admin.settings.edit'))->assertForbidden();
         $this->put(route('admin.settings.update'), [])->assertForbidden();
+        $this->get(route('admin.pages.edit'))->assertForbidden();
+        $this->put(route('admin.pages.update'), [])->assertForbidden();
     }
 
     public function test_editor_does_not_see_system_links(): void
@@ -126,6 +128,30 @@ final class AccessControlTest extends TestCase
         $this->assertSame(['facebook' => 'https://facebook.com/gedco'], $settings->socials());
         $this->get('/ar')->assertSee('https://facebook.com/gedco');
         $this->get('/en')->assertSee('Light')->assertSee('returns');
+    }
+
+    public function test_admin_updates_page_content(): void
+    {
+        $this->actingAs(User::factory()->admin()->create())
+            ->put(route('admin.pages.update'), ['page_about_intro' => str_repeat('أ', 701)])
+            ->assertSessionHasErrors('page_about_intro');
+
+        $this->put(route('admin.pages.update'), [
+            'page_about_intro' => 'نص تعريفي جديد للشركة.',
+            'page_about_intro_en' => 'A new company introduction.',
+            'page_losses_status_plant_state' => 'تعمل جزئيًا',
+            'page_losses_cta_title' => '',
+        ])->assertRedirect(route('admin.pages.edit'));
+
+        $this->assertDatabaseMissing('settings', ['key' => 'page_losses_cta_title']);
+
+        $this->get('/ar/about')->assertSee('نص تعريفي جديد للشركة.');
+        $this->get('/en/about')->assertSee('A new company introduction.');
+        $this->get('/ar/losses')->assertSee('تعمل جزئيًا')->assertSee(__('site.losses.cta.title', [], 'ar'));
+
+        $this->put(route('admin.pages.update'), ['page_about_intro' => ''])->assertRedirect(route('admin.pages.edit'));
+
+        $this->get('/ar/about')->assertDontSee('نص تعريفي جديد للشركة.')->assertSee(__('site.about.intro', [], 'ar'));
     }
 
     public function test_user_changes_own_password(): void

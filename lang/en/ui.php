@@ -117,6 +117,8 @@ return [
         'gallery' => 'Photo gallery',
         'partners' => 'Partners',
         'faqs' => 'FAQ',
+        'pages' => 'Page content',
+        'toggle_group' => 'Expand or collapse :name',
         'giving' => 'Giving',
         'donation_methods' => 'Donation methods',
         'inbox' => 'Inbox',

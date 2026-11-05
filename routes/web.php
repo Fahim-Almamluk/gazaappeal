@@ -67,6 +67,9 @@ Route::prefix('admin')
 
         Route::resource('roles', Admin\RoleController::class)->except('show');
 
+        Route::get('pages', [Admin\PageContentController::class, 'edit'])->name('pages.edit');
+        Route::put('pages', [Admin\PageContentController::class, 'update'])->name('pages.update');
+
         Route::get('settings', [Admin\SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [Admin\SettingController::class, 'update'])->name('settings.update');
 

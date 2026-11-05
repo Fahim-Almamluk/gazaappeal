@@ -52,6 +52,7 @@ final class AdminPagesTest extends TestCase
             route('admin.users.index'), route('admin.users.create'), route('admin.users.edit', $editor), route('admin.users.edit', $admin),
             route('admin.users.permissions', $editor),
             route('admin.roles.index'), route('admin.roles.create'), route('admin.roles.edit', $editor->role),
+            route('admin.pages.edit'),
             route('admin.settings.edit'),
             route('admin.profile.edit'),
         ];

@@ -15,6 +15,7 @@ return [
         [
             'key' => 'main',
             'label' => 'ui.nav.main',
+            'collapsible' => false,
             'items' => [
                 ['route' => 'admin.dashboard', 'label' => 'ui.nav.dashboard', 'icon' => 'layout-dashboard'],
             ],
@@ -30,6 +31,7 @@ return [
                 ['route' => 'admin.gallery.index', 'active' => 'admin.gallery.*', 'permission' => 'gallery.view', 'label' => 'ui.nav.gallery', 'icon' => 'images'],
                 ['route' => 'admin.partners.index', 'active' => 'admin.partners.*', 'permission' => 'partners.view', 'label' => 'ui.nav.partners', 'icon' => 'handshake'],
                 ['route' => 'admin.faqs.index', 'active' => 'admin.faqs.*', 'permission' => 'faqs.view', 'label' => 'ui.nav.faqs', 'icon' => 'circle-help'],
+                ['route' => 'admin.pages.edit', 'active' => 'admin.pages.*', 'permission' => 'pages.update', 'label' => 'ui.nav.pages', 'icon' => 'file-text'],
             ],
         ],
         [

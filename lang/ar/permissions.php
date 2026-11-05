@@ -16,6 +16,7 @@ return [
         'gallery' => 'معرض الصور',
         'partners' => 'الشركاء',
         'faqs' => 'الأسئلة الشائعة',
+        'pages' => 'محتوى الصفحات',
         'donation_methods' => 'طرق التبرع',
         'volunteers' => 'طلبات التطوع',
         'messages' => 'رسائل التواصل',
@@ -34,6 +35,7 @@ return [
     'overrides' => [
         'volunteers' => ['update' => 'متابعة الطلبات'],
         'messages' => ['update' => 'أرشفة واستعادة'],
+        'pages' => ['update' => 'تعديل نصوص الصفحات'],
         'users' => ['update' => 'تعديل وتفعيل وصلاحيات'],
         'settings' => ['update' => 'إدارة الإعدادات'],
     ],

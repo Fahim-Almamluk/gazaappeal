@@ -117,6 +117,8 @@ return [
         'gallery' => 'معرض الصور',
         'partners' => 'الشركاء',
         'faqs' => 'الأسئلة الشائعة',
+        'pages' => 'محتوى الصفحات',
+        'toggle_group' => 'فتح أو إغلاق قسم :name',
         'giving' => 'التبرعات',
         'donation_methods' => 'طرق التبرع',
         'inbox' => 'الوارد',

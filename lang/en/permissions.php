@@ -16,6 +16,7 @@ return [
         'gallery' => 'Photo gallery',
         'partners' => 'Partners',
         'faqs' => 'FAQ',
+        'pages' => 'Page content',
         'donation_methods' => 'Donation methods',
         'volunteers' => 'Volunteer applications',
         'messages' => 'Contact messages',
@@ -34,6 +35,7 @@ return [
     'overrides' => [
         'volunteers' => ['update' => 'Follow up'],
         'messages' => ['update' => 'Archive & restore'],
+        'pages' => ['update' => 'Edit page texts'],
         'users' => ['update' => 'Edit, activate & permissions'],
         'settings' => ['update' => 'Manage settings'],
     ],

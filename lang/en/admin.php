@@ -427,6 +427,37 @@ return [
         'deleted' => 'Role deleted.',
     ],
 
+    'pages' => [
+        'title' => 'Page content',
+        'subtitle' => 'Texts of the “About” and “Losses” pages.',
+        'hint' => 'An empty field restores the default text. Changes appear as soon as you save.',
+        'updated' => 'Page content saved.',
+        'numbered' => ':label :number',
+        'sections' => [
+            'about' => '“About” page',
+            'about_hint' => 'Company introduction, vision, mission and framework.',
+            'losses' => '“Losses” page',
+            'losses_hint' => 'Grid status, crisis timeline and impact on daily life.',
+        ],
+        'groups' => [
+            'who' => 'Introduction',
+            'vision' => 'Vision',
+            'mission' => 'Mission',
+            'framework' => 'Humanitarian framework',
+            'status' => 'Grid status',
+            'timeline' => 'Crisis timeline',
+            'impact' => 'Impact on daily life',
+            'cta' => 'Donation call',
+        ],
+        'labels' => [
+            'title' => 'Title',
+            'body' => 'Text',
+            'label' => 'Item',
+            'state' => 'State',
+            'when' => 'Date',
+        ],
+    ],
+
     'settings' => [
         'title' => 'Site settings',
         'subtitle' => 'Contact details, headline figures and social media accounts.',

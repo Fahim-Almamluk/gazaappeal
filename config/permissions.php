@@ -14,6 +14,7 @@ return [
                 'gallery' => ['icon' => 'images', 'actions' => $crud],
                 'partners' => ['icon' => 'handshake', 'actions' => $crud],
                 'faqs' => ['icon' => 'circle-help', 'actions' => $crud],
+                'pages' => ['icon' => 'file-text', 'actions' => ['update']],
             ],
         ],
         'giving' => [

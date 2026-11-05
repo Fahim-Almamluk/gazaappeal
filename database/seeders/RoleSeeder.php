@@ -12,7 +12,7 @@ final class RoleSeeder extends Seeder
 {
     use SeedsTranslations;
 
-    private const array CONTENT = ['projects', 'losses', 'damages', 'stories', 'gallery', 'partners', 'faqs', 'donation_methods'];
+    private const array CONTENT = ['projects', 'losses', 'damages', 'stories', 'gallery', 'partners', 'faqs', 'pages', 'donation_methods'];
 
     private const array INBOX = ['volunteers', 'messages'];
 

@@ -1,16 +1,18 @@
+@inject('pages', 'App\Support\PageContent')
+
 @php
     $principles = ['framework' => 'heart-handshake', 'water' => 'droplets', 'services' => 'solar-panel'];
     $cover = $gallery->first();
 @endphp
 
-<x-layouts.site :title="__('site.about.title')" :description="__('site.about.intro')">
+<x-layouts.site :title="__('site.about.title')" :description="$pages->text('about.intro')">
     <x-site.page-header :title="__('site.about.title')" :subtitle="__('site.about.subtitle')" />
 
     <section @class(['mx-auto mt-14 grid w-full max-w-[1280px] gap-12 px-5 sm:px-8 lg:items-center', 'lg:grid-cols-2 lg:gap-16' => $cover])>
         <div @class(['reveal', 'mx-auto max-w-3xl text-center' => ! $cover])>
-            <h2 class="text-[28px] leading-tight font-extrabold tracking-tight text-balance text-ink sm:text-[36px]">{{ __('site.about.who.title') }}</h2>
+            <h2 class="text-[28px] leading-tight font-extrabold tracking-tight text-balance text-ink sm:text-[36px]">{{ $pages->text('about.who.title') }}</h2>
             <span @class(['mt-5 block h-1 w-16 rounded-full bg-primary', 'mx-auto' => ! $cover])></span>
-            <p class="mt-6 text-[17px] leading-9 text-ink-muted">{{ __('site.about.intro') }}</p>
+            <p class="mt-6 text-[17px] leading-9 text-ink-muted">{{ $pages->text('about.intro') }}</p>
 
             <div @class(['mt-8 flex flex-wrap gap-3', 'justify-center' => ! $cover])>
                 <x-ui.button :href="route('projects.index')" size="xl" icon="solar-panel">{{ __('site.hero.support') }}</x-ui.button>
@@ -58,7 +60,7 @@
                         <x-ui.icon :name="$icon" :size="22" />
                     </span>
                     <h3 class="mt-6 text-[22px] font-extrabold text-ink">{{ __("site.about.{$key}.title") }}</h3>
-                    <p class="mt-3 text-[16px] leading-8 text-ink-muted">{{ __("site.about.{$key}.body") }}</p>
+                    <p class="mt-3 text-[16px] leading-8 text-ink-muted">{{ $pages->text("about.{$key}.body") }}</p>
                 </article>
             @endforeach
         </section>
@@ -74,8 +76,8 @@
                     <span class="flex size-12 items-center justify-center rounded-xl bg-primary-soft text-primary-soft-ink transition group-hover:bg-primary group-hover:text-primary-fg">
                         <x-ui.icon :name="$icon" :size="22" />
                     </span>
-                    <h3 class="mt-6 text-lg font-bold text-ink">{{ __("site.about.highlights.items.{$key}.title") }}</h3>
-                    <p class="mt-2 text-sm leading-7 text-ink-muted">{{ __("site.about.highlights.items.{$key}.body") }}</p>
+                    <h3 class="mt-6 text-lg font-bold text-ink">{{ $pages->text("about.highlights.items.{$key}.title") }}</h3>
+                    <p class="mt-2 text-sm leading-7 text-ink-muted">{{ $pages->text("about.highlights.items.{$key}.body") }}</p>
                 </article>
             @endforeach
         </div>

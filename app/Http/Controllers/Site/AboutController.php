@@ -18,7 +18,7 @@ final class AboutController extends Controller
     public function __invoke(): View
     {
         return view('site.about', [
-            'gallery' => GalleryItem::query()->published()->ordered()->get(),
+            'gallery' => GalleryItem::query()->published()->ordered()->take(7)->get(),
             'figures' => [
                 'projects' => Project::query()->published()->count(),
                 'volunteers' => Volunteer::query()->where('status', VolunteerStatus::Accepted)->count(),

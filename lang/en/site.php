@@ -142,7 +142,6 @@ return [
         'subtitle' => 'Your support makes a difference',
         'intro' => 'People in Gaza have been left without any source of energy or electricity for more than a year, in a tragedy we have never witnessed before. Your support can make a real difference and change this reality for the displaced families crowded into shelter camps. A brighter future is drawn by those who care and lend a hand.',
         'who' => [
-            'eyebrow' => 'Who we are',
             'title' => 'Gaza Electricity Distribution Company',
         ],
         'vision' => [
@@ -154,7 +153,6 @@ return [
             'body' => 'Applying smart solutions and technologies across our work, while providing a modern work environment that improves service quality and responds quickly to our customers’ needs.',
         ],
         'highlights' => [
-            'eyebrow' => 'Highlights',
             'title' => 'Our humanitarian framework',
             'items' => [
                 'framework' => [
@@ -178,7 +176,6 @@ return [
             'stories' => 'success stories',
         ],
         'gallery' => [
-            'eyebrow' => 'See with us',
             'title' => 'Photo Gallery',
         ],
     ],

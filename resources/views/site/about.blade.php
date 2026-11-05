@@ -1,74 +1,97 @@
 @php
     $principles = ['framework' => 'heart-handshake', 'water' => 'droplets', 'services' => 'solar-panel'];
-    $figureIcons = ['projects' => 'solar-panel', 'volunteers' => 'heart-handshake', 'partners' => 'handshake', 'stories' => 'award'];
+    $cover = $gallery->first();
 @endphp
 
 <x-layouts.site :title="__('site.about.title')" :description="__('site.about.intro')">
     <x-site.page-header :title="__('site.about.title')" :subtitle="__('site.about.subtitle')" />
 
-    <section class="mx-auto mt-10 grid w-full max-w-[1280px] gap-10 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-        <div class="reveal space-y-5">
-            <x-site.section-heading :eyebrow="__('site.about.who.eyebrow')" :title="__('site.about.who.title')" />
-            <p class="text-[17px] leading-9 text-ink-muted">{{ __('site.about.intro') }}</p>
+    <section @class(['mx-auto mt-14 grid w-full max-w-[1280px] gap-12 px-5 sm:px-8 lg:items-center', 'lg:grid-cols-2 lg:gap-16' => $cover])>
+        <div @class(['reveal', 'mx-auto max-w-3xl text-center' => ! $cover])>
+            <h2 class="text-[28px] leading-tight font-extrabold tracking-tight text-balance text-ink sm:text-[36px]">{{ __('site.about.who.title') }}</h2>
+            <span @class(['mt-5 block h-1 w-16 rounded-full bg-primary', 'mx-auto' => ! $cover])></span>
+            <p class="mt-6 text-[17px] leading-9 text-ink-muted">{{ __('site.about.intro') }}</p>
+
+            <div @class(['mt-8 flex flex-wrap gap-3', 'justify-center' => ! $cover])>
+                <x-ui.button :href="route('projects.index')" size="xl" icon="solar-panel">{{ __('site.hero.support') }}</x-ui.button>
+                <x-ui.button :href="route('volunteer.create')" variant="secondary" size="xl" icon="heart-handshake">{{ __('site.hero.volunteer') }}</x-ui.button>
+            </div>
         </div>
 
-        <div class="reveal-stagger grid gap-4">
-            @foreach (['vision' => 'target', 'mission' => 'flag'] as $key => $icon)
-                <article class="reveal flex gap-4 rounded-card border border-t-[3px] border-line border-t-primary bg-surface p-6 shadow-elevated">
-                    <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-soft-ink"><x-ui.icon :name="$icon" :size="22" /></span>
-                    <div>
-                        <h3 class="text-lg font-bold text-ink">{{ __("site.about.{$key}.title") }}</h3>
-                        <p class="mt-1.5 text-sm leading-7 text-ink-muted">{{ __("site.about.{$key}.body") }}</p>
-                    </div>
-                </article>
-            @endforeach
-        </div>
+        @if ($cover)
+            <figure class="reveal relative pb-6">
+                <img src="{{ $cover->imageUrl() }}" alt="{{ $cover->caption }}" decoding="async" class="aspect-[4/3] w-full rounded-[28px] object-cover shadow-elevated">
+
+                <figcaption class="absolute start-6 bottom-0 flex items-center gap-3 rounded-2xl border border-line bg-surface px-5 py-4 shadow-overlay">
+                    <span class="flex size-11 items-center justify-center rounded-xl bg-primary-soft text-primary-soft-ink">
+                        <x-ui.icon name="solar-panel" :size="22" />
+                    </span>
+                    <span class="flex flex-col">
+                        <span class="tabular text-2xl leading-none font-extrabold text-ink"><span data-count>{{ number_format($figures['projects']) }}</span></span>
+                        <span class="mt-1 text-xs font-semibold text-ink-muted">{{ __('site.about.figures.projects') }}</span>
+                    </span>
+                </figcaption>
+            </figure>
+        @endif
     </section>
 
-    <section class="mx-auto mt-24 w-full max-w-[1280px] space-y-8 px-5 sm:px-8">
-        <x-site.section-heading class="reveal" :eyebrow="__('site.about.highlights.eyebrow')" :title="__('site.about.highlights.title')" />
+    <section class="mx-auto mt-20 w-full max-w-[1280px] px-5 sm:px-8">
+        <dl class="reveal grid grid-cols-2 overflow-hidden rounded-card border border-line bg-surface shadow-elevated lg:grid-cols-4">
+            @foreach ($figures as $key => $value)
+                <div @class([
+                    'flex flex-col-reverse items-center gap-2 px-4 py-7 text-center',
+                    'border-line odd:border-e lg:border-e lg:last:border-e-0',
+                    'border-b lg:border-b-0' => $loop->index < 2,
+                ])>
+                    <dt class="text-sm font-semibold text-ink-muted">{{ __("site.about.figures.{$key}") }}</dt>
+                    <dd class="tabular text-[34px] leading-none font-extrabold text-ink"><span data-count>{{ number_format($value) }}</span></dd>
+                </div>
+            @endforeach
+        </dl>
+    </section>
 
-        <div class="reveal-stagger grid gap-5 md:grid-cols-3">
+    <x-site.band class="mt-24">
+        <section class="mx-auto grid w-full max-w-[1280px] gap-5 px-5 sm:px-8 md:grid-cols-2">
+            @foreach (['vision' => 'target', 'mission' => 'flag'] as $key => $icon)
+                <article class="reveal relative overflow-hidden rounded-card border border-line bg-bg p-8 sm:p-10">
+                    <span class="flex size-12 items-center justify-center rounded-xl bg-primary-soft text-primary-soft-ink">
+                        <x-ui.icon :name="$icon" :size="22" />
+                    </span>
+                    <h3 class="mt-6 text-[22px] font-extrabold text-ink">{{ __("site.about.{$key}.title") }}</h3>
+                    <p class="mt-3 text-[16px] leading-8 text-ink-muted">{{ __("site.about.{$key}.body") }}</p>
+                </article>
+            @endforeach
+        </section>
+    </x-site.band>
+
+    <section class="mx-auto mt-24 w-full max-w-[1280px] px-5 sm:px-8">
+        <x-site.section-title class="reveal" :title="__('site.about.highlights.title')" />
+
+        <div class="reveal-stagger mt-12 grid gap-5 md:grid-cols-3">
             @foreach ($principles as $key => $icon)
-                <article class="reveal group rounded-card border border-line bg-surface p-6 transition duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-overlay">
+                <article class="reveal group relative overflow-hidden rounded-card border border-line bg-surface p-7 shadow-elevated transition duration-200 hover:border-primary/40">
+                    <span class="tabular pointer-events-none absolute end-6 top-5 text-[44px] leading-none font-extrabold text-line-strong/60" aria-hidden="true">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                     <span class="flex size-12 items-center justify-center rounded-xl bg-primary-soft text-primary-soft-ink transition group-hover:bg-primary group-hover:text-primary-fg">
                         <x-ui.icon :name="$icon" :size="22" />
                     </span>
-                    <h3 class="mt-5 text-lg font-bold text-ink">{{ __("site.about.highlights.items.{$key}.title") }}</h3>
+                    <h3 class="mt-6 text-lg font-bold text-ink">{{ __("site.about.highlights.items.{$key}.title") }}</h3>
                     <p class="mt-2 text-sm leading-7 text-ink-muted">{{ __("site.about.highlights.items.{$key}.body") }}</p>
                 </article>
             @endforeach
         </div>
     </section>
 
-    <section class="mx-auto mt-24 w-full max-w-[1280px] px-5 sm:px-8">
-        <dl class="reveal-pop grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line shadow-elevated lg:grid-cols-4">
-            @foreach ($figures as $key => $value)
-                <div class="flex items-center gap-4 bg-surface p-6">
-                    <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary-soft-ink"><x-ui.icon :name="$figureIcons[$key]" :size="22" /></span>
-                    <div class="flex flex-col-reverse gap-1.5">
-                        <dt class="text-sm font-semibold text-ink-muted">{{ __("site.about.figures.{$key}") }}</dt>
-                        <dd class="tabular text-[30px] leading-none font-extrabold text-ink"><span data-count>{{ number_format($value) }}</span></dd>
-                    </div>
-                </div>
-            @endforeach
-        </dl>
-    </section>
-
     @if ($gallery->isNotEmpty())
-        <section class="mx-auto mt-24 w-full max-w-[1280px] space-y-8 px-5 sm:px-8">
-            <x-site.section-heading class="reveal" :eyebrow="__('site.about.gallery.eyebrow')" :title="__('site.about.gallery.title')" />
+        <x-site.band class="mt-24">
+            <section class="mx-auto w-full max-w-[1280px] px-5 sm:px-8">
+                <x-site.section-title class="reveal" :title="__('site.about.gallery.title')" />
 
-            <div class="reveal-stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
-                @foreach ($gallery as $item)
-                    <figure class="reveal group overflow-hidden rounded-card border border-line bg-surface shadow-elevated">
-                        <div class="aspect-square overflow-hidden">
-                            <img src="{{ $item->imageUrl() }}" alt="{{ $item->caption }}" loading="lazy" decoding="async" class="size-full object-cover transition duration-500 group-hover:scale-105">
-                        </div>
-                        <figcaption class="px-4 py-3 text-sm font-semibold text-ink-muted">{{ $item->caption }}</figcaption>
-                    </figure>
-                @endforeach
-            </div>
-        </section>
+                <x-site.gallery :items="$gallery" class="mt-12" />
+
+                <div class="mt-10 flex justify-center">
+                    <x-ui.button variant="secondary" :href="route('gallery')" icon="arrow-left" class="flex-row-reverse">{{ __('site.gallery_section.all') }}</x-ui.button>
+                </div>
+            </section>
+        </x-site.band>
     @endif
 </x-layouts.site>

@@ -10,7 +10,7 @@ import permissionTree from './components/permission-tree';
 import { registerConfirmations } from './components/confirm';
 import { registerFormGuard } from './components/form-guard';
 import { registerScrollEffects } from './components/scroll-effects';
-import { copyText, dropdown, imagePreview, localeTabs, methodFields, navGroup, passwordField, submitGuard, tabs, toast } from './components/ui';
+import { copyText, dropdown, imagePreview, localeTabs, methodFields, passwordField, submitGuard, tabs, toast } from './components/ui';
 
 Alpine.plugin(focus);
 
@@ -29,7 +29,6 @@ Alpine.data('copyText', copyText);
 Alpine.data('imagePreview', imagePreview);
 Alpine.data('localeTabs', localeTabs);
 Alpine.data('methodFields', methodFields);
-Alpine.data('navGroup', navGroup);
 Alpine.data('tabs', tabs);
 
 registerFormGuard();

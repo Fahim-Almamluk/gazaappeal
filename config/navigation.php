@@ -15,7 +15,6 @@ return [
         [
             'key' => 'main',
             'label' => 'ui.nav.main',
-            'collapsible' => false,
             'items' => [
                 ['route' => 'admin.dashboard', 'label' => 'ui.nav.dashboard', 'icon' => 'layout-dashboard'],
             ],

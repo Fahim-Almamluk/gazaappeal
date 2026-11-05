@@ -126,7 +126,6 @@ return [
         'users' => 'Users',
         'roles' => 'Roles & permissions',
         'settings' => 'Site settings',
-        'toggle_group' => 'Expand or collapse :name',
     ],
 
     'footer' => [

@@ -3,6 +3,7 @@
 
     $links = $methods->reject->isBankTransfer();
     $banks = $methods->filter->isBankTransfer();
+    $singleLink = $links->count() === 1;
     $trust = ['shield-check' => __('site.giving.trust.official'), 'lock' => __('site.giving.trust.secure'), 'mail' => __('site.giving.trust.confirm')];
 @endphp
 
@@ -70,28 +71,38 @@
                 <p class="mt-2 text-ink-muted">{{ __('site.donate.online_hint') }}</p>
             </div>
 
-            <div class="reveal-stagger mt-10 grid gap-5 md:grid-cols-2">
+            <div @class(['reveal-stagger mt-10 grid gap-5', 'md:grid-cols-2' => ! $singleLink, 'mx-auto max-w-3xl' => $singleLink])>
                 @foreach ($links as $method)
-                    <article class="reveal group relative flex flex-col overflow-hidden rounded-[24px] border border-line bg-surface p-6 shadow-elevated transition duration-200 hover:border-primary/40 hover:shadow-overlay sm:flex-row sm:items-center sm:gap-6">
+                    <article @class([
+                        'reveal group relative flex flex-col overflow-hidden rounded-[24px] border border-line bg-surface shadow-elevated transition duration-200 hover:border-primary/40 hover:shadow-overlay sm:flex-row sm:items-center',
+                        'p-6 sm:gap-6' => ! $singleLink,
+                        'p-6 sm:gap-10 sm:p-10' => $singleLink,
+                    ])>
                         <div class="pointer-events-none absolute -top-20 -start-20 size-52 rounded-full bg-primary/10 blur-3xl"></div>
 
                         <div class="relative min-w-0 flex-1">
                             <span class="flex size-12 items-center justify-center rounded-2xl bg-linear-to-br from-brand-400 to-brand-700 text-white shadow-brand">
                                 <x-ui.icon name="credit-card" :size="22" />
                             </span>
-                            <h3 class="mt-4 text-lg font-extrabold text-ink">{{ $method->name }}</h3>
-                            @if ($method->description)
-                                <p class="mt-1 text-sm leading-6 text-ink-muted">{{ $method->description }}</p>
+                            <h3 @class(['mt-4 font-extrabold text-ink', 'text-lg' => ! $singleLink, 'text-[22px]' => $singleLink])>{{ $method->name }}</h3>
+                            @if ($host = parse_url((string) $method->url, PHP_URL_HOST))
+                                <p dir="ltr" class="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-success/10 px-2.5 py-1 text-xs font-semibold text-success">
+                                    <x-ui.icon name="lock" :size="13" />
+                                    {{ $host }}
+                                </p>
                             @endif
-                            <a href="{{ $method->url }}" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-fg shadow-brand transition hover:bg-primary-hover dark:shadow-none">
+                            @if ($method->description)
+                                <p class="mt-3 text-sm leading-6 text-ink-muted">{{ $method->description }}</p>
+                            @endif
+                            <a href="{{ $method->url }}" target="_blank" rel="noopener noreferrer" class="mt-6 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-fg shadow-brand transition hover:bg-primary-hover dark:shadow-none">
                                 {{ __('site.nav.donate') }}
                                 <x-ui.icon name="external-link" :size="16" />
                             </a>
                         </div>
 
-                        <figure class="relative mt-6 flex shrink-0 flex-col items-center sm:mt-0">
-                            <div class="size-36 rounded-2xl border border-line bg-white p-2.5 shadow-sm transition duration-300 group-hover:scale-105 [&>svg]:size-full">{{ QrCode::svg($method->url, 200) }}</div>
-                            <figcaption class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-ink-subtle">
+                        <figure @class(['relative mt-8 flex shrink-0 flex-col items-center sm:mt-0', 'sm:border-s sm:border-line sm:ps-10' => $singleLink])>
+                            <div @class(['rounded-2xl border border-line bg-white p-2.5 shadow-sm transition duration-300 group-hover:scale-105 [&>svg]:size-full', 'size-36' => ! $singleLink, 'size-44' => $singleLink])>{{ QrCode::svg($method->url, 200) }}</div>
+                            <figcaption class="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-ink-subtle">
                                 <x-ui.icon name="smartphone" :size="14" />
                                 {{ __('site.giving.qr.scan') }}
                             </figcaption>

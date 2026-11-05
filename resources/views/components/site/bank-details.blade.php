@@ -24,7 +24,8 @@
                 <div @class([
                     'border-line px-5 py-4 sm:px-6',
                     'border-b sm:col-span-2' => $field === 'beneficiary',
-                    'border-b last:border-b-0 sm:border-b-0 sm:odd:border-e' => $field !== 'beneficiary',
+                    'border-b last:border-b-0 sm:border-b-0' => $field !== 'beneficiary',
+                    'sm:border-e' => $field === 'branch' && isset($info['address']),
                 ])>
                     <dt class="text-xs font-semibold text-ink-subtle">{{ __("site.donate.bank.{$field}") }}</dt>
                     <dd class="mt-1 font-bold text-ink">{{ $value }}</dd>

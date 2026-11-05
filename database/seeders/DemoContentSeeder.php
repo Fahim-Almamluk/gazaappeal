@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\DamageCategory;
+use App\Enums\DonationMethodType;
 use App\Enums\Governorate;
 use App\Enums\LossIcon;
 use App\Enums\ProjectStatus;
@@ -10,6 +11,7 @@ use App\Enums\VolunteerExpertise;
 use App\Enums\VolunteerStatus;
 use App\Models\ContactMessage;
 use App\Models\Damage;
+use App\Models\DonationMethod;
 use App\Models\GalleryItem;
 use App\Models\Loss;
 use App\Models\Partner;
@@ -33,6 +35,7 @@ final class DemoContentSeeder extends Seeder
         $this->seedStories();
         $this->seedGallery();
         $this->seedPartners();
+        $this->seedBankAccounts();
         $this->seedLosses();
         $this->seedDamages();
         $this->seedInbox();
@@ -176,6 +179,29 @@ final class DemoContentSeeder extends Seeder
                 'sort_order' => $index + 1,
             ]);
         }
+    }
+
+    private function seedBankAccounts(): void
+    {
+        $this->seedTranslated(DonationMethod::class, ['name', ['ar' => 'تحويل بنكي - حساب تجريبي', 'en' => 'Bank Transfer - Demo Account']], [
+            'type' => DonationMethodType::BankTransfer,
+            'description' => ['ar' => 'حساب تجريبي لمعاينة عرض أكثر من حساب بنكي.', 'en' => 'A demo account to preview several bank accounts.'],
+            'bank_details' => [
+                'bank_name' => 'بنك تجريبي',
+                'bank_name_en' => 'Demo Bank',
+                'beneficiary' => 'شركة توزيع كهرباء غزة',
+                'beneficiary_en' => 'Gaza Electricity Distribution Company',
+                'branch' => 'الرمال',
+                'branch_en' => 'Al-Rimal',
+                'address' => 'غزة - الرمال',
+                'address_en' => 'Al-Rimal, Gaza',
+                'account_number' => '100200',
+                'swift_code' => 'DEMOPS00',
+                'iban' => 'PS00DEMO000000000000001002000',
+            ],
+            'is_published' => true,
+            'sort_order' => 3,
+        ]);
     }
 
     private function seedLosses(): void

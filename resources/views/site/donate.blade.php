@@ -61,13 +61,6 @@
             @endforeach
         </section>
     @endif
-                    </dl>
-
-                    <x-ui.alert tone="info" :title="__('site.donate.note_title')">{{ __('site.donate.note') }}</x-ui.alert>
-                </div>
-            </div>
-        </section>
-    @endforeach
 
     @if ($links->isNotEmpty())
         <section class="mx-auto mt-24 w-full max-w-[1280px] px-5 sm:px-8">

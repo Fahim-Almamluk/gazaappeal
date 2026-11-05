@@ -242,7 +242,6 @@ return [
         'subtitle' => 'Choose the way of giving that suits you.',
         'empty' => 'No donation methods are published at the moment.',
         'bank_eyebrow' => 'Direct bank transfer',
-        'online_eyebrow' => 'In a minute',
         'online_hint' => 'Press the donate button or scan the code with your phone to go straight to the secure payment page.',
         'copy' => 'Copy',
         'copied' => 'Copied',

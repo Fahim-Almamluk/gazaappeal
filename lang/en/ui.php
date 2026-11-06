@@ -12,9 +12,7 @@ return [
         'menu' => 'Menu',
         'skip_to_content' => 'Skip to content',
         'back_to_top' => 'Back to top',
-        'all' => 'All',
         'none' => '—',
-        'yes' => 'Yes',
         'no' => 'No',
         'view_site' => 'View site',
     ],
@@ -50,7 +48,6 @@ return [
     ],
 
     'actions' => [
-        'add' => 'Add',
         'edit' => 'Edit',
         'view' => 'View',
         'delete' => 'Delete',

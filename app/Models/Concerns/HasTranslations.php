@@ -53,11 +53,6 @@ trait HasTranslations
         return is_array($decoded) ? $decoded : [config('app.fallback_locale') => (string) $raw];
     }
 
-    public function hasTranslation(string $key, string $locale): bool
-    {
-        return filled($this->translations($key)[$locale] ?? null);
-    }
-
     public function isTranslatable(string $key): bool
     {
         return in_array($key, $this->translatable, true);

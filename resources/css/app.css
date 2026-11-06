@@ -446,12 +446,6 @@
     }
 }
 
-@keyframes scroll-draw {
-    from {
-        clip-path: inset(0 0 0 100%);
-    }
-}
-
 @keyframes scroll-grow {
     from {
         scale: 0 1;
@@ -512,16 +506,6 @@
             animation: scroll-pop linear backwards;
             animation-timeline: view();
             animation-range: entry 0% entry 55%;
-        }
-    }
-}
-
-@utility reveal-draw {
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: view()) {
-            animation: scroll-draw linear backwards;
-            animation-timeline: view();
-            animation-range: entry 15% cover 40%;
         }
     }
 }

@@ -19,13 +19,7 @@ return [
         'menu' => 'Open menu',
     ],
 
-    'common' => [
-        'more' => 'More',
-    ],
-
     'hero' => [
-        'title' => 'Join our mission <mark>to light up Gaza</mark>',
-        'body' => 'Join us in our mission to bring light to Gaza’s darkness. Together, your support will improve living conditions, restore essential services and build a brighter future for everyone in Gaza after the catastrophe.',
         'support' => 'Support a project',
         'volunteer' => 'Volunteer with us',
         'stats' => [

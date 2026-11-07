@@ -9,8 +9,14 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.users.index')" :active="filled($search)">
+            <x-ui.filter-bar :action="route('admin.users.index')" :active="filled($search) || $role || $status">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.users.search')" />
+                <div class="w-full sm:w-48">
+                    <x-ui.select name="role" compact :options="$roles" :selected="$role" :placeholder="__('admin.users.all_roles')" :aria-label="__('admin.users.columns.role')" />
+                </div>
+                <div class="w-full sm:w-44">
+                    <x-ui.select name="status" compact :options="['active' => __('ui.status.active'), 'inactive' => __('ui.status.inactive')]" :selected="$status" :placeholder="__('admin.common.all_statuses')" :aria-label="__('admin.users.columns.status')" />
+                </div>
             </x-ui.filter-bar>
 
             <x-ui.results-count :paginator="$users" />

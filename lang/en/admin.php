@@ -340,6 +340,7 @@ return [
         'subtitle' => 'Admin team accounts and their permissions.',
         'add' => 'Add user',
         'edit' => 'Edit user',
+        'all_roles' => 'All roles',
         'search' => 'Search by name or email',
         'form_subtitle' => 'Create an account for an admin team member.',
         'you' => 'You',
@@ -400,6 +401,18 @@ return [
     'roles' => [
         'title' => 'Roles & permissions',
         'subtitle' => 'Decide what each role can see and change in the dashboard.',
+        'search' => 'Search by role name',
+        'all_types' => 'All types',
+        'all_usage' => 'All usage',
+        'empty' => 'No matching roles.',
+        'types' => [
+            'system' => 'System role',
+            'custom' => 'Custom role',
+        ],
+        'usage' => [
+            'used' => 'Has users',
+            'unused' => 'No users',
+        ],
         'add' => 'Add role',
         'edit' => 'Edit role',
         'form_subtitle' => 'The role name and the permissions it grants.',

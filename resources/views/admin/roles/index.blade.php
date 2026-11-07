@@ -9,6 +9,16 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
+            <x-ui.filter-bar :action="route('admin.roles.index')" :active="filled($search) || $type || $usage">
+                <x-ui.search-input :value="$search" :placeholder="__('admin.roles.search')" />
+                <div class="w-full sm:w-44">
+                    <x-ui.select name="type" compact :options="['system' => __('admin.roles.types.system'), 'custom' => __('admin.roles.types.custom')]" :selected="$type" :placeholder="__('admin.roles.all_types')" :aria-label="__('admin.roles.columns.name')" />
+                </div>
+                <div class="w-full sm:w-52">
+                    <x-ui.select name="usage" compact :options="['used' => __('admin.roles.usage.used'), 'unused' => __('admin.roles.usage.unused')]" :selected="$usage" :placeholder="__('admin.roles.all_usage')" :aria-label="__('admin.roles.columns.users')" />
+                </div>
+            </x-ui.filter-bar>
+
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[760px] text-sm">
                     <thead>
@@ -21,7 +31,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-line">
-                        @foreach ($roles as $role)
+                        @forelse ($roles as $role)
                             @php
                                 $count = $role->permissionCount();
                                 $share = $total > 0 ? (int) round($count / $total * 100) : 0;
@@ -68,7 +78,9 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr><td colspan="5"><x-ui.empty-state icon="shield-check" :title="__('admin.roles.empty')" /></td></tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

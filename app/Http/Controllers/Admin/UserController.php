@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,9 +21,13 @@ final class UserController extends Controller
         Gate::authorize('viewAny', User::class);
 
         $search = $request->string('q')->trim()->toString();
+        $role = $request->integer('role') ?: null;
+        $status = in_array($request->query('status'), ['active', 'inactive'], true) ? $request->query('status') : null;
 
         $users = User::query()
             ->with('role')
+            ->when($role, fn ($query, int $roleId) => $query->where('role_id', $roleId))
+            ->when($status, fn ($query, string $state) => $query->where('is_active', $state === 'active'))
             ->addSelect([
                 'granted_count' => DB::table('permission_user')->selectRaw('count(*)')->whereColumn('user_id', 'users.id')->where('granted', true),
                 'revoked_count' => DB::table('permission_user')->selectRaw('count(*)')->whereColumn('user_id', 'users.id')->where('granted', false),
@@ -36,7 +41,9 @@ final class UserController extends Controller
             ->paginate(config('appeal.per_page'))
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'search'));
+        $roles = Role::query()->orderByDesc('is_system')->orderBy('id')->get()->mapWithKeys(fn (Role $item): array => [$item->id => $item->name])->all();
+
+        return view('admin.users.index', compact('users', 'search', 'role', 'status', 'roles'));
     }
 
     public function create(): View

@@ -61,21 +61,13 @@ return [
             ],
         ],
         [
-            'key' => 'appearance',
-            'label' => 'ui.nav.appearance',
-            'items' => [
-                ['route' => 'admin.menu.index', 'active' => 'admin.menu.*', 'super' => true, 'label' => 'ui.nav.menu', 'icon' => 'list-tree'],
-                ['route' => 'admin.home-sections.edit', 'active' => 'admin.home-sections.*', 'super' => true, 'label' => 'ui.nav.home_sections', 'icon' => 'layout-list'],
-            ],
-        ],
-        [
             'key' => 'system',
             'label' => 'ui.nav.system',
             'items' => [
                 ['route' => 'admin.users.index', 'active' => 'admin.users.*', 'permission' => 'users.view', 'label' => 'ui.nav.users', 'icon' => 'users'],
                 ['route' => 'admin.roles.index', 'active' => 'admin.roles.*', 'permission' => 'roles.view', 'label' => 'ui.nav.roles', 'icon' => 'shield-check'],
                 ['route' => 'admin.lookups.index', 'active' => 'admin.lookups.*', 'permission' => 'lookups.view', 'label' => 'ui.nav.lookups', 'icon' => 'tags'],
-                ['route' => 'admin.settings.edit', 'active' => 'admin.settings.*', 'permission' => 'settings.update', 'label' => 'ui.nav.settings', 'icon' => 'settings'],
+                ['route' => 'admin.settings.edit', 'active' => ['admin.settings.*', 'admin.menu.*', 'admin.home-sections.*'], 'permission' => 'settings.update', 'label' => 'ui.nav.settings', 'icon' => 'settings'],
             ],
         ],
     ],

@@ -57,17 +57,21 @@ final class SiteLayoutTest extends TestCase
         $this->get(route('admin.home-sections.edit'))->assertOk();
     }
 
-    public function test_only_the_super_admin_sees_the_layout_links(): void
+    public function test_layout_screens_live_as_tabs_inside_site_settings_for_the_super_admin_only(): void
     {
         $this->actingAs(User::factory()->administrator()->create())
-            ->get(route('admin.dashboard'))
+            ->get(route('admin.settings.edit'))
+            ->assertOk()
             ->assertDontSee(route('admin.menu.index'))
             ->assertDontSee(route('admin.home-sections.edit'));
 
-        $this->actingAs($this->superAdmin())
-            ->get(route('admin.dashboard'))
-            ->assertSee(route('admin.menu.index'))
-            ->assertSee(route('admin.home-sections.edit'));
+        $this->actingAs($this->superAdmin());
+
+        foreach ([route('admin.settings.edit'), route('admin.menu.index'), route('admin.home-sections.edit')] as $url) {
+            $this->get($url)->assertOk()->assertSee(route('admin.menu.index'))->assertSee(route('admin.home-sections.edit'));
+        }
+
+        $this->get(route('admin.dashboard'))->assertDontSee(route('admin.menu.index'));
     }
 
     public function test_default_menu_is_seeded_in_both_languages(): void

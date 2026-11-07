@@ -9,6 +9,8 @@
             </x-slot:actions>
         </x-ui.page-header>
 
+        @include('admin.settings.partials.tabs')
+
         <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
             <x-ui.card :padding="false" class="overflow-hidden">
                 <div class="flex items-center gap-3 border-b border-line bg-surface-2/60 px-4 py-3 sm:px-5">

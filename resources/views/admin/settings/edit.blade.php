@@ -12,6 +12,8 @@
     <div class="mx-auto max-w-6xl space-y-6">
         <x-ui.page-header icon="settings" :title="__('admin.settings.title')" :subtitle="__('admin.settings.subtitle')" />
 
+        @include('admin.settings.partials.tabs')
+
         <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" class="space-y-6" novalidate>
             @csrf
             @method('PUT')

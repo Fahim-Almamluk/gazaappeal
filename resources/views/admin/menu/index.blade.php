@@ -10,6 +10,8 @@
             </x-slot:actions>
         </x-ui.page-header>
 
+        @include('admin.settings.partials.tabs')
+
         <x-ui.card class="space-y-3">
             <p class="text-xs font-bold text-ink-subtle">{{ __('admin.menu.preview') }}</p>
             <div x-data="sortPreview" x-on:sorted.window="sync" data-group="menu-root" class="overflow-x-auto pb-1">

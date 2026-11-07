@@ -633,6 +633,11 @@ return [
     ],
 
     'settings' => [
+        'tabs' => [
+            'general' => 'General',
+            'menu' => 'Site menu',
+            'home' => 'Home sections',
+        ],
         'title' => 'Site settings',
         'subtitle' => 'Contact details, headline figures and social media accounts.',
         'hint' => 'Changes appear on the site as soon as you save.',

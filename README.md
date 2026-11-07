@@ -50,11 +50,8 @@ ADMIN_PASSWORD=
 php artisan key:generate
 php artisan migrate
 php artisan db:seed
-php artisan db:seed --class=DemoContentSeeder
 php artisan storage:link
 ```
-
-`DemoContentSeeder` يضيف محتوى تجريبيًا بصور، ولا يُستعمل على الخادم الحقيقي.
 
 ## التشغيل
 

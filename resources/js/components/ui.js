@@ -1,6 +1,10 @@
 export const dropdown = () => ({
     open: false,
 
+    show() {
+        this.open = true;
+    },
+
     toggle() {
         this.open = !this.open;
     },
@@ -175,6 +179,26 @@ export const methodFields = () => ({
 
     get isBank() {
         return this.type === this.$root.dataset.bank;
+    },
+});
+
+export const menuFields = () => ({
+    type: 'page',
+
+    init() {
+        this.type = this.$refs.type.value;
+    },
+
+    sync() {
+        this.type = this.$refs.type.value;
+    },
+
+    get isPage() {
+        return this.type === 'page';
+    },
+
+    get isUrl() {
+        return this.type === 'url';
     },
 });
 

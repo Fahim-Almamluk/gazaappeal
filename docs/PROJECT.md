@@ -88,6 +88,7 @@ npm run build
 - `lookups`: type (`LookupType`), name (مترجم)، icon (اختياري)، tone (اختياري)، sort_order، is_active. جدول واحد لكل الثوابت المُدارة من اللوحة.
 - `volunteers`: name, email, phone, country, expertise_id (→ `lookups`), experience_years, message, status, notes, reviewed_by.
 - `contact_messages`: name, email, phone, organization, body, read_at, archived_at.
+- `menu_items`: parent_id (→ نفسه، حذف متسلسل)، page (مفتاح مسار من `navigation.pages`)، url، label (مترجم)، sort_order، is_visible. بلا timestamps.
 
 - حقول المحتوى القابلة للعرض مترجمة (عمود `text` يحمل JSON مثل `{"ar":"…","en":"…"}`) عبر `HasTranslations`: projects(title, summary, body)، losses(title, unit, description)، stories(title, summary, body)، partners(name)، faqs(question, answer)، gallery_items(caption)، donation_methods(name, description)، damages(item). بيانات البنك الإنجليزية مفاتيح `*_en` داخل `bank_details`، وعنوان التواصل الإنجليزي إعداد `contact_address_en`.
 
@@ -114,7 +115,7 @@ npm run build
 
 ## 7. لوحة التحكم (`/admin`)
 
-الهيكل (`config/navigation.php`): الرئيسية؛ المحتوى (المشاريع، الخسائر، **أضرار المحافظات**، قصص النجاح، معرض الصور، الشركاء، الأسئلة الشائعة، **محتوى الصفحات**)؛ التبرعات (طرق التبرع)؛ الوارد (طلبات التطوع، رسائل التواصل)؛ النظام (المستخدمون، الأدوار والصلاحيات، **الثوابت**، إعدادات الموقع). كل عنصر يظهر حسب صلاحية `*.view` الخاصة به.
+الهيكل (`config/navigation.php`): الرئيسية؛ المحتوى (المشاريع، الخسائر، **أضرار المحافظات**، قصص النجاح، معرض الصور، الشركاء، الأسئلة الشائعة، **محتوى الصفحات**)؛ التبرعات (طرق التبرع)؛ الوارد (طلبات التطوع، رسائل التواصل)؛ **واجهة الموقع** (قائمة الموقع، أقسام الرئيسية: للسوبر أدمن فقط، القسم 20)؛ النظام (المستخدمون، الأدوار والصلاحيات، **الثوابت**، إعدادات الموقع). كل عنصر يظهر حسب صلاحية `*.view` الخاصة به (أو `super => true` للسوبر أدمن).
 
 - **محتوى الصفحات** (`/admin/pages`، صلاحية `pages.update`، `PageContentController`): نصوص «من نحن» (التعريف، الرؤية، المهمة، إطار العمل) و«الخسائر» (حالة الشبكة، التسلسل الزمني، الأثر، دعوة التبرع) بلغتين. الحقول معرّفة في `config/pages.php` والنصوص الافتراضية تبقى في `lang/*/site.php`؛ تُخزَّن في جدول `settings` بمفاتيح `page_*` و`page_*_en` **فقط عند اختلافها عن الافتراضي** (الحقل الفارغ أو المطابق للافتراضي يحذف الصف). القراءة عبر `App\Support\PageContent::text('about.intro')` (كاش `page-content`). لون شارة الحالة (`tone`) والأيقونات تبقى في الكود.
 - **القائمة الجانبية** (`admin/partials/sidebar`): بلا خطوط فاصلة ولا حدود، تنفصل عن المحتوى بظل ناعم. المجموعات مفتوحة تلقائيًا وقابلة للإغلاق (`navGroup` في `ui.js`) بعنوان صغير هادئ وسهم ونقطة زرقاء إن كانت تحوي الصفحة الحالية، بلا عدّادات؛ مجموعة «الرئيسية» ثابتة (`collapsible => false`). العنصر النشط بتدرج أزرق بارز (لمعة وظل)، والتأشير خلفية ناعمة مع حركة بسيطة للأيقونة. في وضع الطي تُخفى العناوين وتبقى الأيقونات.
@@ -136,7 +137,7 @@ npm run build
 
 ## 9. الاختبارات
 
-177 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
+197 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest, SiteLayoutTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 
@@ -235,3 +236,12 @@ npm run build
 - **قاعدة المستوى**: غير السوبر أدمن يسند ويدير فقط ما هو **أدنى منه** (صلاحيات الدور مجموعة جزئية فعلية من صلاحياته: `User::canManageRole()`). لذلك لا ينشئ الأدمن أدمن مثله ولا يعدّل أدمن زميلًا (تعديل/إيقاف/صلاحيات)، بينما السوبر أدمن يستطيع. لإنشاء أدمن استعمل حساب السوبر أدمن.
 - **الخريطة بالإنجليزية**: أسماء المحافظات ومبالغها في طبقة نص منفصلة فوق كل المسارات (حتى لا تغطيها محافظة مجاورة)، وحجم الخط يتناسب عكسيًا مع طول الاسم (11–17)، وتأثير التأشير بتغيير لون الحد بدل الرفع. شريط الأرقام: النص يلتفّ داخل خانته (`text-balance` و`min-w-0`).
 - **بحر الخريطة**: جُرّبت طبقة بحر مرسومة (تدرّج وأمواج) ثم **أُلغيت بطلب صاحب المشروع**؛ الخريطة تبقى بالخطوط المنقّطة وتسمية «البحر المتوسط». لا حد أبيض حول أسماء المحافظات.
+
+## 20. قائمة الموقع وأقسام الرئيسية والشعار (للسوبر أدمن)
+
+- **الصلاحية**: المسارات `admin.menu.*` و`admin.home-sections.*` تُفرض في `AuthorizePermission` عبر `config/permissions.php → super_admin_routes` (يُرفض غير السوبر أدمن بـ403)، وليست ضمن شجرة الصلاحيات. عناصر السايدبار تحمل `'super' => true`، ومجموعتها «واجهة الموقع».
+- **قائمة الموقع** (`/admin/menu`، `MenuController`): جدول `menu_items`، مستويان فقط (أب ← أبناء) وحدّان في `navigation.limits` (8 رئيسية، 10 فرعية لكل قائمة). نوع العنصر لا يُخزَّن: `page` (مفتاح من `navigation.pages`، والاسم اختياري ويرجع لاسم الصفحة بالنص المترجم)، أو `url` (https فقط)، أو قائمة منسدلة بلا رابط (تحتاج اسمًا وأبناء وإلا لا تظهر). مفاتيح الصفحات أسماء مسارات فيها نقطة (`projects.index`) فاقرأها بـ`config('navigation.pages')[$key]` **لا** `config("navigation.pages.$key")`. الهجرة تزرع القائمة الافتراضية (`navigation.defaults`)، و«استعادة الافتراضي» (`SiteMenu::reset()`) تعيد زرعها، وإن فرغ الجدول يُستعمل الافتراضي تلقائيًا. `App\Support\SiteMenu` يبني الشجرة (كاش `site-menu` يُمسح عند كل تعديل) ويحسب الحالة النشطة ويحذف أبناء الأب المخفي والمنسدلة الفارغة. الهيدر: قائمة منسدلة بالتأشير والنقر في الديسكتوب، وأكورديون في الجوال.
+- **أقسام الرئيسية** (`/admin/home-sections`، `HomeSectionController`): الأقسام معرّفة في `config/home.php` (الهيرو ثابت أولًا)، والترتيب والإخفاء في مفتاح `home_sections` بجدول `settings` (JSON: `order` و`hidden`) بلا جدول جديد، عبر `App\Support\HomeSections` (قسم جديد في الكود يظهر آخرًا، ومفتاح محذوف يُتجاهل). كل قسم عرض مستقل `site/sections/{key}.blade.php`؛ `HomeController` يجلب بيانات الأقسام الظاهرة فقط، و`home.blade.php` يعرضها بالترتيب ويضبط المسافات وحدود الأشرطة (`x-site.band`) تلقائيًا حسب الموضع، ويتجاهل القسم الفارغ. إضافة قسم = مفتاح في `config/home.php` + عرض + حالة في `HomeController::dataFor` + نصوص `admin.home_sections.sections.*` بلغتين.
+- **الترتيب بالسحب**: المكوّن `sortList` في `resources/js/components/sort.js` (سحب HTML5 + أسهم أعلى/أسفل للمس ولوحة المفاتيح + زر العين) يحفظ فورًا بـ`PUT` JSON (`{items: [{id, visible}]}`) ويعرض تنبيه `notify`، و`sortPreview` يحدّث المعاينة الحية. السحب داخل المجموعة نفسها فقط؛ نقل عنصر بين الأب والآخر من نموذج التعديل (حقل «يتبع للعنصر»).
+- **الشعار** (إعدادات الموقع ← الشعار): `logo_ar` و`logo_en` و`logo_mark` في `settings` (مسارات داخل `branding/` على القرص public، jpg/png/webp حتى 4MB، بلا SVG)، مع خانة «العودة للافتراضي». `x-brand.logo` و`x-brand.mark` والـfavicon تقرأها عبر `SiteSettings::imageUrl()` وترجع للملفات الأصلية في `public/images/brand`.
+- **ملاحظة تشغيل**: الهجرة `2026_11_07_142728_create_menu_items_table` جديدة، شغّل `php artisan migrate` ثم `npm run build`.

@@ -7,12 +7,13 @@ import bankCard from './components/bank-card';
 import damageMap from './components/damage-map';
 import gallery from './components/gallery';
 import permissionTree from './components/permission-tree';
+import { sortList, sortPreview } from './components/sort';
 import { registerCleanUrl } from './components/clean-url';
 import { registerConfirmations } from './components/confirm';
 import { registerFlash } from './components/flash';
 import { registerFormGuard } from './components/form-guard';
 import { registerScrollEffects } from './components/scroll-effects';
-import { copyText, dropdown, imagePreview, localeTabs, methodFields, navGroup, passwordField, passwordStrength, submitGuard, tabs } from './components/ui';
+import { copyText, dropdown, imagePreview, localeTabs, menuFields, methodFields, navGroup, passwordField, passwordStrength, submitGuard, tabs } from './components/ui';
 
 Alpine.plugin(focus);
 
@@ -31,6 +32,9 @@ Alpine.data('copyText', copyText);
 Alpine.data('imagePreview', imagePreview);
 Alpine.data('localeTabs', localeTabs);
 Alpine.data('methodFields', methodFields);
+Alpine.data('menuFields', menuFields);
+Alpine.data('sortList', sortList);
+Alpine.data('sortPreview', sortPreview);
 Alpine.data('navGroup', navGroup);
 Alpine.data('tabs', tabs);
 

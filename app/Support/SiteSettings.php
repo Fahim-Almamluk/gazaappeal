@@ -24,6 +24,13 @@ final class SiteSettings
         return $this->all()[$key] ?? null;
     }
 
+    public function imageUrl(string $key): ?string
+    {
+        $path = $this->get($key);
+
+        return filled($path) ? asset('storage/'.$path) : null;
+    }
+
     public function localized(string $key): ?string
     {
         $locale = app()->getLocale();

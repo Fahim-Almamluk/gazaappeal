@@ -61,5 +61,7 @@ return [
         'destroy' => 'delete',
     ],
 
+    'super_admin_routes' => ['admin.menu.', 'admin.home-sections.'],
+
     'public_routes' => ['admin.dashboard', 'admin.profile.edit', 'admin.profile.update', 'admin.profile.password', 'admin.impersonation.leave'],
 ];

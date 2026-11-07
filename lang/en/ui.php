@@ -64,7 +64,16 @@ return [
         'restore' => ['title' => 'Restore message', 'text' => 'The message from “:name” will return to the inbox.', 'ok' => 'Yes, restore'],
         'deactivate' => ['title' => 'Deactivate account', 'text' => '“:name” will be blocked from the dashboard immediately.', 'ok' => 'Yes, deactivate'],
         'activate' => ['title' => 'Activate account', 'text' => '“:name” will be able to access the dashboard again.', 'ok' => 'Yes, activate'],
+        'reset_menu' => ['title' => 'Restore the default menu', 'text' => 'Your changes to the site menu will be discarded and the original menu will return.', 'ok' => 'Yes, restore'],
+        'reset_home' => ['title' => 'Restore the home layout', 'text' => 'The order and visibility of the sections will return to the original.', 'ok' => 'Yes, restore'],
         'impersonate' => ['title' => 'Sign in as user', 'text' => 'You will browse the dashboard with “:name”’s permissions until you switch back.', 'ok' => 'Yes, sign in'],
+    ],
+
+    'sort' => [
+        'drag' => 'Drag to reorder',
+        'up' => 'Move up',
+        'down' => 'Move down',
+        'toggle' => 'Show or hide',
     ],
 
     'flash' => [
@@ -135,6 +144,9 @@ return [
         'inbox' => 'Inbox',
         'volunteers' => 'Volunteer applications',
         'messages' => 'Contact messages',
+        'appearance' => 'Site appearance',
+        'menu' => 'Site menu',
+        'home_sections' => 'Home sections',
         'system' => 'System',
         'users' => 'Users',
         'roles' => 'Roles & permissions',

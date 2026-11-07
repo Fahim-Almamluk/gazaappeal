@@ -1,6 +1,7 @@
 @props(['title' => null, 'index' => false, 'description' => null])
 
 @inject('localization', 'App\Support\Localization')
+@inject('settings', 'App\Support\SiteSettings')
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ $localization->direction() }}" data-theme="light" data-v-required="{{ __('validation.client.required') }}" data-v-invalid="{{ __('validation.client.invalid') }}" data-v-short="{{ __('validation.client.too_short') }}" data-v-long="{{ __('validation.client.too_long') }}" data-v-range="{{ __('validation.client.out_of_range') }}" data-v-summary="{{ __('validation.client.summary') }}" data-v-tamper="{{ __('validation.client.tamper') }}" data-v-ok="{{ __('validation.client.ok') }}">
@@ -25,7 +26,7 @@
         <meta name="robots" content="noindex, nofollow">
     @endif
     <title>{{ $title ? $title.' · ' : '' }}{{ __('ui.brand.name') }}</title>
-    <link rel="icon" href="{{ asset('images/brand/mark.png') }}" type="image/png">
+    <link rel="icon" href="{{ $settings->imageUrl('logo_mark') ?? asset('images/brand/mark.png') }}">
     <script nonce="{{ Vite::cspNonce() }}">
         (() => {
             try {

@@ -12,6 +12,7 @@ return [
         'projects' => 'Projects',
         'volunteer' => 'Volunteers',
         'stories' => 'Success Stories',
+        'gallery' => 'Photo gallery',
         'contact' => 'Contact',
         'donate' => 'Donate Now',
         'faq' => 'FAQ',

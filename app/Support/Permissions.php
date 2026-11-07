@@ -76,6 +76,11 @@ final class Permissions
         return in_array($routeName, config('permissions.public_routes'), true);
     }
 
+    public function isSuperAdminRoute(string $routeName): bool
+    {
+        return Str::startsWith($routeName, config('permissions.super_admin_routes'));
+    }
+
     private function actionLabel(string $module, string $action): string
     {
         $override = "permissions.overrides.{$module}.{$action}";

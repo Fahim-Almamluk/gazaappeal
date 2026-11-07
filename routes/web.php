@@ -77,6 +77,14 @@ Route::prefix('admin')
         Route::resource('roles', Admin\RoleController::class)->except('show');
         Route::resource('lookups', Admin\LookupController::class)->except('show');
 
+        Route::put('menu/order', [Admin\MenuController::class, 'reorder'])->name('menu.reorder');
+        Route::post('menu/reset', [Admin\MenuController::class, 'reset'])->name('menu.reset');
+        Route::resource('menu', Admin\MenuController::class)->except('show')->parameters(['menu' => 'menuItem']);
+
+        Route::get('home-sections', [Admin\HomeSectionController::class, 'edit'])->name('home-sections.edit');
+        Route::put('home-sections', [Admin\HomeSectionController::class, 'update'])->name('home-sections.update');
+        Route::post('home-sections/reset', [Admin\HomeSectionController::class, 'reset'])->name('home-sections.reset');
+
         Route::get('pages', [Admin\PageContentController::class, 'edit'])->name('pages.edit');
         Route::put('pages', [Admin\PageContentController::class, 'update'])->name('pages.update');
 

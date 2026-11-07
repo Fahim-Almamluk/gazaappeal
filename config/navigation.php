@@ -1,15 +1,26 @@
 <?php
 
 return [
-    'public' => [
-        ['route' => 'home', 'label' => 'site.nav.home'],
-        ['route' => 'about', 'label' => 'site.nav.about'],
-        ['route' => 'losses', 'label' => 'site.nav.losses'],
-        ['route' => 'projects.index', 'active' => 'projects.*', 'label' => 'site.nav.projects'],
-        ['route' => 'volunteer.create', 'active' => 'volunteer.*', 'label' => 'site.nav.volunteer'],
-        ['route' => 'stories.index', 'active' => 'stories.*', 'label' => 'site.nav.stories'],
-        ['route' => 'contact.create', 'active' => 'contact.*', 'label' => 'site.nav.contact'],
+    'limits' => [
+        'roots' => 8,
+        'children' => 10,
     ],
+
+    'pages' => [
+        'home' => ['label' => 'site.nav.home', 'active' => 'home'],
+        'about' => ['label' => 'site.nav.about', 'active' => 'about'],
+        'losses' => ['label' => 'site.nav.losses', 'active' => 'losses'],
+        'projects.index' => ['label' => 'site.nav.projects', 'active' => 'projects.*'],
+        'stories.index' => ['label' => 'site.nav.stories', 'active' => 'stories.*'],
+        'gallery' => ['label' => 'site.nav.gallery', 'active' => 'gallery'],
+        'donate' => ['label' => 'site.nav.donate', 'active' => 'donate'],
+        'volunteer.create' => ['label' => 'site.nav.volunteer', 'active' => 'volunteer.*'],
+        'contact.create' => ['label' => 'site.nav.contact', 'active' => 'contact.*'],
+        'faq' => ['label' => 'site.nav.faq', 'active' => 'faq'],
+        'privacy' => ['label' => 'site.nav.privacy', 'active' => 'privacy'],
+    ],
+
+    'defaults' => ['home', 'about', 'losses', 'projects.index', 'volunteer.create', 'stories.index', 'contact.create'],
 
     'admin' => [
         [
@@ -47,6 +58,14 @@ return [
             'items' => [
                 ['route' => 'admin.volunteers.index', 'active' => 'admin.volunteers.*', 'permission' => 'volunteers.view', 'label' => 'ui.nav.volunteers', 'icon' => 'user-plus'],
                 ['route' => 'admin.messages.index', 'active' => 'admin.messages.*', 'permission' => 'messages.view', 'label' => 'ui.nav.messages', 'icon' => 'mail'],
+            ],
+        ],
+        [
+            'key' => 'appearance',
+            'label' => 'ui.nav.appearance',
+            'items' => [
+                ['route' => 'admin.menu.index', 'active' => 'admin.menu.*', 'super' => true, 'label' => 'ui.nav.menu', 'icon' => 'list-tree'],
+                ['route' => 'admin.home-sections.edit', 'active' => 'admin.home-sections.*', 'super' => true, 'label' => 'ui.nav.home_sections', 'icon' => 'layout-list'],
             ],
         ],
         [

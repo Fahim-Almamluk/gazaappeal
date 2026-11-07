@@ -4,7 +4,7 @@
     $groups = collect(config('navigation.admin'))
         ->map(function (array $group) use ($user): array {
             $items = collect($group['items'])
-                ->reject(fn (array $item): bool => isset($item['permission']) && ! $user->hasPermission($item['permission']))
+                ->reject(fn (array $item): bool => (isset($item['permission']) && ! $user->hasPermission($item['permission'])) || (isset($item['super']) && ! $user->isSuperAdmin()))
                 ->map(fn (array $item): array => [...$item, 'active' => request()->routeIs($item['active'] ?? $item['route'])])
                 ->values();
 

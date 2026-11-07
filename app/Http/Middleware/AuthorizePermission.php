@@ -17,7 +17,9 @@ final class AuthorizePermission
     {
         $route = (string) $request->route()?->getName();
 
-        if (! $this->permissions->isPublicRoute($route)) {
+        if ($this->permissions->isSuperAdminRoute($route)) {
+            abort_unless($request->user()?->isSuperAdmin(), Response::HTTP_FORBIDDEN);
+        } elseif (! $this->permissions->isPublicRoute($route)) {
             $permission = $this->permissions->forRoute($route);
 
             abort_unless($permission !== null && $request->user()?->hasPermission($permission), Response::HTTP_FORBIDDEN);

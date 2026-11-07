@@ -1,0 +1,1 @@
+<x-site.damage-map :damages="$damages" :categories="$damageCategories" />

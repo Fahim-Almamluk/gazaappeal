@@ -30,6 +30,28 @@ export const passwordField = () => ({
     },
 });
 
+const hasCase = (value) => /\p{Ll}/u.test(value) && /\p{Lu}/u.test(value);
+
+export const passwordStrength = () => ({
+    measure(event) {
+        const value = event.target.value;
+        const rules = { min: value.length >= 8, case: hasCase(value), digit: /\p{N}/u.test(value) };
+        const accepted = rules.min && rules.case && rules.digit;
+        const bonus = Number(value.length >= 12) + Number(/[^\p{L}\p{N}]/u.test(value));
+        const level = value === '' ? 0 : accepted ? 2 + bonus : 1;
+        const names = ['', 'weak', 'medium', 'strong', 'veryStrong'];
+
+        this.$root.dataset.tone = ['', 'danger', 'warning', 'success', 'success'][level];
+        this.$root.querySelectorAll('[data-segment]').forEach((segment) => {
+            segment.dataset.on = String(level >= Number(segment.dataset.segment));
+        });
+        this.$refs.label.textContent = level === 0 ? '' : this.$root.dataset[names[level]];
+        this.$root.querySelectorAll('[data-rule]').forEach((item) => {
+            item.dataset.met = String(rules[item.dataset.rule]);
+        });
+    },
+});
+
 export const submitGuard = () => ({
     busy: false,
 
@@ -39,28 +61,6 @@ export const submitGuard = () => ({
 
     get idle() {
         return !this.busy;
-    },
-});
-
-export const toast = () => ({
-    visible: true,
-    gone: false,
-
-    init() {
-        setTimeout(() => this.dismiss(), Number(this.$el.dataset.timeout ?? 6000));
-    },
-
-    dismiss() {
-        this.visible = false;
-        setTimeout(() => (this.gone = true), 320);
-    },
-
-    get shown() {
-        return !this.gone;
-    },
-
-    get fade() {
-        return this.visible ? '' : 'opacity-0';
     },
 });
 

@@ -68,6 +68,20 @@ return [
         'impersonate' => ['title' => 'Sign in as user', 'text' => 'You will browse the dashboard with “:name”’s permissions until you switch back.', 'ok' => 'Yes, sign in'],
     ],
 
+    'flash' => [
+        'invalid' => 'Could not save. Check the fields marked in red.',
+    ],
+
+    'password' => [
+        'min' => 'At least 8 characters',
+        'case' => 'An upper and a lower case letter (A and a)',
+        'digit' => 'At least one number',
+        'weak' => 'Weak',
+        'medium' => 'Medium',
+        'strong' => 'Strong',
+        'very_strong' => 'Very strong',
+    ],
+
     'results' => [
         'total' => 'Results',
         'range' => 'Showing :from – :to',

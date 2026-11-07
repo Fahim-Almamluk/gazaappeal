@@ -39,5 +39,7 @@
 </head>
 <body {{ $attributes->class('min-h-dvh') }}>
     {{ $slot }}
+
+    <x-ui.flash />
 </body>
 </html>

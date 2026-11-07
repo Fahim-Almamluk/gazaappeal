@@ -47,11 +47,10 @@ final class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('forms', fn (Request $request): Limit => Limit::perMinute(5)->by('forms|'.$request->ip()));
 
-        Password::defaults(fn () => Password::min(12)
+        Password::defaults(fn () => Password::min(8)
             ->letters()
             ->mixedCase()
             ->numbers()
-            ->symbols()
             ->when($this->app->isProduction(), fn (Password $rule) => $rule->uncompromised(3)));
     }
 }

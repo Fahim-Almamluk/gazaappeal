@@ -48,10 +48,16 @@ return [
 
     'password' => [
         'letters' => 'يجب أن تحتوي :attribute على حرف واحد على الأقل.',
-        'mixed' => 'يجب أن تحتوي :attribute على حرف كبير وحرف صغير على الأقل.',
+        'mixed' => 'يجب أن تحتوي :attribute على حرف كبير وحرف صغير (A و a) على الأقل.',
         'numbers' => 'يجب أن تحتوي :attribute على رقم واحد على الأقل.',
         'symbols' => 'يجب أن تحتوي :attribute على رمز واحد على الأقل.',
         'uncompromised' => 'ظهرت :attribute المُدخلة في تسريب بيانات، اختر كلمة مرور أخرى.',
+    ],
+
+    'custom' => [
+        'password' => [
+            'min' => 'يجب أن تتكوّن :attribute من :min خانات على الأقل.',
+        ],
     ],
 
     'client' => [

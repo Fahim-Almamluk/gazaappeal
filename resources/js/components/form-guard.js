@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2/dist/sweetalert2.esm.js';
+import { notify } from './flash';
 
 const FIELDS = 'input[data-req], select[data-req], textarea[data-req]';
 const ERROR_CLASS = 'app-client-error';
@@ -81,15 +82,7 @@ export const registerFormGuard = () => {
             invalid.forEach((field) => field.dispatchEvent(new CustomEvent('reveal-field', { bubbles: true })));
             invalid[0].focus({ preventScroll: false });
 
-            Swal.fire({
-                toast: true,
-                position: 'top',
-                icon: 'warning',
-                title: text('Summary'),
-                showConfirmButton: false,
-                timer: 3500,
-                customClass: { popup: 'app-swal-toast' },
-            });
+            notify({ type: 'warning', title: text('Summary') });
         },
         true,
     );

@@ -8,12 +8,6 @@
     @include('site.partials.header')
 
     <main id="content" class="pb-20 has-[>[data-band]:last-child]:pb-0">
-        @if (session('success'))
-            <div class="mx-auto mt-6 w-full max-w-[1280px] px-5 sm:px-8">
-                <x-ui.alert tone="success">{{ session('success') }}</x-ui.alert>
-            </div>
-        @endif
-
         {{ $slot }}
     </main>
 

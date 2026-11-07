@@ -23,7 +23,7 @@ final class ImpersonationController extends Controller
 
         $this->impersonation->start($request->user(), $user);
 
-        return to_route('admin.dashboard')->with('success', __('admin.impersonation.started', ['name' => $user->name]));
+        return to_route('admin.dashboard');
     }
 
     public function destroy(Request $request): RedirectResponse

@@ -36,5 +36,4 @@
 
     <x-ui.scroll-top />
 
-    @include('admin.partials.toasts')
 </x-layouts.base>

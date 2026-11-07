@@ -27,10 +27,10 @@
 
             <x-ui.form-section step="2" :title="__('admin.users.sections.password')" :description="$editing ? __('admin.users.sections.password_edit_hint') : __('admin.users.sections.password_hint')">
                 @if ($editing)
-                    <x-ui.password name="password" :label="__('admin.users.fields.password')" autocomplete="new-password" />
+                    <x-ui.password name="password" :label="__('admin.users.fields.password')" autocomplete="new-password" strength />
                     <x-ui.password name="password_confirmation" :label="__('admin.users.fields.password_confirmation')" autocomplete="new-password" />
                 @else
-                    <x-ui.password name="password" :label="__('admin.users.fields.password')" autocomplete="new-password" required />
+                    <x-ui.password name="password" :label="__('admin.users.fields.password')" autocomplete="new-password" required strength />
                     <x-ui.password name="password_confirmation" :label="__('admin.users.fields.password_confirmation')" autocomplete="new-password" required />
                 @endif
             </x-ui.form-section>

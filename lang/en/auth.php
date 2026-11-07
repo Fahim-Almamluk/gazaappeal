@@ -17,7 +17,7 @@ return [
         'title' => 'Sign in',
         'subheading' => 'Gaza Electricity Appeal dashboard',
         'email_placeholder' => 'name@gedco.ps',
-        'password_placeholder' => 'At least 12 characters',
+        'password_placeholder' => 'Enter your password',
         'submit' => 'Sign in',
         'submitting' => 'Verifying…',
         'show_password' => 'Show password',

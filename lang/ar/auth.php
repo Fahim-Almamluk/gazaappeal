@@ -17,7 +17,7 @@ return [
         'title' => 'تسجيل الدخول',
         'subheading' => 'لوحة إدارة نداء كهرباء غزة',
         'email_placeholder' => 'name@gedco.ps',
-        'password_placeholder' => '12 حرفًا على الأقل',
+        'password_placeholder' => 'أدخل كلمة المرور',
         'submit' => 'تسجيل الدخول',
         'submitting' => 'جارٍ التحقق…',
         'show_password' => 'إظهار كلمة المرور',

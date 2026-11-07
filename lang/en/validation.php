@@ -54,6 +54,12 @@ return [
         'uncompromised' => 'The given :attribute has appeared in a data leak. Please choose a different password.',
     ],
 
+    'custom' => [
+        'password' => [
+            'min' => 'The :attribute must be at least :min characters long.',
+        ],
+    ],
+
     'client' => [
         'required' => 'This field is required.',
         'invalid' => 'The value entered is invalid.',

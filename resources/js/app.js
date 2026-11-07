@@ -9,9 +9,10 @@ import gallery from './components/gallery';
 import permissionTree from './components/permission-tree';
 import { registerCleanUrl } from './components/clean-url';
 import { registerConfirmations } from './components/confirm';
+import { registerFlash } from './components/flash';
 import { registerFormGuard } from './components/form-guard';
 import { registerScrollEffects } from './components/scroll-effects';
-import { copyText, dropdown, imagePreview, localeTabs, methodFields, navGroup, passwordField, submitGuard, tabs, toast } from './components/ui';
+import { copyText, dropdown, imagePreview, localeTabs, methodFields, navGroup, passwordField, passwordStrength, submitGuard, tabs } from './components/ui';
 
 Alpine.plugin(focus);
 
@@ -24,8 +25,8 @@ Alpine.data('gallery', gallery);
 Alpine.data('permissionTree', permissionTree);
 Alpine.data('dropdown', dropdown);
 Alpine.data('passwordField', passwordField);
+Alpine.data('passwordStrength', passwordStrength);
 Alpine.data('submitGuard', submitGuard);
-Alpine.data('toast', toast);
 Alpine.data('copyText', copyText);
 Alpine.data('imagePreview', imagePreview);
 Alpine.data('localeTabs', localeTabs);
@@ -35,6 +36,7 @@ Alpine.data('tabs', tabs);
 
 registerCleanUrl();
 registerFormGuard();
+registerFlash();
 registerConfirmations();
 registerScrollEffects();
 

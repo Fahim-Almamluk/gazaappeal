@@ -128,7 +128,7 @@ npm run build
 ## 8. الأمان
 
 - رؤوس أمان + CSP بـ nonce (`app/Http/Middleware/SecurityHeaders.php`).
-- كلمة المرور: 12 حرفًا على الأقل، مختلطة، بأرقام ورموز.
+- كلمة المرور: 8 خانات على الأقل بحرف كبير وصغير ورقم (الرمز اختياري ويرفع القوة)، وفي الإنتاج تُفحص أيضًا ضد التسريبات.
 - الدخول محدود بـ5 محاولات؛ النماذج العامة محدودة بـ5 في الدقيقة مع honeypot.
 - رفع الصور: القرص `public`، حتى 4MB، jpg/jpeg/png/webp (`ImageStore`).
 - `.env` غير مرفوع، والتطبيق ما زال بوضع `APP_DEBUG=true` المحلي.
@@ -136,7 +136,7 @@ npm run build
 
 ## 9. الاختبارات
 
-141 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
+152 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 
@@ -214,3 +214,10 @@ npm run build
 - **الحذف**: ممنوع لو العنصر مستخدم (ويشمل المشاريع المحذوفة soft)؛ يظهر عدد الاستخدام في الجدول وتُعرض رسالة بالعدد، والمفتاح الأجنبي `restrictOnDelete` حماية إضافية. المعطّل يختفي من القوائم والنماذج الجديدة (`Lookup::options(..., activeOnly)` و`Lookup::rule()` للتحقق، مع السماح بقيمة السجل الحالية عند تعديله) ويبقى ظاهرًا في السجلات القديمة.
 - **الاستعمال**: العلاقات `Project::status` و`Damage::category` و`Volunteer::expertise`؛ حمّلها صراحة بـ`->with()` في كل استعلام يعرضها (`Model::shouldBeStrict`). الشارة بـ`<x-ui.lookup-badge>`. الـ seeders تجد العنصر بالاسم العربي (`SeedsLookups`).
 - **التصدير إلى Excel**: مكتبة `openspout/openspout` (خفيفة وتبث الملف بلا تحميله كله في الذاكرة). الخدمة `App\Support\SpreadsheetExport` تكتب xlsx بترويسة زرقاء وورقة RTL في العربية. الشاشات: المشاريع، الخسائر، أضرار المحافظات، طلبات التطوع، رسائل التواصل (`admin.*.export`، زر أخضر في الترويسة). يصدّر **نتائج الفلاتر الحالية كلها** (لا الصفحة فقط) لأن كل متحكم يستخرج استعلام `filtered()` يستعمله العرض والتصدير. الصلاحية = `*.view` (`route_actions.export`). النصوص تُكتب كنص لا كصيغ، فلا حقن صيغ. أي شاشة جديدة: مسار `export` قبل مسار المورد، ومفاتيح `admin.export.columns.*`.
+
+## 18. التنبيهات وكلمات المرور
+
+- **تنبيه واحد لكل الصفحات** (الإدارة والموقع والدخول): المكوّن `x-ui.flash` (يُضمَّن مرة واحدة في `layouts/base`) يكتب JSON فقط داخل `<script type="application/json" data-flash>` (بلا HTML للتنبيه ومُهرَّب ضد كسر الوسم)، و`resources/js/components/flash.js` يقرؤه ويحذف الوسم فورًا ويعرض تنبيه SweetAlert في **أعلى** الصفحة. لا يوجد `toast` أو `alert` قديم في القوالب؛ أي رسالة جديدة تُرسَل بـ`->with('success'|'error'|'warning'|'info', ...)` فقط.
+- **رسالة واحدة بلا تكرار**: لو اجتمعت رسائل تُعرض الأهم فقط (خطأ ثم تحذير ثم نجاح ثم ملاحظة). أخطاء التحقق: نص الخطأ يبقى **تحت الحقل**، والتنبيه جملة واحدة قصيرة («راجع الحقول المعلّمة بالأحمر») ثم ينتقل التركيز لأول حقل خاطئ (ويفتح تبويب اللغة المخفي)؛ وتُعرض في التنبيه (حتى 3) فقط الأخطاء التي لا يظهر نصها تحت أي حقل. لا ترسل رسالة تكرر ما تقوله الواجهة (مثلًا لا رسالة عند الدخول بحساب مستخدم لأن الشريط الأصفر يقولها). ملخص التحقق في المتصفح (`form-guard.js`) يستعمل `notify()` نفسها.
+- **حدود الحماية**: ما يُعرض للمستخدم من متصفحه لا يمكن حمايته من تعديله هو؛ الحماية هنا أن التنبيه لا يوجد كعنصر قابل للتعديل في HTML وأن كل تحقق وقرار يتم في الخادم.
+- **قوة كلمة المرور**: الخاصية `strength` في `x-ui.password` (حقول كلمة المرور الجديدة فقط: إضافة/تعديل مستخدم والملف الشخصي) تعرض مؤشرًا من 4 مقاطع (ضعيفة/متوسطة/قوية/قوية جدًا) وقائمة الشروط (8 خانات، حرف كبير وصغير A و a، رقم). «ضعيفة» تعني أن الخادم سيرفضها؛ «متوسطة» هي الحد الأدنى المقبول، والطول 12 فأكثر والرمز يرفعان المستوى. المنطق في `passwordStrength` (`ui.js`) ويطابق قاعدة `Password::defaults()` في `AppServiceProvider`. رسالة الحد الأدنى معدّلة في `validation.custom.password.min` (خانات لا أحرف).

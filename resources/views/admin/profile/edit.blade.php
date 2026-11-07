@@ -48,7 +48,7 @@
                     <div class="sm:col-span-2">
                         <x-ui.password name="current_password" bag="password" :label="__('admin.profile.fields.current_password')" autocomplete="current-password" required />
                     </div>
-                    <x-ui.password name="password" bag="password" :label="__('admin.users.fields.password')" autocomplete="new-password" required />
+                    <x-ui.password name="password" bag="password" :label="__('admin.users.fields.password')" autocomplete="new-password" required strength />
                     <x-ui.password name="password_confirmation" bag="password" :label="__('admin.users.fields.password_confirmation')" autocomplete="new-password" required />
                 </x-ui.form-section>
                 <div class="flex justify-end">

@@ -358,7 +358,7 @@ return [
             'identity' => 'Account details',
             'identity_hint' => 'Name, sign-in email and role.',
             'password' => 'Password',
-            'password_hint' => 'At least 12 characters with upper and lower case letters, a number and a symbol.',
+            'password_hint' => 'Choose a strong password.',
             'password_edit_hint' => 'Leave empty to keep the current password.',
         ],
         'fields' => [
@@ -478,7 +478,6 @@ return [
     'impersonation' => [
         'banner' => 'You are browsing the dashboard as :name.',
         'leave' => 'Back to my account',
-        'started' => 'Signed in as :name.',
         'stopped' => 'You are back on your account.',
     ],
 

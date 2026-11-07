@@ -27,13 +27,13 @@
             <x-ui.form-section step="2" :title="__('admin.lookups.sections.appearance')" :description="__('admin.lookups.sections.appearance_hint')">
                 <fieldset class="sm:col-span-2">
                     <legend class="mb-2 text-sm font-semibold text-ink">{{ __('admin.lookups.fields.icon') }}</legend>
-                    <div class="grid grid-cols-6 gap-2 sm:grid-cols-9 lg:grid-cols-12">
-                        <label class="flex aspect-square cursor-pointer items-center justify-center rounded-xl border border-line text-xs font-semibold text-ink-muted transition hover:border-line-strong hover:text-ink has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-soft-ink has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/20">
+                    <div class="flex flex-wrap gap-2">
+                        <label class="flex h-10 min-w-10 cursor-pointer items-center justify-center rounded-xl border border-line px-2 text-xs font-semibold text-ink-muted transition hover:border-line-strong hover:text-ink has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-soft-ink has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/20">
                             <input type="radio" name="icon" value="" class="sr-only" @checked($currentIcon === '')>
                             {{ __('admin.lookups.none') }}
                         </label>
                         @foreach (Lookup::ICONS as $icon)
-                            <label title="{{ $icon }}" class="flex aspect-square cursor-pointer items-center justify-center rounded-xl border border-line text-ink-muted transition hover:border-line-strong hover:text-ink has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-soft-ink has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/20">
+                            <label title="{{ $icon }}" class="flex size-10 cursor-pointer items-center justify-center rounded-xl border border-line text-ink-muted transition hover:border-line-strong hover:text-ink has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-soft-ink has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/20">
                                 <input type="radio" name="icon" value="{{ $icon }}" class="sr-only" @checked($currentIcon === $icon)>
                                 <x-ui.icon :name="$icon" :size="18" />
                                 <span class="sr-only">{{ $icon }}</span>

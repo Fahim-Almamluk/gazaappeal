@@ -1,12 +1,6 @@
 <?php
 
 return [
-    'project_status' => [
-        'Planned' => 'Planned',
-        'Active' => 'In progress',
-        'Completed' => 'Completed',
-    ],
-
     'volunteer_status' => [
         'New' => 'New',
         'Contacted' => 'Contacted',
@@ -14,12 +8,10 @@ return [
         'Declined' => 'Declined',
     ],
 
-    'volunteer_expertise' => [
-        'PowerInfrastructure' => 'Power infrastructure',
-        'ReliefProjects' => 'Relief & emergency project management',
-        'Reconstruction' => 'Energy sector rehabilitation & reconstruction',
-        'RenewableEnergy' => 'Renewable & hybrid energy solutions',
-        'Other' => 'Other field',
+    'lookup_type' => [
+        'ProjectStatus' => 'Project statuses',
+        'DamageCategory' => 'Damage categories',
+        'VolunteerExpertise' => 'Volunteer fields',
     ],
 
     'donation_method_type' => [
@@ -44,13 +36,6 @@ return [
         'Middle' => 'Deir al-Balah',
         'KhanYounis' => 'Khan Younis',
         'Rafah' => 'Rafah',
-    ],
-
-    'damage_category' => [
-        'Networks' => 'Electrical networks',
-        'Buildings' => 'Buildings, stores & centres',
-        'Vehicles' => 'Vehicles, machinery & generators',
-        'Operations' => 'Salaries & operating costs',
     ],
 
     'message_state' => [

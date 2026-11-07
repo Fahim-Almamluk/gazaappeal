@@ -1,6 +1,7 @@
 @php
-    use App\Enums\DamageCategory;
     use App\Enums\Governorate;
+    use App\Enums\LookupType;
+    use App\Models\Lookup;
 
     $editing = $damage->exists;
     $title = $editing ? __('admin.damages.edit') : __('admin.damages.add');
@@ -14,7 +15,7 @@
 
             <x-ui.form-section step="1" :title="__('admin.damages.sections.content')" :description="__('admin.damages.sections.content_hint')">
                 <x-ui.select name="governorate" :label="__('admin.damages.fields.governorate')" :options="Governorate::options()" :selected="$damage->governorate?->value" :placeholder="__('admin.common.choose')" required />
-                <x-ui.select name="category" :label="__('admin.damages.fields.category')" :options="DamageCategory::options()" :selected="$damage->category?->value" :placeholder="__('admin.common.choose')" required />
+                <x-ui.select name="category_id" :label="__('admin.damages.fields.category')" :options="Lookup::options(LookupType::DamageCategory, true, $damage->category_id)" :selected="$damage->category_id" :placeholder="__('admin.common.choose')" required />
                 <div class="sm:col-span-2">
                     <x-ui.translatable name="item" :label="__('admin.damages.fields.item')" :value="$damage->translations('item')" :maxlength="120" required />
                 </div>

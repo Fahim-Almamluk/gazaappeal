@@ -37,6 +37,9 @@
                                         <div class="min-w-0">
                                             <p class="truncate font-semibold text-ink">
                                                 {{ $user->name }}
+                                                @if ($user->is_super_admin)
+                                                    <x-ui.badge tone="warning" icon="crown" class="ms-1">{{ __('admin.users.super_admin') }}</x-ui.badge>
+                                                @endif
                                                 @if ($user->is(auth()->user()))
                                                     <x-ui.badge tone="brand" class="ms-1">{{ __('admin.users.you') }}</x-ui.badge>
                                                 @endif
@@ -45,7 +48,19 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-3 py-3.5"><x-ui.badge :tone="$user->isAdmin() ? 'brand' : 'neutral'" :icon="$user->isAdmin() ? 'shield-check' : null">{{ $user->role?->name ?? __('ui.common.none') }}</x-ui.badge></td>
+                                <td class="px-3 py-3.5">
+                                    <x-ui.badge :tone="$user->isAdmin() ? 'brand' : 'neutral'" :icon="$user->isAdmin() ? 'shield-check' : null">{{ $user->role?->name ?? __('ui.common.none') }}</x-ui.badge>
+                                    @if (! $user->isAdmin() && ($user->granted_count > 0 || $user->revoked_count > 0))
+                                        <div class="mt-1.5 flex flex-wrap gap-1">
+                                            @if ($user->granted_count > 0)
+                                                <x-ui.badge tone="success" icon="plus">{{ trans_choice('admin.users.permissions.granted_count', $user->granted_count, ['count' => $user->granted_count]) }}</x-ui.badge>
+                                            @endif
+                                            @if ($user->revoked_count > 0)
+                                                <x-ui.badge tone="danger" icon="ban">{{ trans_choice('admin.users.permissions.revoked_count', $user->revoked_count, ['count' => $user->revoked_count]) }}</x-ui.badge>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </td>
                                 <td class="px-3 py-3.5">
                                     <x-ui.badge :tone="$user->is_active ? 'success' : 'danger'" :icon="$user->is_active ? 'circle-check' : 'ban'">{{ $user->is_active ? __('ui.status.active') : __('ui.status.inactive') }}</x-ui.badge>
                                 </td>
@@ -58,6 +73,12 @@
                                 </td>
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center justify-end gap-0.5">
+                                        @can('impersonate', $user)
+                                            <form method="POST" action="{{ route('admin.users.impersonate', $user) }}" @confirm('warning', 'impersonate', ['name' => $user->name])>
+                                                @csrf
+                                                <x-ui.icon-button type="submit" icon="log-in" tone="primary" :label="__('admin.users.impersonate')" />
+                                            </form>
+                                        @endcan
                                         @can('permissions', $user)
                                             <x-ui.icon-button icon="shield-check" tone="primary" :label="__('admin.users.permissions.title')" :href="route('admin.users.permissions', $user)" />
                                         @endcan

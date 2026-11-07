@@ -68,7 +68,7 @@
                                     <span class="block text-xs text-ink-subtle">{{ __('admin.projects.no_goal') }}</span>
                                 @endif
                             </span>
-                            <x-ui.badge :tone="$project->status->tone()" :icon="$project->status->icon()">{{ $project->status->label() }}</x-ui.badge>
+                            <x-ui.lookup-badge :lookup="$project->status" />
                         </a>
                     @empty
                         <x-ui.empty-state icon="solar-panel" :title="__('admin.dashboard.no_urgent')" />
@@ -85,10 +85,10 @@
 
                         @forelse ($volunteers as $volunteer)
                             <a href="{{ route('admin.volunteers.show', $volunteer) }}" class="flex items-center gap-3 border-b border-line px-5 py-3 transition last:border-b-0 hover:bg-surface-hover">
-                                <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary-soft-ink"><x-ui.icon :name="$volunteer->expertise->icon()" :size="16" /></span>
+                                <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary-soft-ink"><x-ui.icon :name="$volunteer->expertise->displayIcon()" :size="16" /></span>
                                 <span class="min-w-0 flex-1">
                                     <span class="block truncate text-sm font-semibold text-ink">{{ $volunteer->name }}</span>
-                                    <span class="block truncate text-xs text-ink-subtle">{{ $volunteer->expertise->label() }}</span>
+                                    <span class="block truncate text-xs text-ink-subtle">{{ $volunteer->expertise->name }}</span>
                                 </span>
                                 <x-ui.badge :tone="$volunteer->status->tone()">{{ $volunteer->status->label() }}</x-ui.badge>
                             </a>

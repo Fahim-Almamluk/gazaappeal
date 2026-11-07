@@ -1,6 +1,7 @@
 @php
-    use App\Enums\DamageCategory;
     use App\Enums\Governorate;
+    use App\Enums\LookupType;
+    use App\Models\Lookup;
     use App\Support\Money;
 @endphp
 
@@ -8,6 +9,7 @@
     <div class="space-y-6">
         <x-ui.page-header icon="map-pin" :title="__('admin.damages.title')" :subtitle="__('admin.damages.subtitle')">
             <x-slot:actions>
+                <x-ui.button variant="excel" icon="download" :href="route('admin.damages.export', request()->query())">{{ __('admin.export.button') }}</x-ui.button>
                 @can('damages.create')
                     <x-ui.button :href="route('admin.damages.create')" icon="plus">{{ __('admin.damages.add') }}</x-ui.button>
                 @endcan
@@ -20,7 +22,7 @@
                     <x-ui.select name="governorate" compact :options="Governorate::options()" :selected="$governorate?->value" :placeholder="__('admin.damages.all_governorates')" :aria-label="__('admin.damages.columns.governorate')" />
                 </div>
                 <div class="w-full sm:w-56">
-                    <x-ui.select name="category" compact :options="DamageCategory::options()" :selected="$category?->value" :placeholder="__('admin.damages.all_categories')" :aria-label="__('admin.damages.columns.category')" />
+                    <x-ui.select name="category" compact :options="Lookup::options(LookupType::DamageCategory)" :selected="$category" :placeholder="__('admin.damages.all_categories')" :aria-label="__('admin.damages.columns.category')" />
                 </div>
             </x-ui.filter-bar>
 
@@ -44,10 +46,10 @@
                                 <td class="tabular px-4 py-3.5 text-xs font-semibold text-ink-subtle">{{ $damages->firstItem() + $loop->index }}</td>
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center gap-3">
-                                        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-danger-soft text-danger"><x-ui.icon :name="$damage->category->icon()" :size="18" /></span>
+                                        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-danger-soft text-danger"><x-ui.icon :name="$damage->category->displayIcon()" :size="18" /></span>
                                         <div class="min-w-0">
                                             <p class="truncate font-semibold text-ink">{{ $damage->item }}</p>
-                                            <p class="truncate text-xs text-ink-subtle">{{ $damage->category->label() }}</p>
+                                            <p class="truncate text-xs text-ink-subtle">{{ $damage->category->name }}</p>
                                         </div>
                                     </div>
                                 </td>

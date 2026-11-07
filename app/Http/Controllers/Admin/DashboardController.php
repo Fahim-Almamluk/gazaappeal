@@ -22,14 +22,14 @@ final class DashboardController extends Controller
         return view('admin.dashboard', [
             'user' => $request->user(),
             'stats' => [
-                'projects' => Project::query()->published()->count(),
+                'projects' => Project::query()->with('status')->published()->count(),
                 'raised' => (float) $funding->raised,
                 'goal' => (float) $funding->goal,
                 'volunteers' => Volunteer::query()->where('status', VolunteerStatus::New)->count(),
                 'messages' => ContactMessage::query()->inState(MessageState::Unread)->count(),
             ],
-            'projects' => Project::query()->published()->urgent()->ordered()->take(5)->get(),
-            'volunteers' => Volunteer::query()->latest()->take(5)->get(),
+            'projects' => Project::query()->with('status')->published()->urgent()->ordered()->take(5)->get(),
+            'volunteers' => Volunteer::query()->with('expertise')->latest()->take(5)->get(),
             'messages' => ContactMessage::query()->inState(MessageState::Unread)->latest()->take(5)->get(),
         ]);
     }

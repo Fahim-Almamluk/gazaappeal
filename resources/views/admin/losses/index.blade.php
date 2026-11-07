@@ -2,6 +2,7 @@
     <div class="space-y-6">
         <x-ui.page-header icon="zap-off" :title="__('admin.losses.title')" :subtitle="__('admin.losses.subtitle')">
             <x-slot:actions>
+                <x-ui.button variant="excel" icon="download" :href="route('admin.losses.export', request()->query())">{{ __('admin.export.button') }}</x-ui.button>
                 @can('losses.create')
                     <x-ui.button :href="route('admin.losses.create')" icon="plus">{{ __('admin.losses.add') }}</x-ui.button>
                 @endcan

@@ -3,7 +3,7 @@
 @endphp
 
 <x-layouts.admin :title="$volunteer->name">
-    <x-ui.detail-page icon="user-plus" :title="$volunteer->name" :subtitle="$volunteer->expertise->label()" :back="route('admin.volunteers.index')" :parent="__('admin.volunteers.title')" :parent-url="route('admin.volunteers.index')">
+    <x-ui.detail-page icon="user-plus" :title="$volunteer->name" :subtitle="$volunteer->expertise->name" :back="route('admin.volunteers.index')" :parent="__('admin.volunteers.title')" :parent-url="route('admin.volunteers.index')">
         <x-slot:actions>
             <x-ui.badge :tone="$volunteer->status->tone()" :icon="$volunteer->status->icon()" class="px-3 py-1.5 text-sm">{{ $volunteer->status->label() }}</x-ui.badge>
         </x-slot:actions>

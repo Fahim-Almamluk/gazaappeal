@@ -22,6 +22,7 @@ return [
         'messages' => 'Contact messages',
         'users' => 'Users',
         'roles' => 'Roles & permissions',
+        'lookups' => 'Constants',
         'settings' => 'Site settings',
     ],
 

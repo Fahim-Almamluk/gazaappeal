@@ -2,7 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Enums\ProjectStatus;
+use App\Enums\LookupType;
+use App\Models\Lookup;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +21,7 @@ final class ProjectFactory extends Factory
             'body' => fake()->paragraphs(3, true),
             'goal_amount' => $goal,
             'raised_amount' => fake()->numberBetween(0, $goal),
-            'status' => ProjectStatus::Active,
+            'status_id' => fn (): int => Lookup::query()->ofType(LookupType::ProjectStatus)->ordered()->value('id') ?? Lookup::factory()->type(LookupType::ProjectStatus)->create()->id,
             'is_urgent' => false,
             'is_published' => true,
             'sort_order' => 0,

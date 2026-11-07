@@ -3,7 +3,7 @@
     'active' => false,
 ])
 
-<form method="GET" action="{{ $action }}" role="search" {{ $attributes->class('flex flex-col gap-4 border-b border-line p-4 sm:p-5') }}>
+<form method="GET" action="{{ $action }}" role="search" autocomplete="off" data-clean-url {{ $attributes->class('flex flex-col gap-4 border-b border-line p-4 sm:p-5') }}>
     <div class="flex flex-wrap items-center gap-3">
         {{ $slot }}
     </div>

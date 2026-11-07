@@ -4,32 +4,51 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\DamageCategory;
 use App\Enums\Governorate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DamageRequest;
 use App\Models\Damage;
+use App\Support\SpreadsheetExport;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class DamageController extends Controller
 {
     public function index(Request $request): View
     {
         $governorate = Governorate::tryFrom($request->string('governorate')->toString());
-        $category = DamageCategory::tryFrom($request->string('category')->toString());
-
-        $damages = Damage::query()
-            ->when($governorate, fn ($query) => $query->where('governorate', $governorate))
-            ->when($category, fn ($query) => $query->where('category', $category))
-            ->orderBy('governorate')
-            ->orderBy('category')
-            ->ordered()
-            ->paginate(config('appeal.per_page'))
-            ->withQueryString();
+        $category = $request->integer('category') ?: null;
+        $damages = $this->filtered($request)->paginate(config('appeal.per_page'))->withQueryString();
 
         return view('admin.damages.index', compact('damages', 'governorate', 'category'));
+    }
+
+    public function export(Request $request, SpreadsheetExport $export): StreamedResponse
+    {
+        return $export->download('damages', __('admin.damages.title'), [
+            '#', ...array_map(fn (string $key): string => __("admin.export.columns.{$key}"), ['governorate', 'category', 'item', 'amount', 'order']),
+        ], $this->filtered($request), fn (Damage $damage): array => [
+            $damage->id,
+            $damage->governorate->label(),
+            $damage->category->name,
+            $damage->item,
+            $damage->amount,
+            $damage->sort_order,
+        ]);
+    }
+
+    private function filtered(Request $request): Builder
+    {
+        return Damage::query()
+            ->with('category')
+            ->when(Governorate::tryFrom($request->string('governorate')->toString()), fn ($query, Governorate $governorate) => $query->where('governorate', $governorate))
+            ->when($request->integer('category') ?: null, fn ($query, int $category) => $query->where('category_id', $category))
+            ->orderBy('governorate')
+            ->orderBy('category_id')
+            ->ordered();
     }
 
     public function create(): View

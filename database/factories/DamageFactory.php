@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Enums\DamageCategory;
 use App\Enums\Governorate;
+use App\Enums\LookupType;
 use App\Models\Damage;
+use App\Models\Lookup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 final class DamageFactory extends Factory
@@ -15,7 +16,7 @@ final class DamageFactory extends Factory
     {
         return [
             'governorate' => fake()->randomElement(Governorate::cases()),
-            'category' => fake()->randomElement(DamageCategory::cases()),
+            'category_id' => fn (): int => Lookup::query()->ofType(LookupType::DamageCategory)->inRandomOrder()->value('id') ?? Lookup::factory()->type(LookupType::DamageCategory)->create()->id,
             'item' => fake()->words(3, true),
             'amount' => fake()->numberBetween(100_000, 90_000_000),
             'sort_order' => 0,

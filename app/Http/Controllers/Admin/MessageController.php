@@ -7,9 +7,12 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\MessageState;
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
+use App\Support\SpreadsheetExport;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class MessageController extends Controller
 {
@@ -18,16 +21,41 @@ final class MessageController extends Controller
         $search = $request->string('q')->trim()->toString();
         $state = MessageState::tryFrom($request->string('state')->toString());
 
-        $messages = ContactMessage::query()
+        $messages = $this->filtered($request)->paginate(config('appeal.per_page'))->withQueryString();
+
+        return view('admin.messages.index', compact('messages', 'search', 'state'));
+    }
+
+    public function export(Request $request, SpreadsheetExport $export): StreamedResponse
+    {
+        return $export->download('messages', __('admin.messages.title'), [
+            '#', ...array_map(fn (string $key): string => __("admin.export.columns.{$key}"), ['name', 'email', 'phone', 'organization', 'message', 'state', 'received']),
+        ], $this->filtered($request), fn (ContactMessage $message): array => [
+            $message->id,
+            $message->name,
+            $message->email,
+            $message->phone,
+            $message->organization,
+            $message->body,
+            $message->state()->label(),
+            $message->created_at->format('Y-m-d H:i'),
+        ]);
+    }
+
+    private function filtered(Request $request): Builder
+    {
+        $search = $request->string('q')->trim()->toString();
+
+        return ContactMessage::query()
             ->when($search !== '', fn ($query) => $query->where(
                 fn ($inner) => $inner->whereLike('name', "%{$search}%")->orWhereLike('email', "%{$search}%"),
             ))
-            ->when($state, fn ($query) => $query->inState($state), fn ($query) => $query->whereNull('archived_at'))
-            ->latest()
-            ->paginate(config('appeal.per_page'))
-            ->withQueryString();
-
-        return view('admin.messages.index', compact('messages', 'search', 'state'));
+            ->when(
+                MessageState::tryFrom($request->string('state')->toString()),
+                fn ($query, MessageState $state) => $query->inState($state),
+                fn ($query) => $query->whereNull('archived_at'),
+            )
+            ->latest();
     }
 
     public function show(ContactMessage $message): View

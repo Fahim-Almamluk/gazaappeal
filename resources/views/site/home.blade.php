@@ -29,7 +29,7 @@
         </x-site.band>
     @endif
 
-    <x-site.damage-map :damages="$damages" class="mt-24" />
+    <x-site.damage-map :damages="$damages" :categories="$damageCategories" class="mt-24" />
 
     <section class="mx-auto mt-24 w-full max-w-[1280px] px-5 sm:px-8">
         <div class="reveal-pop relative isolate overflow-clip rounded-[32px] bg-linear-to-l from-brand-700 via-brand-600 to-brand-500 p-8 text-white sm:p-14">

@@ -55,6 +55,7 @@ return [
             'items' => [
                 ['route' => 'admin.users.index', 'active' => 'admin.users.*', 'permission' => 'users.view', 'label' => 'ui.nav.users', 'icon' => 'users'],
                 ['route' => 'admin.roles.index', 'active' => 'admin.roles.*', 'permission' => 'roles.view', 'label' => 'ui.nav.roles', 'icon' => 'shield-check'],
+                ['route' => 'admin.lookups.index', 'active' => 'admin.lookups.*', 'permission' => 'lookups.view', 'label' => 'ui.nav.lookups', 'icon' => 'tags'],
                 ['route' => 'admin.settings.edit', 'active' => 'admin.settings.*', 'permission' => 'settings.update', 'label' => 'ui.nav.settings', 'icon' => 'settings'],
             ],
         ],

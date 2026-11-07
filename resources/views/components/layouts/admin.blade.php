@@ -1,5 +1,7 @@
 @props(['title' => null])
 
+@inject('impersonation', 'App\Support\Impersonation')
+
 <x-layouts.base :title="$title" x-data="shell">
     <a href="#content" class="sr-only z-[60] rounded-lg bg-primary px-4 py-2 text-primary-fg focus:not-sr-only focus:fixed focus:top-3 focus:start-3">
         {{ __('ui.common.skip_to_content') }}
@@ -13,7 +15,12 @@
         @include('admin.partials.sidebar')
 
         <div class="flex min-w-0 flex-col">
-            @include('admin.partials.header')
+            <div class="sticky top-0 z-30">
+                @if ($impersonation->active())
+                    @include('admin.partials.impersonation-bar')
+                @endif
+                @include('admin.partials.header')
+            </div>
 
             <main id="content" class="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
                 {{ $slot }}

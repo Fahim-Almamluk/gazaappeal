@@ -1,22 +1,22 @@
-@props(['damages'])
+@props(['damages', 'categories'])
 
 @php
-    use App\Enums\DamageCategory;
     use App\Enums\Governorate;
     use App\Support\Money;
 
-    $governorates = collect(Governorate::cases())->mapWithKeys(function (Governorate $governorate) use ($damages): array {
+    $governorates = collect(Governorate::cases())->mapWithKeys(function (Governorate $governorate) use ($damages, $categories): array {
         $items = $damages->where('governorate', $governorate);
 
         return [$governorate->value => [
             'case' => $governorate,
             'total' => $items->sum('amount'),
-            'categories' => collect(DamageCategory::cases())->mapWithKeys(fn (DamageCategory $category): array => [
-                $category->value => $items->where('category', $category)->values(),
+            'categories' => $categories->mapWithKeys(fn ($category): array => [
+                $category->id => $items->where('category_id', $category->id)->values(),
             ]),
         ]];
     });
 
+    $firstCategory = $categories->first()?->id;
     $peak = max(1, $governorates->max('total'));
     $selected = $governorates->sortByDesc('total')->keys()->first();
     $heat = fn (int $total): string => match (true) {
@@ -28,7 +28,7 @@
 @endphp
 
 <section {{ $attributes->class('mx-auto w-full max-w-[1280px] px-5 sm:px-8') }}>
-    <div x-data="damageMap" data-governorate="{{ $selected }}" data-category="{{ DamageCategory::Networks->value }}" class="reveal grid overflow-hidden rounded-[32px] border border-line bg-surface shadow-elevated lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <div x-data="damageMap" data-governorate="{{ $selected }}" data-category="{{ $firstCategory }}" class="reveal grid overflow-hidden rounded-[32px] border border-line bg-surface shadow-elevated lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div class="relative isolate flex flex-col border-b border-line p-6 sm:p-9 lg:border-e lg:border-b-0">
             <div class="hero-dots pointer-events-none absolute inset-0 -z-10 opacity-70"></div>
 
@@ -93,10 +93,10 @@
 
         <div class="flex flex-col p-6 sm:p-9">
             <div class="flex flex-wrap gap-2" role="tablist">
-                @foreach (DamageCategory::cases() as $category)
-                    <button type="button" role="tab" data-category="{{ $category->value }}" x-on:click="pick" aria-selected="false" class="inline-flex h-10 items-center gap-2 rounded-full border border-line px-3.5 text-[13px] font-bold text-ink-muted transition hover:border-line-strong hover:text-ink aria-selected:border-primary/30 aria-selected:bg-primary-soft aria-selected:text-primary-soft-ink">
-                        <x-ui.icon :name="$category->icon()" :size="16" />
-                        {{ $category->label() }}
+                @foreach ($categories as $category)
+                    <button type="button" role="tab" data-category="{{ $category->id }}" x-on:click="pick" aria-selected="false" class="inline-flex h-10 items-center gap-2 rounded-full border border-line px-3.5 text-[13px] font-bold text-ink-muted transition hover:border-line-strong hover:text-ink aria-selected:border-primary/30 aria-selected:bg-primary-soft aria-selected:text-primary-soft-ink">
+                        <x-ui.icon :name="$category->displayIcon()" :size="16" />
+                        {{ $category->name }}
                     </button>
                 @endforeach
             </div>
@@ -115,7 +115,7 @@
                     </div>
 
                     @foreach ($governorate['categories'] as $category => $items)
-                        <div data-category-panel="{{ $category }}" @if ($category !== DamageCategory::Networks->value) hidden @endif class="flex flex-1 flex-col">
+                        <div data-category-panel="{{ $category }}" @if ($category !== $firstCategory) hidden @endif class="flex flex-1 flex-col">
                             @if ($items->isEmpty())
                                 <x-ui.empty-state icon="chart-column" :title="__('site.damage.empty')" class="flex-1" />
                             @else

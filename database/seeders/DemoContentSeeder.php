@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Enums\DamageCategory;
 use App\Enums\DonationMethodType;
 use App\Enums\Governorate;
+use App\Enums\LookupType;
 use App\Enums\LossIcon;
-use App\Enums\ProjectStatus;
-use App\Enums\VolunteerExpertise;
 use App\Enums\VolunteerStatus;
 use App\Models\ContactMessage;
 use App\Models\Damage;
@@ -18,6 +16,7 @@ use App\Models\Partner;
 use App\Models\Project;
 use App\Models\Story;
 use App\Models\Volunteer;
+use Database\Seeders\Concerns\SeedsLookups;
 use Database\Seeders\Concerns\SeedsTranslations;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\File;
@@ -25,6 +24,7 @@ use Illuminate\Support\Facades\Storage;
 
 final class DemoContentSeeder extends Seeder
 {
+    use SeedsLookups;
     use SeedsTranslations;
 
     public function run(): void
@@ -44,31 +44,31 @@ final class DemoContentSeeder extends Seeder
     private function seedProjects(): void
     {
         $projects = [
-            'حلول الطاقة لتنقية مياه الشرب' => ['project-water', 180000, 112500, ProjectStatus::Active,
+            'حلول الطاقة لتنقية مياه الشرب' => ['project-water', 180000, 112500, 'قيد التنفيذ',
                 'تعتمد محطات تحلية المياه الصغيرة في غزة على الكهرباء لتشغيل المضخات وأغشية التنقية، ومع انقطاع الشبكة توقف معظمها عن العمل وأصبحت آلاف العائلات بلا مياه شرب آمنة.',
                 'Gaza’s small desalination plants rely on electricity to run their pumps and purification membranes. With the grid down, most of them have stopped, leaving thousands of families without safe drinking water.'],
-            'محطات الطاقة للرعاية الطبية' => ['project-clinic', 240000, 96000, ProjectStatus::Active,
+            'محطات الطاقة للرعاية الطبية' => ['project-clinic', 240000, 96000, 'قيد التنفيذ',
                 'تحتاج النقاط الطبية في مخيمات النزوح إلى كهرباء مستقرة لتشغيل أجهزة الفحص وحفظ اللقاحات والأدوية في درجات حرارة آمنة.',
                 'Medical points in displacement camps need a stable power supply to run diagnostic equipment and keep vaccines and medicines at safe temperatures.'],
-            'محطات الطاقة لمخيمات الإيواء' => ['project-shelters', 150000, 121000, ProjectStatus::Active,
+            'محطات الطاقة لمخيمات الإيواء' => ['project-shelters', 150000, 121000, 'قيد التنفيذ',
                 'تعيش آلاف العائلات النازحة في خيام بلا إنارة ولا وسيلة لشحن الهواتف أو تشغيل الأجهزة الأساسية، ما يزيد من صعوبة الحياة ليلًا ويعرّض الأطفال للخطر.',
                 'Thousands of displaced families live in tents with no lighting and no way to charge phones or run basic devices, making nights harder and putting children at risk.'],
-            'الطاقة الشمسية لمراكز رعاية الأطفال' => ['project-children', 90000, 38500, ProjectStatus::Planned,
+            'الطاقة الشمسية لمراكز رعاية الأطفال' => ['project-children', 90000, 38500, 'قيد التخطيط',
                 'تستقبل مراكز رعاية الأطفال يوميًا مئات الأطفال لتقديم الدعم النفسي والتعليم، وتحتاج إلى إنارة وتهوية وطاقة لتشغيل أنشطتها بأمان.',
                 'Children’s care centres welcome hundreds of children every day for psychosocial support and learning, and need lighting, ventilation and power to run their activities safely.'],
-            'الطاقة الشمسية لآبار المياه الصغيرة' => ['project-wells', 120000, 120000, ProjectStatus::Completed,
+            'الطاقة الشمسية لآبار المياه الصغيرة' => ['project-wells', 120000, 120000, 'مكتمل',
                 'تغذي الآبار الصغيرة الأحياء السكنية ومناطق الخيام بالمياه، لكن مضخاتها توقفت مع انقطاع الكهرباء ونفاد الوقود.',
                 'Small wells supply water to residential neighbourhoods and tent areas, but their pumps stopped when the power was cut and fuel ran out.'],
-            'عربات الطاقة الشمسية المتنقلة' => ['project-mobile', 75000, 41000, ProjectStatus::Active,
+            'عربات الطاقة الشمسية المتنقلة' => ['project-mobile', 75000, 41000, 'قيد التنفيذ',
                 'عربة النور وحدة طاقة شمسية متنقلة تصل إلى أماكن تجمع النازحين لشحن الهواتف والبطاريات وتشغيل الإنارة والأجهزة الطبية البسيطة.',
                 'The Light Cart is a mobile solar unit that reaches gathering points of displaced people to charge phones and batteries and to run lighting and basic medical devices.'],
-            'حلول الطاقة لمحطات الصرف الصحي' => ['project-sewage', 320000, 64000, ProjectStatus::Planned,
+            'حلول الطاقة لمحطات الصرف الصحي' => ['project-sewage', 320000, 64000, 'قيد التخطيط',
                 'توقف محطات الصرف الصحي يهدد بانتشار الأمراض وتلوث المياه الجوفية والبحر، وتشغيلها بأنظمة شمسية هجينة يحمي صحة السكان والبيئة.',
                 'Idle wastewater stations threaten the spread of disease and the pollution of groundwater and the sea. Running them on hybrid solar systems protects public health and the environment.'],
-            'حلول الطاقة لآبار المياه التابعة للبلديات وسلطة المياه' => ['project-municipal', 280000, 147000, ProjectStatus::Active,
+            'حلول الطاقة لآبار المياه التابعة للبلديات وسلطة المياه' => ['project-municipal', 280000, 147000, 'قيد التنفيذ',
                 'تعتمد البلديات على آبار رئيسية لتزويد الأحياء بالمياه عبر الشبكات، وتشغيلها بالطاقة الشمسية يعيد المياه إلى آلاف المنازل.',
                 'Municipalities rely on main wells to supply neighbourhoods through the water network. Running them on solar power brings water back to thousands of homes.'],
-            'قطع غيار لأنظمة الطاقة المتضررة للأفراد والمؤسسات' => ['project-parts', 60000, 22500, ProjectStatus::Active,
+            'قطع غيار لأنظمة الطاقة المتضررة للأفراد والمؤسسات' => ['project-parts', 60000, 22500, 'قيد التنفيذ',
                 'تضررت آلاف أنظمة الطاقة الشمسية المنزلية والمؤسسية، وكثير منها يحتاج فقط إلى قطع غيار بسيطة ليعود إلى العمل.',
                 'Thousands of home and institutional solar systems were damaged, and many of them need only simple spare parts to work again.'],
         ];
@@ -95,7 +95,7 @@ final class DemoContentSeeder extends Seeder
                     'image' => $this->publish($image, 'projects'),
                     'goal_amount' => $goal,
                     'raised_amount' => $raised,
-                    'status' => $status,
+                    'status_id' => $this->lookup(LookupType::ProjectStatus, $status),
                 ]);
             }
 
@@ -230,24 +230,24 @@ final class DemoContentSeeder extends Seeder
     private function seedDamages(): void
     {
         $items = [
-            DamageCategory::Networks->value => [
+            'الشبكات الكهربائية' => [
                 ['شبكات الجهد المتوسط', 'Medium-voltage networks', 25_800_000],
                 ['شبكات الجهد المنخفض', 'Low-voltage networks', 29_800_000],
                 ['محولات التوزيع', 'Distribution transformers', 32_100_000],
                 ['عدادات المشتركين', 'Customer meters', 14_400_000],
                 ['مبيعات الطاقة', 'Energy sales', 79_400_000],
             ],
-            DamageCategory::Buildings->value => [
+            'مبانٍ ومخازن ومراكز' => [
                 ['المقرات الإدارية', 'Administrative offices', 6_200_000],
                 ['المخازن والمستودعات', 'Stores and warehouses', 9_400_000],
                 ['مراكز خدمة الجمهور', 'Customer service centres', 3_100_000],
             ],
-            DamageCategory::Vehicles->value => [
+            'سيارات وآليات ومولدات' => [
                 ['سيارات الصيانة والطوارئ', 'Maintenance and emergency vehicles', 4_300_000],
                 ['الرافعات والآليات الثقيلة', 'Cranes and heavy machinery', 7_800_000],
                 ['المولدات الاحتياطية', 'Backup generators', 2_600_000],
             ],
-            DamageCategory::Operations->value => [
+            'رواتب ومصاريف تشغيلية' => [
                 ['الرواتب والأجور', 'Salaries and wages', 11_500_000],
                 ['المصاريف التشغيلية', 'Operating expenses', 5_700_000],
             ],
@@ -267,7 +267,7 @@ final class DemoContentSeeder extends Seeder
                         Damage::class,
                         ['item', ['ar' => $item, 'en' => $itemEn]],
                         ['amount' => (int) round($amount * $share, -5), 'sort_order' => $order],
-                        ['governorate' => $governorate, 'category' => $category],
+                        ['governorate' => $governorate, 'category_id' => $this->lookup(LookupType::DamageCategory, $category)],
                     );
                 }
             }
@@ -277,10 +277,10 @@ final class DemoContentSeeder extends Seeder
     private function seedInbox(): void
     {
         $volunteers = [
-            ['م. سامر الحلبي', 'samer@example.com', '+970 59 111 2233', 'فلسطين', VolunteerExpertise::RenewableEnergy, 12, VolunteerStatus::New],
-            ['م. ليلى عودة', 'laila@example.com', '+962 79 444 5566', 'الأردن', VolunteerExpertise::PowerInfrastructure, 9, VolunteerStatus::Contacted],
-            ['د. كريم منصور', 'karim@example.com', '+44 7700 900123', 'المملكة المتحدة', VolunteerExpertise::Reconstruction, 18, VolunteerStatus::Accepted],
-            ['هبة الشامي', 'hiba@example.com', '+90 532 111 2233', 'تركيا', VolunteerExpertise::ReliefProjects, 6, VolunteerStatus::New],
+            ['م. سامر الحلبي', 'samer@example.com', '+970 59 111 2233', 'فلسطين', 'حلول الطاقة المتجددة والهجينة', 12, VolunteerStatus::New],
+            ['م. ليلى عودة', 'laila@example.com', '+962 79 444 5566', 'الأردن', 'البنية التحتية للطاقة الكهربائية', 9, VolunteerStatus::Contacted],
+            ['د. كريم منصور', 'karim@example.com', '+44 7700 900123', 'المملكة المتحدة', 'إعادة التأهيل والإعمار في قطاع الطاقة', 18, VolunteerStatus::Accepted],
+            ['هبة الشامي', 'hiba@example.com', '+90 532 111 2233', 'تركيا', 'إدارة مشاريع الإغاثة والطوارئ', 6, VolunteerStatus::New],
         ];
 
         foreach ($volunteers as [$name, $email, $phone, $country, $expertise, $years, $status]) {
@@ -289,7 +289,7 @@ final class DemoContentSeeder extends Seeder
                 'name' => $name,
                 'phone' => $phone,
                 'country' => $country,
-                'expertise' => $expertise,
+                'expertise_id' => $this->lookup(LookupType::VolunteerExpertise, $expertise),
                 'experience_years' => $years,
                 'message' => 'لدي خبرة عملية في هذا المجال وأرغب في المساهمة عن بُعد أو ميدانيًا في تصميم وتنفيذ مشاريع الطاقة في غزة.',
             ]);

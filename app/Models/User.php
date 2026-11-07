@@ -23,6 +23,10 @@ final class User extends Authenticatable
     use HasFactory;
     use Notifiable;
 
+    protected $attributes = [
+        'is_super_admin' => false,
+    ];
+
     /**
      * @var list<string>|null
      */
@@ -33,6 +37,7 @@ final class User extends Authenticatable
         return [
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'is_super_admin' => 'boolean',
             'last_login_at' => 'datetime',
         ];
     }
@@ -44,7 +49,7 @@ final class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return (bool) $this->role?->is_system;
+        return $this->is_super_admin || (bool) $this->role?->is_system;
     }
 
     /**

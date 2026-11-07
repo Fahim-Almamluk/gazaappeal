@@ -35,6 +35,7 @@ return [
             'modules' => [
                 'users' => ['icon' => 'users', 'actions' => ['view', 'create', 'update']],
                 'roles' => ['icon' => 'shield-check', 'actions' => $crud],
+                'lookups' => ['icon' => 'tags', 'actions' => $crud],
                 'settings' => ['icon' => 'settings', 'actions' => ['update']],
             ],
         ],
@@ -47,6 +48,7 @@ return [
     'route_actions' => [
         'index' => 'view',
         'show' => 'view',
+        'export' => 'view',
         'create' => 'create',
         'store' => 'create',
         'edit' => 'update',
@@ -55,8 +57,9 @@ return [
         'archive' => 'update',
         'restore' => 'update',
         'permissions' => 'update',
+        'impersonate' => 'update',
         'destroy' => 'delete',
     ],
 
-    'public_routes' => ['admin.dashboard', 'admin.profile.edit', 'admin.profile.update', 'admin.profile.password'],
+    'public_routes' => ['admin.dashboard', 'admin.profile.edit', 'admin.profile.update', 'admin.profile.password', 'admin.impersonation.leave'],
 ];

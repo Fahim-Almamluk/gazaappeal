@@ -1,11 +1,13 @@
 @php
-    use App\Enums\ProjectStatus;
+    use App\Enums\LookupType;
+    use App\Models\Lookup;
 @endphp
 
 <x-layouts.admin :title="__('admin.projects.title')">
     <div class="space-y-6">
         <x-ui.page-header icon="solar-panel" :title="__('admin.projects.title')" :subtitle="__('admin.projects.subtitle')">
             <x-slot:actions>
+                <x-ui.button variant="excel" icon="download" :href="route('admin.projects.export', request()->query())">{{ __('admin.export.button') }}</x-ui.button>
                 @can('projects.create')
                     <x-ui.button :href="route('admin.projects.create')" icon="plus">{{ __('admin.projects.add') }}</x-ui.button>
                 @endcan
@@ -16,7 +18,7 @@
             <x-ui.filter-bar :action="route('admin.projects.index')" :active="filled($search) || $status || request()->filled('visibility')">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.projects.search')" />
                 <div class="w-full sm:w-44">
-                    <x-ui.select name="status" compact :options="ProjectStatus::options()" :selected="$status?->value" :placeholder="__('admin.common.all_statuses')" :aria-label="__('admin.projects.columns.status')" />
+                    <x-ui.select name="status" compact :options="Lookup::options(LookupType::ProjectStatus)" :selected="$status" :placeholder="__('admin.common.all_statuses')" :aria-label="__('admin.projects.columns.status')" />
                 </div>
                 @include('admin.partials.visibility-filter')
             </x-ui.filter-bar>
@@ -54,7 +56,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-3 py-3.5"><x-ui.badge :tone="$project->status->tone()" :icon="$project->status->icon()">{{ $project->status->label() }}</x-ui.badge></td>
+                                <td class="px-3 py-3.5"><x-ui.lookup-badge :lookup="$project->status" /></td>
                                 <td class="px-3 py-3.5">
                                     @if ($progress !== null)
                                         <div class="flex w-40 items-center gap-2">

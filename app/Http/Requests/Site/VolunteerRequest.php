@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Site;
 
-use App\Enums\VolunteerExpertise;
+use App\Enums\LookupType;
+use App\Models\Lookup;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 final class VolunteerRequest extends FormRequest
 {
@@ -22,7 +22,7 @@ final class VolunteerRequest extends FormRequest
             'email' => ['required', 'string', 'email:rfc', 'max:190'],
             'phone' => ['required', 'string', 'regex:/^\+?[0-9\s\-()]{7,20}$/'],
             'country' => ['required', 'string', 'max:80'],
-            'expertise' => ['required', Rule::enum(VolunteerExpertise::class)],
+            'expertise_id' => ['required', 'integer', Lookup::rule(LookupType::VolunteerExpertise)],
             'experience_years' => ['required', 'integer', 'between:0,60'],
             'message' => ['required', 'string', 'min:20', 'max:3000'],
             'website' => ['prohibited'],

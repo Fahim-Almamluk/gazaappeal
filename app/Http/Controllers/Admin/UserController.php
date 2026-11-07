@@ -23,9 +23,14 @@ final class UserController extends Controller
 
         $users = User::query()
             ->with('role')
+            ->addSelect([
+                'granted_count' => DB::table('permission_user')->selectRaw('count(*)')->whereColumn('user_id', 'users.id')->where('granted', true),
+                'revoked_count' => DB::table('permission_user')->selectRaw('count(*)')->whereColumn('user_id', 'users.id')->where('granted', false),
+            ])
             ->when($search !== '', fn ($query) => $query->where(
                 fn ($inner) => $inner->whereLike('name', "%{$search}%")->orWhereLike('email', "%{$search}%"),
             ))
+            ->orderByDesc('is_super_admin')
             ->orderByDesc('is_active')
             ->orderBy('name')
             ->paginate(config('appeal.per_page'))

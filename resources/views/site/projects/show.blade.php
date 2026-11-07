@@ -8,7 +8,7 @@
             @if ($project->is_urgent)
                 <x-ui.badge tone="danger" icon="zap">{{ __('site.projects.urgent') }}</x-ui.badge>
             @endif
-            <x-ui.badge :tone="$project->status->tone()" :icon="$project->status->icon()">{{ $project->status->label() }}</x-ui.badge>
+            <x-ui.lookup-badge :lookup="$project->status" />
         </div>
     </x-site.page-header>
 

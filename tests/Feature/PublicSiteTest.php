@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Enums\DamageCategory;
 use App\Enums\Governorate;
+use App\Enums\LookupType;
 use App\Models\Damage;
 use App\Models\DonationMethod;
 use App\Models\Faq;
 use App\Models\GalleryItem;
+use App\Models\Lookup;
 use App\Models\Loss;
 use App\Models\Partner;
 use App\Models\Project;
@@ -63,9 +64,11 @@ final class PublicSiteTest extends TestCase
 
     public function test_home_map_totals_damages_per_governorate(): void
     {
-        Damage::factory()->create(['governorate' => Governorate::Rafah, 'category' => DamageCategory::Networks, 'amount' => 12_000_000]);
-        Damage::factory()->create(['governorate' => Governorate::Rafah, 'category' => DamageCategory::Vehicles, 'amount' => 3_500_000]);
-        Damage::factory()->create(['governorate' => Governorate::Gaza, 'category' => DamageCategory::Networks, 'amount' => 900_000]);
+        [$networks, $vehicles] = Lookup::query()->ofType(LookupType::DamageCategory)->ordered()->take(2)->get();
+
+        Damage::factory()->create(['governorate' => Governorate::Rafah, 'category_id' => $networks, 'amount' => 12_000_000]);
+        Damage::factory()->create(['governorate' => Governorate::Rafah, 'category_id' => $vehicles, 'amount' => 3_500_000]);
+        Damage::factory()->create(['governorate' => Governorate::Gaza, 'category_id' => $networks, 'amount' => 900_000]);
 
         $this->get('/ar')
             ->assertSee('$15.5M')

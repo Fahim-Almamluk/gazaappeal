@@ -13,7 +13,7 @@ final class ProjectController extends Controller
     public function index(): View
     {
         return view('site.projects.index', [
-            'projects' => Project::query()->published()->ordered()->paginate(9),
+            'projects' => Project::query()->with('status')->published()->ordered()->paginate(9),
         ]);
     }
 
@@ -24,7 +24,7 @@ final class ProjectController extends Controller
         return view('site.projects.show', [
             'project' => $project,
             'stories' => $project->stories()->published()->latest()->take(3)->get(),
-            'related' => Project::query()->published()->whereKeyNot($project->getKey())->ordered()->take(3)->get(),
+            'related' => Project::query()->with('status')->published()->whereKeyNot($project->getKey())->ordered()->take(3)->get(),
         ]);
     }
 }

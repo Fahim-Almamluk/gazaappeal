@@ -3,17 +3,19 @@
 namespace Database\Seeders;
 
 use App\Enums\DonationMethodType;
+use App\Enums\LookupType;
 use App\Enums\LossIcon;
-use App\Enums\ProjectStatus;
 use App\Models\DonationMethod;
 use App\Models\Faq;
 use App\Models\Loss;
 use App\Models\Project;
+use Database\Seeders\Concerns\SeedsLookups;
 use Database\Seeders\Concerns\SeedsTranslations;
 use Illuminate\Database\Seeder;
 
 final class ContentSeeder extends Seeder
 {
+    use SeedsLookups;
     use SeedsTranslations;
 
     public function run(): void
@@ -69,7 +71,7 @@ final class ContentSeeder extends Seeder
             $this->seedTranslated(Project::class, ['title', ['ar' => $title, 'en' => $titleEn]], [
                 'summary' => ['ar' => $summary, 'en' => $summaryEn],
                 'body' => ['ar' => $summary, 'en' => $summaryEn],
-                'status' => ProjectStatus::Active,
+                'status_id' => $this->lookup(LookupType::ProjectStatus, 'قيد التنفيذ'),
                 'is_urgent' => true,
                 'is_published' => true,
                 'sort_order' => $order + 1,

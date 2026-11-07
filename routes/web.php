@@ -42,6 +42,12 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/', Admin\DashboardController::class)->name('dashboard');
 
+        Route::get('projects/export', [Admin\ProjectController::class, 'export'])->name('projects.export');
+        Route::get('losses/export', [Admin\LossController::class, 'export'])->name('losses.export');
+        Route::get('damages/export', [Admin\DamageController::class, 'export'])->name('damages.export');
+        Route::get('volunteers/export', [Admin\VolunteerController::class, 'export'])->name('volunteers.export');
+        Route::get('messages/export', [Admin\MessageController::class, 'export'])->name('messages.export');
+
         Route::resource('projects', Admin\ProjectController::class)->except('show');
         Route::resource('losses', Admin\LossController::class)->except('show');
         Route::resource('damages', Admin\DamageController::class)->except('show');
@@ -65,7 +71,11 @@ Route::prefix('admin')
         Route::get('users/{user}/permissions', [Admin\UserPermissionController::class, 'edit'])->name('users.permissions');
         Route::put('users/{user}/permissions', [Admin\UserPermissionController::class, 'update'])->name('users.permissions.update');
 
+        Route::post('users/{user}/impersonate', [Admin\ImpersonationController::class, 'store'])->name('users.impersonate');
+        Route::delete('impersonation', [Admin\ImpersonationController::class, 'destroy'])->name('impersonation.leave');
+
         Route::resource('roles', Admin\RoleController::class)->except('show');
+        Route::resource('lookups', Admin\LookupController::class)->except('show');
 
         Route::get('pages', [Admin\PageContentController::class, 'edit'])->name('pages.edit');
         Route::put('pages', [Admin\PageContentController::class, 'update'])->name('pages.update');

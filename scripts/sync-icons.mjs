@@ -9,12 +9,12 @@ const target = join(root, 'resources', 'svg', 'icons');
 const icons = [
     'archive', 'arrow-left', 'arrow-right', 'arrow-up', 'at-sign', 'award', 'ban', 'banknote', 'battery-charging', 'bell',
     'building-2', 'cable', 'calendar-days', 'chart-column', 'check', 'chevron-down', 'chevron-left', 'chevron-right',
-    'circle-alert', 'circle-check', 'circle-help', 'clipboard-check', 'clock', 'copy', 'credit-card', 'droplets', 'external-link',
+    'circle-alert', 'circle-check', 'circle-help', 'clipboard-check', 'clock', 'copy', 'credit-card', 'crown', 'download', 'droplets', 'external-link',
     'eye', 'eye-off', 'factory', 'file-text', 'flag', 'globe', 'hand-coins', 'handshake', 'heart', 'heart-handshake',
     'heart-pulse', 'house', 'image', 'images', 'inbox', 'info', 'landmark', 'languages', 'layout-dashboard', 'lightbulb', 'link',
-    'list', 'lock', 'log-out', 'mail', 'mail-open', 'map-pin', 'maximize-2', 'menu', 'message-circle', 'monitor', 'moon',
+    'list', 'lock', 'log-in', 'log-out', 'mail', 'mail-open', 'map-pin', 'maximize-2', 'menu', 'message-circle', 'monitor', 'moon',
     'panel-right', 'pencil', 'phone', 'plus', 'quote', 'rotate-ccw', 'school', 'search', 'send', 'settings', 'shield-check',
-    'smartphone', 'solar-panel', 'sparkles', 'sun', 'target', 'tent', 'trash-2', 'triangle-alert', 'truck', 'user-plus',
+    'smartphone', 'solar-panel', 'sparkles', 'sun', 'tags', 'target', 'tent', 'trash-2', 'triangle-alert', 'truck', 'undo-2', 'user-plus',
     'user-round', 'users', 'utility-pole', 'wallet', 'waves', 'wrench', 'x', 'zap', 'zap-off',
 ];
 

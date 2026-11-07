@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Enums\DamageCategory;
 use App\Enums\DonationMethodType;
 use App\Enums\Governorate;
+use App\Enums\LookupType;
 use App\Enums\LossIcon;
-use App\Enums\ProjectStatus;
 use App\Models\Damage;
 use App\Models\DonationMethod;
 use App\Models\GalleryItem;
+use App\Models\Lookup;
 use App\Models\Loss;
 use App\Models\Project;
 use App\Models\User;
@@ -38,7 +38,7 @@ final class ContentManagementTest extends TestCase
             'body' => ['ar' => "الفقرة الأولى.\n\nالفقرة الثانية.", 'en' => ''],
             'goal_amount' => '50000',
             'raised_amount' => '12500.50',
-            'status' => ProjectStatus::Active->value,
+            'status_id' => Lookup::query()->ofType(LookupType::ProjectStatus)->value('id'),
             'is_urgent' => '1',
             'is_published' => '1',
             'sort_order' => '1',
@@ -124,7 +124,7 @@ final class ContentManagementTest extends TestCase
     {
         $this->post(route('admin.damages.store'), [
             'governorate' => Governorate::KhanYounis->value,
-            'category' => DamageCategory::Networks->value,
+            'category_id' => Lookup::query()->ofType(LookupType::DamageCategory)->value('id'),
             'item' => ['ar' => 'محولات التوزيع', 'en' => 'Distribution transformers'],
             'amount' => '21650000',
             'sort_order' => '2',
@@ -139,7 +139,7 @@ final class ContentManagementTest extends TestCase
     {
         $this->post(route('admin.damages.store'), [
             'governorate' => 'jerusalem',
-            'category' => DamageCategory::Networks->value,
+            'category_id' => Lookup::query()->ofType(LookupType::DamageCategory)->value('id'),
             'item' => ['ar' => 'محولات التوزيع'],
             'amount' => '1000',
             'sort_order' => '0',

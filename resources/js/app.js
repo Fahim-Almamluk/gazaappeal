@@ -7,6 +7,7 @@ import bankCard from './components/bank-card';
 import damageMap from './components/damage-map';
 import gallery from './components/gallery';
 import permissionTree from './components/permission-tree';
+import { registerCleanUrl } from './components/clean-url';
 import { registerConfirmations } from './components/confirm';
 import { registerFormGuard } from './components/form-guard';
 import { registerScrollEffects } from './components/scroll-effects';
@@ -32,6 +33,7 @@ Alpine.data('methodFields', methodFields);
 Alpine.data('navGroup', navGroup);
 Alpine.data('tabs', tabs);
 
+registerCleanUrl();
 registerFormGuard();
 registerConfirmations();
 registerScrollEffects();

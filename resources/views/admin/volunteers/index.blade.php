@@ -1,11 +1,16 @@
 @php
-    use App\Enums\VolunteerExpertise;
+    use App\Enums\LookupType;
+    use App\Models\Lookup;
     use App\Enums\VolunteerStatus;
 @endphp
 
 <x-layouts.admin :title="__('admin.volunteers.title')">
     <div class="space-y-6">
-        <x-ui.page-header icon="user-plus" :title="__('admin.volunteers.title')" :subtitle="__('admin.volunteers.subtitle')" />
+        <x-ui.page-header icon="user-plus" :title="__('admin.volunteers.title')" :subtitle="__('admin.volunteers.subtitle')">
+            <x-slot:actions>
+                <x-ui.button variant="excel" icon="download" :href="route('admin.volunteers.export', request()->query())">{{ __('admin.export.button') }}</x-ui.button>
+            </x-slot:actions>
+        </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
             <x-ui.filter-bar :action="route('admin.volunteers.index')" :active="filled($search) || $status || $expertise">
@@ -14,7 +19,7 @@
                     <x-ui.select name="status" compact :options="VolunteerStatus::options()" :selected="$status?->value" :placeholder="__('admin.common.all_statuses')" :aria-label="__('admin.volunteers.columns.status')" />
                 </div>
                 <div class="w-full sm:w-64">
-                    <x-ui.select name="expertise" compact :options="VolunteerExpertise::options()" :selected="$expertise?->value" :placeholder="__('admin.volunteers.all_expertise')" :aria-label="__('admin.volunteers.columns.expertise')" />
+                    <x-ui.select name="expertise" compact :options="Lookup::options(LookupType::VolunteerExpertise)" :selected="$expertise" :placeholder="__('admin.volunteers.all_expertise')" :aria-label="__('admin.volunteers.columns.expertise')" />
                 </div>
             </x-ui.filter-bar>
 
@@ -42,7 +47,7 @@
                                     <p class="text-xs text-ink-subtle" dir="ltr">{{ $volunteer->email }}</p>
                                 </td>
                                 <td class="px-3 py-3.5">
-                                    <span class="inline-flex items-center gap-2 text-ink-muted"><x-ui.icon :name="$volunteer->expertise->icon()" :size="16" class="text-primary" />{{ $volunteer->expertise->label() }}</span>
+                                    <span class="inline-flex items-center gap-2 text-ink-muted"><x-ui.icon :name="$volunteer->expertise->displayIcon()" :size="16" class="text-primary" />{{ $volunteer->expertise->name }}</span>
                                     <p class="tabular text-xs text-ink-subtle">{{ trans_choice('admin.volunteers.years', $volunteer->experience_years) }}</p>
                                 </td>
                                 <td class="px-3 py-3.5 text-ink-muted">{{ $volunteer->country }}</td>

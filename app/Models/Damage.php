@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\DamageCategory;
 use App\Enums\Governorate;
 use App\Models\Concerns\HasTranslations;
 use App\Models\Concerns\Sortable;
@@ -12,8 +11,9 @@ use Database\Factories\DamageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['governorate', 'category', 'item', 'amount', 'sort_order'])]
+#[Fillable(['governorate', 'category_id', 'item', 'amount', 'sort_order'])]
 final class Damage extends Model
 {
     use HasFactory;
@@ -29,10 +29,14 @@ final class Damage extends Model
     {
         return [
             'governorate' => Governorate::class,
-            'category' => DamageCategory::class,
             'amount' => 'integer',
             'sort_order' => 'integer',
         ];
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Lookup::class, 'category_id');
     }
 
     protected static function newFactory(): DamageFactory

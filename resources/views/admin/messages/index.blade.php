@@ -4,7 +4,11 @@
 
 <x-layouts.admin :title="__('admin.messages.title')">
     <div class="space-y-6">
-        <x-ui.page-header icon="mail" :title="__('admin.messages.title')" :subtitle="__('admin.messages.subtitle')" />
+        <x-ui.page-header icon="mail" :title="__('admin.messages.title')" :subtitle="__('admin.messages.subtitle')">
+            <x-slot:actions>
+                <x-ui.button variant="excel" icon="download" :href="route('admin.messages.export', request()->query())">{{ __('admin.export.button') }}</x-ui.button>
+            </x-slot:actions>
+        </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
             <x-ui.filter-bar :action="route('admin.messages.index')" :active="filled($search) || $state">

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\VolunteerExpertise;
 use App\Enums\VolunteerStatus;
 use Database\Factories\VolunteerFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'email', 'phone', 'country', 'expertise', 'experience_years', 'message'])]
+#[Fillable(['name', 'email', 'phone', 'country', 'expertise_id', 'experience_years', 'message'])]
 final class Volunteer extends Model
 {
     use HasFactory;
@@ -24,10 +23,14 @@ final class Volunteer extends Model
     protected function casts(): array
     {
         return [
-            'expertise' => VolunteerExpertise::class,
             'status' => VolunteerStatus::class,
             'experience_years' => 'integer',
         ];
+    }
+
+    public function expertise(): BelongsTo
+    {
+        return $this->belongsTo(Lookup::class, 'expertise_id');
     }
 
     public function reviewer(): BelongsTo

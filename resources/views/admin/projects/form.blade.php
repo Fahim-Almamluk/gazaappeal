@@ -1,5 +1,6 @@
 @php
-    use App\Enums\ProjectStatus;
+    use App\Enums\LookupType;
+    use App\Models\Lookup;
 
     $editing = $project->exists;
     $title = $editing ? __('admin.projects.edit') : __('admin.projects.add');
@@ -25,7 +26,7 @@
             </x-ui.form-section>
 
             <x-ui.form-section step="2" :title="__('admin.projects.sections.funding')" :description="__('admin.projects.sections.funding_hint')">
-                <x-ui.select name="status" :label="__('admin.projects.fields.status')" :options="ProjectStatus::options()" :selected="$project->status?->value" required />
+                <x-ui.select name="status_id" :label="__('admin.projects.fields.status')" :options="Lookup::options(LookupType::ProjectStatus, true, $project->status_id)" :selected="$project->status_id" :placeholder="__('admin.common.choose')" required />
                 <div class="hidden sm:block"></div>
                 <x-ui.input name="goal_amount" type="number" min="0" step="0.01" dir="ltr" :label="__('admin.projects.fields.goal_amount')" :hint="__('admin.projects.fields.goal_hint')" :value="old('goal_amount', $project->goal_amount)" />
                 <x-ui.input name="raised_amount" type="number" min="0" step="0.01" dir="ltr" :label="__('admin.projects.fields.raised_amount')" :value="old('raised_amount', $project->raised_amount ?? 0)" />

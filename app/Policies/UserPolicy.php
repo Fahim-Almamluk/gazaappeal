@@ -20,6 +20,10 @@ final class UserPolicy
 
     public function update(User $actor, User $user): bool
     {
+        if ($user->is_super_admin) {
+            return $actor->is($user);
+        }
+
         return $actor->hasPermission('users.update') && ($actor->isAdmin() || ! $user->isAdmin());
     }
 
@@ -31,5 +35,10 @@ final class UserPolicy
     public function permissions(User $actor, User $user): bool
     {
         return $this->update($actor, $user) && $actor->isNot($user) && ! $user->isAdmin();
+    }
+
+    public function impersonate(User $actor, User $user): bool
+    {
+        return $actor->is_super_admin && $actor->isNot($user) && ! $user->is_super_admin && $user->is_active;
     }
 }

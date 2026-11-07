@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Enums\VolunteerExpertise;
+use App\Enums\LookupType;
 use App\Enums\VolunteerStatus;
 use App\Models\ContactMessage;
+use App\Models\Lookup;
 use App\Models\Volunteer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -20,7 +21,7 @@ final class PublicFormsTest extends TestCase
             'email' => 'sara@example.com',
             'phone' => '+970 59 123 4567',
             'country' => 'فلسطين',
-            'expertise' => VolunteerExpertise::RenewableEnergy->value,
+            'expertise_id' => Lookup::query()->ofType(LookupType::VolunteerExpertise)->value('id'),
             'experience_years' => 8,
             'message' => 'مهندسة طاقة شمسية بخبرة في تصميم الأنظمة الهجينة للمرافق الصحية.',
             ...$overrides,
@@ -62,8 +63,8 @@ final class PublicFormsTest extends TestCase
 
     public function test_volunteer_application_is_validated(): void
     {
-        $this->post(route('volunteer.store'), $this->volunteerData(['email' => 'not-an-email', 'expertise' => 99]))
-            ->assertSessionHasErrors(['email', 'expertise']);
+        $this->post(route('volunteer.store'), $this->volunteerData(['email' => 'not-an-email', 'expertise_id' => 99]))
+            ->assertSessionHasErrors(['email', 'expertise_id']);
 
         $this->assertDatabaseCount('volunteers', 0);
     }

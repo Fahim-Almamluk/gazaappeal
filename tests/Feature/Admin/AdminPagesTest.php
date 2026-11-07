@@ -7,6 +7,7 @@ use App\Models\Damage;
 use App\Models\DonationMethod;
 use App\Models\Faq;
 use App\Models\GalleryItem;
+use App\Models\Lookup;
 use App\Models\Loss;
 use App\Models\Partner;
 use App\Models\Project;
@@ -52,6 +53,8 @@ final class AdminPagesTest extends TestCase
             route('admin.users.index'), route('admin.users.create'), route('admin.users.edit', $editor), route('admin.users.edit', $admin),
             route('admin.users.permissions', $editor),
             route('admin.roles.index'), route('admin.roles.create'), route('admin.roles.edit', $editor->role),
+            route('admin.lookups.index'), route('admin.lookups.index', ['type' => 'damage_category']), route('admin.lookups.index', ['type' => 'volunteer_expertise']),
+            route('admin.lookups.create', ['type' => 'damage_category']), route('admin.lookups.edit', Lookup::query()->firstOrFail()),
             route('admin.pages.edit'),
             route('admin.settings.edit'),
             route('admin.profile.edit'),

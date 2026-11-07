@@ -1,7 +1,7 @@
 # نداء كهرباء غزة — توثيق المشروع
 
 > هذا الملف مرجع للجلسات القادمة حتى لا نعيد تحليل المشروع كل مرة. اقرأه كاملًا قبل أي تعديل، وحدّثه في نهاية أي عمل يغيّر البنية أو القرارات.
-> آخر تحديث: 2026-11-05.
+> آخر تحديث: 2026-11-07.
 
 ## 1. فكرة المشروع
 
@@ -63,7 +63,7 @@ npm run build
 - `declare(strict_types=1)` وفئات `final`.
 - النماذج بسمات `#[Fillable]` و`#[Hidden]` و`#[Scope]`؛ والـ traits في `app/Models/Concerns`:
   - `Publishable` (سكوب `published` و`visibility`)، `Sortable` (سكوب `ordered`: `sort_order` ثم `id` تنازليًا)، `HasTranslations` (حقول بلغتين)، `HasImage` (`asset('storage/'.$path)`).
-- التعدادات (Enums) رقمية أو نصية مع trait `HasLabel` وثابت `private const string LABELS` يشير لمفتاح في `lang/ar/enums.php`.
+- التعدادات (Enums) رقمية أو نصية مع trait `HasLabel` وثابت `private const string LABELS` يشير لمفتاح في `lang/ar/enums.php`. تبقى في الكود ما له منطق فقط: `Governorate` (أشكال الخريطة)، `DonationMethodType`، `VolunteerStatus`، `MessageState`، `LossIcon`، و`LookupType` (أنواع الثوابت). أما حالات المشاريع وتصنيفات الأضرار ومجالات التطوع فبيانات في جدول `lookups` (القسم 17).
 - كل نصوص الواجهة في `lang/ar/*` و`lang/en/*` (المفاتيح متطابقة في الملفين ويجب أن تبقى كذلك) (`ui`, `site`, `auth`, `admin`, `enums`, `privacy`, `validation`, `pagination`) ولا نص ثابت في Blade.
 - Requests مستقلة لكل نموذج (`app/Http/Requests/{Admin,Site,Auth}`).
 - النماذج العامة فيها مصيدة honeypot (حقل `website` => `prohibited`) وحد معدل `forms` (5/دقيقة).
@@ -76,21 +76,22 @@ npm run build
 
 الجداول والأعمدة (مختصرة، كلها لازمة):
 
-- `users`: name, email, password, role_id, is_active, last_login_at, remember_token.
+- `users`: name, email, password, role_id, is_super_admin, is_active, last_login_at, remember_token.
 - `roles`: name (مترجم), is_system. `permission_role` (role_id, permission). `permission_user` (user_id, permission, granted) لإضافة أو حجب صلاحية لمستخدم بعينه. + `sessions`, `cache`, `cache_locks`.
-- `projects`: title, summary, body, image, goal_amount, raised_amount, status, is_urgent, is_published, sort_order, soft deletes.
+- `projects`: title, summary, body, image, goal_amount, raised_amount, status_id (→ `lookups`), is_urgent, is_published, sort_order, soft deletes.
 - `losses`: title, figure, unit, description, icon (`LossIcon`), is_published, sort_order, soft deletes.
-- `damages`: governorate (`Governorate`), category (`DamageCategory`), item, amount (دولار، `unsignedBigInteger`)، sort_order. (بدون is_published ولا soft delete.)
+- `damages`: governorate (`Governorate`), category_id (→ `lookups`), item, amount (دولار، `unsignedBigInteger`)، sort_order. (بدون is_published ولا soft delete.)
 - `stories`: project_id (nullable), title, summary, body, image, is_published, soft deletes.
 - `partners`, `faqs`, `gallery_items`.
 - `donation_methods`: type (رابط أو تحويل بنكي), name, description, url, `bank_details` JSON (bank_name, beneficiary, branch, address, account_number, swift_code, iban).
 - `settings`: key, value (بدون timestamps)؛ القيم الافتراضية في `config/appeal.php` ومن خلال `App\Support\SiteSettings` (مع كاش).
-- `volunteers`: name, email, phone, country, expertise, experience_years, message, status, notes, reviewed_by.
+- `lookups`: type (`LookupType`), name (مترجم)، icon (اختياري)، tone (اختياري)، sort_order، is_active. جدول واحد لكل الثوابت المُدارة من اللوحة.
+- `volunteers`: name, email, phone, country, expertise_id (→ `lookups`), experience_years, message, status, notes, reviewed_by.
 - `contact_messages`: name, email, phone, organization, body, read_at, archived_at.
 
 - حقول المحتوى القابلة للعرض مترجمة (عمود `text` يحمل JSON مثل `{"ar":"…","en":"…"}`) عبر `HasTranslations`: projects(title, summary, body)، losses(title, unit, description)، stories(title, summary, body)، partners(name)، faqs(question, answer)، gallery_items(caption)، donation_methods(name, description)، damages(item). بيانات البنك الإنجليزية مفاتيح `*_en` داخل `bank_details`، وعنوان التواصل الإنجليزي إعداد `contact_address_en`.
 
-الهجرات: `0001_01_01_000000` (users)، `..._000001_create_cache_table`، `2026_11_02_000001_create_content_tables`، `..._000002_create_inbox_tables`، `..._000003_create_damages_table`، `2026_11_04_134521_make_content_translatable` (تحوّل الأعمدة وتلفّ القيم الحالية كعربي، ولها `down`)، `2026_11_04_141428_drop_slugs_from_projects_and_stories`.
+الهجرات: `0001_01_01_000000` (users)، `..._000001_create_cache_table`، `2026_11_02_000001_create_content_tables`، `..._000002_create_inbox_tables`، `..._000003_create_damages_table`، `2026_11_04_134521_make_content_translatable` (تحوّل الأعمدة وتلفّ القيم الحالية كعربي، ولها `down`)، `2026_11_04_141428_drop_slugs_from_projects_and_stories`، `2026_11_06_223019_create_lookups_table` (تنقل projects.status وdamages.category وvolunteers.expertise إلى مفاتيح أجنبية دون فقدان بيانات ولها `down`؛ جُرّبت صعودًا ونزولًا وصعودًا على MariaDB بنسخة من القاعدة)، `2026_11_06_224601_add_is_super_admin_to_users_table`.
 
 ### المحتوى الحالي
 - `ContentSeeder`: 9 مشاريع حقيقية، خسارتان حقيقيتان، رابط منصة «إنساني»، بيانات بنك فلسطين، 3 أسئلة شائعة.
@@ -101,7 +102,7 @@ npm run build
 المسارات في `routes/web.php` كلها تحت بادئة اللغة `/{locale}` (ar أو en): `/`, `/about`, `/losses`, `/projects`, `/projects/{id}`, `/stories`, `/stories/{id}`, `/gallery`, `/donate`, `/faq`, `/privacy`, `/volunteer`, `/contact`.
 
 - **الرئيسية (`site/home`)**: هيرو (`site/partials/hero`): سطر رئيسي وسطر فرعي من الإعدادات (`hero_tagline`/`hero_subtitle` بلغتين، العنوان كله بلون واحد هو أزرق الموقع `text-primary` مثل زر «الرئيسية» و«تبرع الآن»؛ تلوين كلمات العنوان بألوان مختلفة مرفوض)، زرا «ادعم مشروعًا» (تدرج أزرق بلمعة زجاجية وسهم في مربع، ولمعة تعبر الزر عند التأشير فقط) و«تطوع معنا» (أبيض شفاف بأيقونة وردية دافئة) بلا تكرار تبرع الآن، ومشهد `x-scene.solar` بقصة دخول ~3.6 ثوانٍ بـ CSS فقط: المنصة ترتفع، الشمس تشرق ويزداد توهّج الفجر معها، تلمع الألواح، تُشحن بطاريات التخزين (تتوهّج ليلًا في الوضع الداكن لأنها مصدر الإنارة)، تسري الكهرباء، يمتلئ الخزان، وتضيء الخيمة والمركز وتظهر البطاقات، ثم في الختام تصعد كلمات العنوان تباعًا ويظهر السطر الفرعي والأزرار، ثم شريط الأرقام تحت الأزرار، ثم يُرسم خط فاصل مستقيم متدرج أسفل الهيرو (بدل القوس). الهيرو يملأ الشاشة الأولى (`min-h-[calc(100svh-73px)]`). الشمس واقعية: هالة، إكليل متوهج، قرص ساطع، أشعة ضوئية ناعمة تدور ببطء (90 ثانية)، شعاع نحو الألواح، ولمعات عدسة (أصناف `hero-*` و`story-*` داخل `@layer components` في `app.css` حتى تعمل أصناف `[animation-delay:…]`). الخلفية سماء فاتحة. فكرة الشاشة المعتمة عند الفتح مرفوضة. ← شريط أرقام مدمج من ثلاث خانات (2.5 مليون / 12 شهرًا / عدد المشاريع): الخانة الوسطى بارزة افتراضيًا (تدرج أزرق بلمعة زجاجية وظل ومرفوعة قليلًا)، وعند التأشير على خانة أخرى ينتقل لها البروز بتلاشٍ ناعم (طبقة `--raised`) وتعود الوسطى عند الخروج. تصميم الفواصل الرفيعة بلا خانة زرقاء مرفوض ← مشاريع عاجلة ← **خريطة أضرار المحافظات** (`x-site.damage-map`) ← دعوة التطوع ← طرق التبرع ← قصص النجاح. الأقسام تتناوب بخلفية بيضاء (`x-site.band`) وكل قسم يبدأ بـ `x-site.section-title` (خط من الجهتين، العنوان في الوسط 25px، الوصف تحته) بدون عناوين صغيرة (eyebrow).
-- **خريطة الأضرار**: مسارات المحافظات الخمس (شمال غزة، غزة، دير البلح، خانيونس، رفح) مأخوذة من الموقع الأصلي ومخزنة في `Governorate::outline()`. تدرّج أزرق بحسب حجم الضرر، والنقر على محافظة يعرض لوح «تحت المجهر» (إجمالي المحافظة + 4 تصنيفات بتبويبات: الشبكات، المباني، السيارات، الرواتب) بأشرطة تقدّم متحركة. السلوك في `resources/js/components/damage-map.js`. المبالغ تُنسَّق بـ `App\Support\Money::short()` (مثل `$25.8M`).
+- **خريطة الأضرار**: مسارات المحافظات الخمس (شمال غزة، غزة، دير البلح، خانيونس، رفح) مأخوذة من الموقع الأصلي ومخزنة في `Governorate::outline()`. تدرّج أزرق بحسب حجم الضرر، والنقر على محافظة يعرض لوح «تحت المجهر» (إجمالي المحافظة + تبويب لكل تصنيف أضرار فعّال من «الثوابت»؛ يظهر أيضًا التصنيف المعطّل إن كانت له بنود) بأشرطة تقدّم متحركة. السلوك في `resources/js/components/damage-map.js`. المبالغ تُنسَّق بـ `App\Support\Money::short()` (مثل `$25.8M`).
 - **من نحن (`site/about`)**: تعريف الشركة بجانب صورة غلاف (أول صورة في المعرض) مع شارة عدد المشاريع وزرّي «ادعم مشروعًا» و«تطوع معنا» (عمود واحد بالوسط إن لم توجد صور) ← شريط أرقام (مشاريع، متطوعون مقبولون، شركاء، قصص) بلا أيقونات ← الرؤية والمهمة في `x-site.band` ← إطار العمل الإنساني بثلاث بطاقات مرقّمة ← المعرض (`x-site.gallery`، 7 صور وزر كل الصور) في `x-site.band`. العناوين بـ`x-site.section-title` بلا eyebrow.
 - **الخسائر (`site/losses`)**: لوحة فاتحة فيها كروت أرقام `Loss` + شريط حالة الشبكة، ثم تسلسل زمني للأزمة (نصوص قصيرة) وتأثير الانقطاع (ماء، صحة، صرف صحي، تعليم)، ثم دعوة للتبرع.
 - **التبرع (`site/donate` و`x-site.giving`)**: بطاقة بنكية ثلاثية الأبعاد (`x-site.bank-card`): تميل حسب حركة الماوس مع لمعة، وتنقلب بالنقر لتظهر رمز QR (المنطق في `bank-card.js`)، وأزرار نسخ IBAN/رقم الحساب (`bank-copy`)، وQR لكل بوابة تبرع إلكترونية. عند وجود أكثر من حساب بنكي تظهر تبويبات بأسماء البنوك (مكوّن Alpine `tabs` في `ui.js`) بدل تكديسها. جدول البيانات `x-site.bank-details`: ترويسة باسم البنك، ثم المستفيد والفرع والعنوان في خانات، ثم رقم الحساب والسويفت والـIBAN بأزرار نسخ (IBAN يُعرض مجمّعًا كل 4 خانات ويُنسخ متصلًا).
@@ -113,7 +114,7 @@ npm run build
 
 ## 7. لوحة التحكم (`/admin`)
 
-الهيكل (`config/navigation.php`): الرئيسية؛ المحتوى (المشاريع، الخسائر، **أضرار المحافظات**، قصص النجاح، معرض الصور، الشركاء، الأسئلة الشائعة، **محتوى الصفحات**)؛ التبرعات (طرق التبرع)؛ الوارد (طلبات التطوع، رسائل التواصل)؛ النظام (المستخدمون، الأدوار والصلاحيات، إعدادات الموقع). كل عنصر يظهر حسب صلاحية `*.view` الخاصة به.
+الهيكل (`config/navigation.php`): الرئيسية؛ المحتوى (المشاريع، الخسائر، **أضرار المحافظات**، قصص النجاح، معرض الصور، الشركاء، الأسئلة الشائعة، **محتوى الصفحات**)؛ التبرعات (طرق التبرع)؛ الوارد (طلبات التطوع، رسائل التواصل)؛ النظام (المستخدمون، الأدوار والصلاحيات، **الثوابت**، إعدادات الموقع). كل عنصر يظهر حسب صلاحية `*.view` الخاصة به.
 
 - **محتوى الصفحات** (`/admin/pages`، صلاحية `pages.update`، `PageContentController`): نصوص «من نحن» (التعريف، الرؤية، المهمة، إطار العمل) و«الخسائر» (حالة الشبكة، التسلسل الزمني، الأثر، دعوة التبرع) بلغتين. الحقول معرّفة في `config/pages.php` والنصوص الافتراضية تبقى في `lang/*/site.php`؛ تُخزَّن في جدول `settings` بمفاتيح `page_*` و`page_*_en` **فقط عند اختلافها عن الافتراضي** (الحقل الفارغ أو المطابق للافتراضي يحذف الصف). القراءة عبر `App\Support\PageContent::text('about.intro')` (كاش `page-content`). لون شارة الحالة (`tone`) والأيقونات تبقى في الكود.
 - **القائمة الجانبية** (`admin/partials/sidebar`): بلا خطوط فاصلة ولا حدود، تنفصل عن المحتوى بظل ناعم. المجموعات مفتوحة تلقائيًا وقابلة للإغلاق (`navGroup` في `ui.js`) بعنوان صغير هادئ وسهم ونقطة زرقاء إن كانت تحوي الصفحة الحالية، بلا عدّادات؛ مجموعة «الرئيسية» ثابتة (`collapsible => false`). العنصر النشط بتدرج أزرق بارز (لمعة وظل)، والتأشير خلفية ناعمة مع حركة بسيطة للأيقونة. في وضع الطي تُخفى العناوين وتبقى الأيقونات.
@@ -135,7 +136,7 @@ npm run build
 
 ## 9. الاختبارات
 
-110 اختبارات ناجحة (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest}`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (المشروع بلا git فلا يعمل `--dirty`، مرّر أسماء الملفات).
+141 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 
@@ -157,6 +158,10 @@ npm run build
 ## 12. آخر عمل (حتى وقت كتابة هذا الملف)
 
 - استبدال مخطط النبض المتحرك في بطاقة الترحيب بلوحة المعلومات (`resources/views/admin/dashboard.blade.php`) بفن `x-brand.power-line`، وحذف `pulse.js` و`x-brand.pulse` وتسجيله من `app.js`. البناء نجح، وفُحصت النتيجة بصريًا (2026-11-04) عند عرضي 800 و1440: الرسمة أسفل اليسار والنص يمينًا بلا تداخل، وحُذف مستخدم الاختبار المؤقت (جدول `users` فيه حساب واحد).
+
+## 12.0 عمل 2026-11-07
+
+الثوابت والأدوار والمدير العام والتصدير (تفاصيلها في القسمين 16 و17). الهجرتان الجديدتان **لم تُشغَّلا على قاعدتك المحلية**: شغّل `php artisan migrate` ثم `php artisan db:seed --class=AdminUserSeeder` (يجعل حساب `ADMIN_EMAIL` مديرًا عامًا). عدّلنا أيضًا: فلاتر القوائم تمسح باراميتراتها من شريط العنوان بعد التحميل (`clean-url.js` مع `data-clean-url` على `x-ui.filter-bar`)، ولا تُحفظ بين الزيارات.
 
 ## 12.1 تنظيف 2026-11-06
 
@@ -197,5 +202,15 @@ npm run build
 - **الأدوار الافتراضية** (`RoleSeeder`): مدير النظام (دور نظام: كل الصلاحيات، لا يُعدّل ولا يُحذف)، محرر المحتوى، مدخل بيانات، مشاهد. الدور المرتبط بمستخدمين لا يُحذف، ولا يعدّل المستخدم دوره بنفسه.
 - **صلاحيات المستخدم**: شاشة `/admin/users/{id}/permissions` (أيقونة الدرع في قائمة المستخدمين): صلاحيات الدور زرقاء، المضافة خضراء، المحجوبة حمراء. تُخزن الفروقات عن الدور فقط.
 - **منع التصعيد**: غير المدير لا يمنح صلاحية لا يملكها (في الأدوار ولا للمستخدمين)، ولا يعدّل حسابات المدير أو صلاحياته، ولا يسند دورًا أقوى منه، ولا يعدّل صلاحيات نفسه.
+- **المدير العام**: عمود `users.is_super_admin`، حساب واحد فقط يحدده `ADMIN_EMAIL` عبر `AdminUserSeeder` (يلغي أي مدير عام سابق)، ولا يُمنح من الواجهة ولا يقبل `UserRequest` الحقل. يملك كل الصلاحيات، ولا يعدّله أو يوقفه أو يعدّل صلاحياته غيره (`UserPolicy`).
+- **الدخول بحساب مستخدم** (`Impersonation` + `ImpersonationController`): زر `log-in` في شاشة المستخدمين للمدير العام فقط، ممنوع على مدير عام آخر وعلى الحساب المعطّل وعلى النفس. عند الدخول والخروج يُجدَّد رمز الجلسة، ويظهر شريط أصفر ثابت أعلى اللوحة (`impersonation-bar`) بزر «العودة لحسابي» (المسار `admin.impersonation.leave` عام لأن المستخدم المنتحَل قد لا يملك صلاحية). لو أُوقف المدير العام أثناء الانتحال يخرج المستخدم للدخول. لا يتداخل انتحالان.
+- **صلاحيات المستخدم الإضافية**: أيقونة الدرع بشاشة المستخدمين تعمل مع المدير العام، وتظهر تحت اسم الدور شارتان خضراء/حمراء بعدد الصلاحيات المضافة والمحجوبة.
 - **المكوّن** `x-ui.permission-tree` و`resources/js/components/permission-tree.js`: طي وفتح المجموعات، مربعات بثلاث حالات، بحث، تحديد وإلغاء الكل، عدّاد.
 - أُزيل `App\Enums\UserRole`؛ تحويل الأدوار القديمة تم في الهجرة `2026_11_04_142552_create_roles_and_permissions_tables` (نسخة احتياطية قبلها: `gazaappeal-before-roles.sql` في مجلد العمل المؤقت).
+
+## 17. الثوابت والتصدير
+
+- **الثوابت** (`/admin/lookups`، وحدة `lookups` بصلاحيات CRUD في قسم النظام): جدول `lookups` واحد لأنواع `LookupType` (حالات المشاريع، تصنيفات الأضرار، مجالات التطوع) بتبويبات حسب النوع. لكل عنصر اسم بلغتين وأيقونة (من `Lookup::ICONS`) ولون شارة (`Lookup::TONES`) اختياريان، وترتيب وتفعيل. إضافة نوع جديد = حالة في `LookupType` + علاقة `usage` في `Lookup` + عمود مفتاح أجنبي.
+- **الحذف**: ممنوع لو العنصر مستخدم (ويشمل المشاريع المحذوفة soft)؛ يظهر عدد الاستخدام في الجدول وتُعرض رسالة بالعدد، والمفتاح الأجنبي `restrictOnDelete` حماية إضافية. المعطّل يختفي من القوائم والنماذج الجديدة (`Lookup::options(..., activeOnly)` و`Lookup::rule()` للتحقق، مع السماح بقيمة السجل الحالية عند تعديله) ويبقى ظاهرًا في السجلات القديمة.
+- **الاستعمال**: العلاقات `Project::status` و`Damage::category` و`Volunteer::expertise`؛ حمّلها صراحة بـ`->with()` في كل استعلام يعرضها (`Model::shouldBeStrict`). الشارة بـ`<x-ui.lookup-badge>`. الـ seeders تجد العنصر بالاسم العربي (`SeedsLookups`).
+- **التصدير إلى Excel**: مكتبة `openspout/openspout` (خفيفة وتبث الملف بلا تحميله كله في الذاكرة). الخدمة `App\Support\SpreadsheetExport` تكتب xlsx بترويسة زرقاء وورقة RTL في العربية. الشاشات: المشاريع، الخسائر، أضرار المحافظات، طلبات التطوع، رسائل التواصل (`admin.*.export`، زر أخضر في الترويسة). يصدّر **نتائج الفلاتر الحالية كلها** (لا الصفحة فقط) لأن كل متحكم يستخرج استعلام `filtered()` يستعمله العرض والتصدير. الصلاحية = `*.view` (`route_actions.export`). النصوص تُكتب كنص لا كصيغ، فلا حقن صيغ. أي شاشة جديدة: مسار `export` قبل مسار المورد، ومفاتيح `admin.export.columns.*`.

@@ -1,8 +1,6 @@
 @php
-    use App\Enums\VolunteerExpertise;
-
     $steps = ['apply' => 'send', 'review' => 'clipboard-check', 'contact' => 'phone'];
-    $selected = (int) old('expertise');
+    $selected = (int) old('expertise_id');
 @endphp
 
 <x-layouts.site :title="__('site.volunteer.title')" :description="__('site.volunteer.intro')">
@@ -61,11 +59,11 @@
                     {{ __('site.fields.expertise') }}<span class="text-danger" aria-hidden="true">*</span>
                 </legend>
                 <div class="grid gap-3 sm:grid-cols-2">
-                    @foreach (VolunteerExpertise::cases() as $expertise)
-                        <x-ui.choice-card name="expertise" :value="$expertise->value" :label="$expertise->label()" :icon="$expertise->icon()" :checked="$selected === $expertise->value" />
+                    @foreach ($expertises as $expertise)
+                        <x-ui.choice-card name="expertise_id" :value="$expertise->id" :label="$expertise->name" :icon="$expertise->displayIcon()" :checked="$selected === $expertise->id" />
                     @endforeach
                 </div>
-                @error('expertise')
+                @error('expertise_id')
                     <p class="flex items-center gap-1.5 text-[13px] font-medium text-danger" role="alert"><x-ui.icon name="circle-alert" :size="15" />{{ $message }}</p>
                 @enderror
             </fieldset>

@@ -1,12 +1,6 @@
 <?php
 
 return [
-    'project_status' => [
-        'Planned' => 'قيد التخطيط',
-        'Active' => 'قيد التنفيذ',
-        'Completed' => 'مكتمل',
-    ],
-
     'volunteer_status' => [
         'New' => 'جديد',
         'Contacted' => 'تم التواصل',
@@ -14,12 +8,10 @@ return [
         'Declined' => 'معتذر عنه',
     ],
 
-    'volunteer_expertise' => [
-        'PowerInfrastructure' => 'البنية التحتية للطاقة الكهربائية',
-        'ReliefProjects' => 'إدارة مشاريع الإغاثة والطوارئ',
-        'Reconstruction' => 'إعادة التأهيل والإعمار في قطاع الطاقة',
-        'RenewableEnergy' => 'حلول الطاقة المتجددة والهجينة',
-        'Other' => 'مجال آخر',
+    'lookup_type' => [
+        'ProjectStatus' => 'حالات المشاريع',
+        'DamageCategory' => 'تصنيفات الأضرار',
+        'VolunteerExpertise' => 'مجالات التطوع',
     ],
 
     'donation_method_type' => [
@@ -44,13 +36,6 @@ return [
         'Middle' => 'دير البلح',
         'KhanYounis' => 'خانيونس',
         'Rafah' => 'رفح',
-    ],
-
-    'damage_category' => [
-        'Networks' => 'الشبكات الكهربائية',
-        'Buildings' => 'مبانٍ ومخازن ومراكز',
-        'Vehicles' => 'سيارات وآليات ومولدات',
-        'Operations' => 'رواتب ومصاريف تشغيلية',
     ],
 
     'message_state' => [

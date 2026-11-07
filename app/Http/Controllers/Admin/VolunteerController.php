@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\VolunteerExpertise;
 use App\Enums\VolunteerStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\VolunteerReviewRequest;
 use App\Models\Volunteer;
+use App\Support\SpreadsheetExport;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class VolunteerController extends Controller
 {
@@ -19,19 +21,44 @@ final class VolunteerController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
         $status = VolunteerStatus::tryFrom($request->integer('status'));
-        $expertise = VolunteerExpertise::tryFrom($request->integer('expertise'));
+        $expertise = $request->integer('expertise') ?: null;
 
-        $volunteers = Volunteer::query()
+        $volunteers = $this->filtered($request)->paginate(config('appeal.per_page'))->withQueryString();
+
+        return view('admin.volunteers.index', compact('volunteers', 'search', 'status', 'expertise'));
+    }
+
+    public function export(Request $request, SpreadsheetExport $export): StreamedResponse
+    {
+        return $export->download('volunteers', __('admin.volunteers.title'), [
+            '#', ...array_map(fn (string $key): string => __("admin.export.columns.{$key}"), ['name', 'email', 'phone', 'country', 'expertise', 'experience', 'status', 'message', 'notes', 'received']),
+        ], $this->filtered($request), fn (Volunteer $volunteer): array => [
+            $volunteer->id,
+            $volunteer->name,
+            $volunteer->email,
+            $volunteer->phone,
+            $volunteer->country,
+            $volunteer->expertise->name,
+            $volunteer->experience_years,
+            $volunteer->status->label(),
+            $volunteer->message,
+            $volunteer->notes,
+            $volunteer->created_at->format('Y-m-d H:i'),
+        ]);
+    }
+
+    private function filtered(Request $request): Builder
+    {
+        $search = $request->string('q')->trim()->toString();
+
+        return Volunteer::query()
+            ->with('expertise')
             ->when($search !== '', fn ($query) => $query->where(
                 fn ($inner) => $inner->whereLike('name', "%{$search}%")->orWhereLike('email', "%{$search}%"),
             ))
-            ->when($status, fn ($query) => $query->where('status', $status))
-            ->when($expertise, fn ($query) => $query->where('expertise', $expertise))
-            ->latest()
-            ->paginate(config('appeal.per_page'))
-            ->withQueryString();
-
-        return view('admin.volunteers.index', compact('volunteers', 'search', 'status', 'expertise'));
+            ->when(VolunteerStatus::tryFrom($request->integer('status')), fn ($query, VolunteerStatus $status) => $query->where('status', $status))
+            ->when($request->integer('expertise') ?: null, fn ($query, int $expertise) => $query->where('expertise_id', $expertise))
+            ->latest();
     }
 
     public function show(Volunteer $volunteer): View

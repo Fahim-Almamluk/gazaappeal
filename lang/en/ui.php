@@ -65,6 +65,7 @@ return [
         'restore' => ['title' => 'Restore message', 'text' => 'The message from “:name” will return to the inbox.', 'ok' => 'Yes, restore'],
         'deactivate' => ['title' => 'Deactivate account', 'text' => '“:name” will be blocked from the dashboard immediately.', 'ok' => 'Yes, deactivate'],
         'activate' => ['title' => 'Activate account', 'text' => '“:name” will be able to access the dashboard again.', 'ok' => 'Yes, activate'],
+        'impersonate' => ['title' => 'Sign in as user', 'text' => 'You will browse the dashboard with “:name”’s permissions until you switch back.', 'ok' => 'Yes, sign in'],
     ],
 
     'results' => [
@@ -124,6 +125,7 @@ return [
         'system' => 'System',
         'users' => 'Users',
         'roles' => 'Roles & permissions',
+        'lookups' => 'Constants',
         'settings' => 'Site settings',
     ],
 

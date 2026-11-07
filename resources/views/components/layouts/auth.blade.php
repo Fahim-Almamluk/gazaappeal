@@ -6,7 +6,7 @@
             <section class="relative flex min-h-0 flex-col overflow-x-clip px-6 py-7 sm:px-10 lg:px-14 lg:py-9">
                 <header class="flex items-center justify-end gap-2">
                     <x-ui.language-switch />
-                    @include('partials.theme-menu')
+                    @include('partials.theme-toggle')
                 </header>
 
                 <main class="flex flex-1 items-center py-6">

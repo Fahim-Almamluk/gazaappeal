@@ -18,7 +18,7 @@
         'danger-soft' => 'bg-danger-soft text-danger hover:brightness-[.97] dark:hover:brightness-125',
         'cancel' => 'border border-line-strong bg-neutral-soft text-ink hover:border-ink-subtle hover:bg-surface-hover',
         'reset' => 'border border-warning/35 bg-warning-soft text-warning hover:border-warning hover:brightness-95 dark:hover:brightness-125',
-        'back' => 'border border-danger/30 bg-danger-soft text-danger hover:border-danger-solid hover:bg-danger-solid hover:text-white',
+        'back' => 'border border-danger-solid bg-danger-solid text-white shadow-[0_8px_18px_-10px_var(--danger-solid)] hover:brightness-110',
     ];
 
     $sizes = [
@@ -35,12 +35,12 @@
 @endphp
 
 @if ($href)
-    <a href="{{ $href }}" {{ $attributes->class($classes) }}>
+    <a href="{{ $href }}" data-variant="{{ $variant }}" {{ $attributes->class($classes) }}>
         @if ($icon)<x-ui.icon :name="$icon" :size="$size === 'sm' ? 16 : 18" />@endif
         {{ $slot }}
     </a>
 @else
-    <button type="{{ $type }}" {{ $attributes->class($classes) }}>
+    <button type="{{ $type }}" data-variant="{{ $variant }}" {{ $attributes->class($classes) }}>
         @if ($icon)<x-ui.icon :name="$icon" :size="$size === 'sm' ? 16 : 18" />@endif
         {{ $slot }}
     </button>

@@ -264,6 +264,10 @@
     --info-soft: #eef1ff;
     --neutral: #4b5578;
     --neutral-soft: #f1f3fa;
+    --excel: #1d7a45;
+    --excel-hover: #166338;
+    --excel-fg: #ffffff;
+    --excel-soft: #e8f5ee;
 
     --social-facebook: #1877f2;
     --social-youtube: #ff0000;
@@ -303,6 +307,10 @@
     --info-soft: #14223d;
     --neutral: #a0a7c0;
     --neutral-soft: #1c2130;
+    --excel: #22a55b;
+    --excel-hover: #2bb868;
+    --excel-fg: #06210f;
+    --excel-soft: #0b2a1a;
 }
 
 @theme inline {
@@ -337,6 +345,10 @@
     --color-info-soft: var(--info-soft);
     --color-neutral: var(--neutral);
     --color-neutral-soft: var(--neutral-soft);
+    --color-excel: var(--excel);
+    --color-excel-hover: var(--excel-hover);
+    --color-excel-fg: var(--excel-fg);
+    --color-excel-soft: var(--excel-soft);
     --shadow-elevated: var(--card-shadow);
     --shadow-overlay: var(--float-shadow);
 }

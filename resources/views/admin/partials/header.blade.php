@@ -19,7 +19,7 @@
 
         <x-ui.language-switch class="me-1" />
 
-        @include('partials.theme-menu')
+        @include('partials.theme-toggle')
 
         <div class="relative" x-data="dropdown" x-on:click.outside="close" x-on:keydown.escape.window="close">
             <x-ui.button variant="ghost" size="icon" class="relative" x-on:click="toggle" x-bind:aria-expanded="open" aria-haspopup="true" aria-label="{{ __('ui.header.notifications') }}">

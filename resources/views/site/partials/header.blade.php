@@ -28,7 +28,7 @@
 
         <div class="ms-auto flex items-center gap-1.5 xl:ms-0">
             <x-ui.language-switch />
-            @include('partials.theme-menu')
+            @include('partials.theme-toggle')
             <x-ui.button :href="route('donate')" icon="heart" class="max-sm:hidden">{{ __('site.nav.donate') }}</x-ui.button>
             <x-ui.button variant="ghost" size="icon" class="xl:hidden" x-on:click="toggle" x-bind:aria-expanded="open" aria-label="{{ __('site.nav.menu') }}">
                 <x-ui.icon name="menu" />

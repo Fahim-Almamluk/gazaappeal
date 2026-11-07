@@ -31,9 +31,8 @@ return [
 
     'theme' => [
         'label' => 'Appearance',
-        'light' => 'Light',
-        'dark' => 'Dark',
-        'system' => 'System',
+        'to_dark' => 'Switch to dark mode',
+        'to_light' => 'Switch to light mode',
     ],
 
     'header' => [

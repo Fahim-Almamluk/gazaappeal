@@ -1,64 +1,51 @@
 const STORAGE_KEY = 'gaza.theme';
 const media = window.matchMedia('(prefers-color-scheme: dark)');
 
-export function storedTheme() {
+const stored = () => {
     try {
         return localStorage.getItem(STORAGE_KEY) ?? 'system';
     } catch {
         return 'system';
     }
-}
+};
 
-export function applyTheme(mode) {
+const resolve = (mode) => (mode === 'dark' || (mode === 'system' && media.matches) ? 'dark' : 'light');
+
+const apply = (theme) => {
     const root = document.documentElement;
-    const dark = mode === 'dark' || (mode === 'system' && media.matches);
 
     root.classList.add('theme-switching');
-    root.dataset.theme = dark ? 'dark' : 'light';
+    root.dataset.theme = theme;
     requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-switching')));
-}
+};
 
 export default () => ({
-    mode: storedTheme(),
+    dark: document.documentElement.dataset.theme === 'dark',
 
     init() {
-        media.addEventListener('change', () => this.mode === 'system' && applyTheme('system'));
+        media.addEventListener('change', () => {
+            if (stored() === 'system') {
+                this.dark = resolve('system') === 'dark';
+                apply(this.dark ? 'dark' : 'light');
+            }
+        });
     },
 
-    choose(mode) {
-        this.mode = mode;
+    toggle() {
+        this.dark = !this.dark;
+
         try {
-            localStorage.setItem(STORAGE_KEY, mode);
+            localStorage.setItem(STORAGE_KEY, this.dark ? 'dark' : 'light');
         } catch {}
-        applyTheme(mode);
+
+        apply(this.dark ? 'dark' : 'light');
     },
 
-    setLight() {
-        this.choose('light');
+    get light() {
+        return !this.dark;
     },
 
-    setDark() {
-        this.choose('dark');
-    },
-
-    setSystem() {
-        this.choose('system');
-    },
-
-    cycle() {
-        const order = ['light', 'dark', 'system'];
-        this.choose(order[(order.indexOf(this.mode) + 1) % order.length]);
-    },
-
-    get isLight() {
-        return this.mode === 'light';
-    },
-
-    get isDark() {
-        return this.mode === 'dark';
-    },
-
-    get isSystem() {
-        return this.mode === 'system';
+    get label() {
+        return this.dark ? this.$root.dataset.toLight : this.$root.dataset.toDark;
     },
 });

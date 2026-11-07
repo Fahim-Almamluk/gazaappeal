@@ -113,4 +113,40 @@ final class RolesHierarchyTest extends TestCase
         $this->put(route('admin.roles.update', $systemRole), ['name' => ['ar' => 'x'], 'permissions' => []])->assertForbidden();
         $this->delete(route('admin.roles.destroy', $systemRole))->assertForbidden();
     }
+
+    public function test_admin_can_create_another_admin_but_never_a_super_admin(): void
+    {
+        $adminRole = Role::factory()->administrator()->create();
+        $admin = User::factory()->create(['role_id' => $adminRole]);
+        $this->actingAs($admin);
+
+        $this->post(route('admin.users.store'), [
+            'name' => 'أدمن ثاني',
+            'email' => 'second@example.test',
+            'role_id' => $adminRole->id,
+            'password' => 'Abcdefg1',
+            'password_confirmation' => 'Abcdefg1',
+        ])->assertSessionHasNoErrors();
+
+        $second = User::query()->where('email', 'second@example.test')->firstOrFail();
+        $this->assertSame($adminRole->id, $second->role_id);
+        $this->assertFalse($second->isSuperAdmin());
+    }
+
+    public function test_restricted_admin_cannot_create_an_admin_with_more_permissions_than_their_own(): void
+    {
+        $adminRole = Role::factory()->administrator()->create();
+        $restricted = Role::factory()->withPermissions(['users.view', 'users.create'])->create();
+        $actor = User::factory()->create(['role_id' => $restricted]);
+
+        $this->actingAs($actor)->post(route('admin.users.store'), [
+            'name' => 'أدمن',
+            'email' => 'escalated@example.test',
+            'role_id' => $adminRole->id,
+            'password' => 'Abcdefg1',
+            'password_confirmation' => 'Abcdefg1',
+        ])->assertSessionHasErrors('role_id');
+
+        $this->assertDatabaseMissing('users', ['email' => 'escalated@example.test']);
+    }
 }

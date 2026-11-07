@@ -136,7 +136,7 @@ npm run build
 
 ## 9. الاختبارات
 
-172 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
+174 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 

@@ -8,15 +8,7 @@
 ])
 
 <div class="mx-auto max-w-6xl space-y-6">
-    @if ($parent)
-        <nav aria-label="breadcrumb" class="flex items-center gap-2 text-sm text-ink-subtle">
-            <a href="{{ $parentUrl }}" class="font-medium text-ink-muted transition hover:text-primary">{{ $parent }}</a>
-            <x-ui.icon name="chevron-left" :size="14" />
-            <span class="font-semibold text-ink">{{ $title }}</span>
-        </nav>
-    @endif
-
-    <x-ui.page-header :icon="$icon" :title="$title" :subtitle="$subtitle">
+    <x-ui.page-header :icon="$icon" :title="$title" :subtitle="$subtitle" :parent="$parent" :parent-url="$parentUrl">
         <x-slot:actions>
             <x-ui.back-button :href="$back">{{ __('ui.common.back') }}</x-ui.back-button>
         </x-slot:actions>

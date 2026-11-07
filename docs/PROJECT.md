@@ -136,7 +136,7 @@ npm run build
 
 ## 9. الاختبارات
 
-152 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
+156 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 
@@ -221,3 +221,8 @@ npm run build
 - **رسالة واحدة بلا تكرار**: لو اجتمعت رسائل تُعرض الأهم فقط (خطأ ثم تحذير ثم نجاح ثم ملاحظة). أخطاء التحقق: نص الخطأ يبقى **تحت الحقل**، والتنبيه جملة واحدة قصيرة («راجع الحقول المعلّمة بالأحمر») ثم ينتقل التركيز لأول حقل خاطئ (ويفتح تبويب اللغة المخفي)؛ وتُعرض في التنبيه (حتى 3) فقط الأخطاء التي لا يظهر نصها تحت أي حقل. لا ترسل رسالة تكرر ما تقوله الواجهة (مثلًا لا رسالة عند الدخول بحساب مستخدم لأن الشريط الأصفر يقولها). ملخص التحقق في المتصفح (`form-guard.js`) يستعمل `notify()` نفسها.
 - **حدود الحماية**: ما يُعرض للمستخدم من متصفحه لا يمكن حمايته من تعديله هو؛ الحماية هنا أن التنبيه لا يوجد كعنصر قابل للتعديل في HTML وأن كل تحقق وقرار يتم في الخادم.
 - **قوة كلمة المرور**: الخاصية `strength` في `x-ui.password` (حقول كلمة المرور الجديدة فقط: إضافة/تعديل مستخدم والملف الشخصي) تعرض مؤشرًا من 4 مقاطع (ضعيفة/متوسطة/قوية/قوية جدًا) وقائمة الشروط (8 خانات، حرف كبير وصغير A و a، رقم). «ضعيفة» تعني أن الخادم سيرفضها؛ «متوسطة» هي الحد الأدنى المقبول، والطول 12 فأكثر والرمز يرفعان المستوى. المنطق في `passwordStrength` (`ui.js`) ويطابق قاعدة `Password::defaults()` في `AppServiceProvider`. رسالة الحد الأدنى معدّلة في `validation.custom.password.min` (خانات لا أحرف).
+
+## 19. ترويسة الصفحات وزر اللغة
+
+- **ترويسة الصفحة** `x-ui.page-header`: كارد خفيف (حد رفيع وظل ناعم وتدرج أزرق باهت من جهة الأيقونة، بلا لوحات ثقيلة) يحوي مسار التنقل (`parent`/`parentUrl`، يظهر في صفحات النماذج والتفاصيل فقط) ثم أيقونة وعنوان 24px ووصف قصير وأزرار الإجراءات. `form-page` و`detail-page` يمرّران المسار إليه ولا يرسمان مسارًا خاصًا؛ أُزيل تنبيه الأخطاء المضمّن من `detail-page` لأن التنبيه العلوي (القسم 18) يكفي.
+- **زر اللغة** `x-ui.language-switch` (الإدارة والموقع والدخول): كبسولة بخلفية زرقاء فاتحة ودائرة زرقاء بها رمز اللغة الهدف (`EN` أو `ع`) مع اسمها؛ على الجوال تبقى الدائرة فقط والاسم للقارئ الشاشي.

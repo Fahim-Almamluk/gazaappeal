@@ -80,7 +80,8 @@ final class Role extends Model
             ->orderByDesc('is_system')
             ->orderBy('id')
             ->get()
-            ->filter(fn (self $role): bool => $actor->isAdmin() || (! $role->is_system && array_diff($role->permissions(), $actor->permissions()) === []))
+            ->reject(fn (self $role): bool => $role->is_system)
+            ->filter(fn (self $role): bool => $actor->isSuperAdmin() || array_diff($role->permissions(), $actor->permissions()) === [])
             ->values();
     }
 

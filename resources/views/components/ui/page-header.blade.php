@@ -6,7 +6,7 @@
     'parentUrl' => null,
 ])
 
-<header {{ $attributes->class('rounded-panel bg-linear-to-l from-brand-700 via-brand-600 to-brand-500 px-5 py-4 text-white sm:px-6 sm:py-5') }}>
+<x-ui.brand-card tag="header" {{ $attributes->class('px-5 py-4 sm:px-6 sm:py-5') }}>
     <div class="space-y-3">
         @if ($parent)
             <nav aria-label="breadcrumb" class="flex items-center gap-1.5 text-[13px] text-white/65">
@@ -19,8 +19,8 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex min-w-0 flex-1 items-center gap-3.5">
                 @if ($icon)
-                    <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/25">
-                        <x-ui.icon :name="$icon" :size="22" />
+                    <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-[0_10px_22px_-10px_rgb(4_30_72/0.7)] ring-4 ring-white/20">
+                        <x-ui.icon :name="$icon" :size="24" />
                     </span>
                 @endif
                 <div class="min-w-0 max-w-3xl">
@@ -44,4 +44,4 @@
             @endisset
         </div>
     </div>
-</header>
+</x-ui.brand-card>

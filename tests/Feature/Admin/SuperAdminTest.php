@@ -37,7 +37,7 @@ final class SuperAdminTest extends TestCase
         $this->post(route('admin.users.store'), [
             'name' => 'مستخدم جديد',
             'email' => 'new@example.com',
-            'role_id' => Role::query()->where('is_system', true)->value('id'),
+            'role_id' => Role::factory()->administrator()->create()->id,
             'password' => 'Secret-Pass-2026!',
             'password_confirmation' => 'Secret-Pass-2026!',
             'is_super_admin' => '1',

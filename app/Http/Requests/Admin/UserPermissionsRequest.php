@@ -33,7 +33,7 @@ final class UserPermissionsRequest extends FormRequest
     {
         $actor = $this->user();
 
-        if ($actor->isAdmin()) {
+        if ($actor->isSuperAdmin()) {
             return app(Permissions::class)->all();
         }
 

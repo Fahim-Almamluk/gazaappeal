@@ -81,7 +81,7 @@ final class AccessControlTest extends TestCase
             'role_id' => Role::factory()->editor()->create()->id,
         ])->assertSessionHasErrors('role_id');
 
-        $this->assertTrue($admin->fresh()->isAdmin());
+        $this->assertTrue($admin->fresh()->isSuperAdmin());
     }
 
     public function test_admin_deactivates_another_user(): void

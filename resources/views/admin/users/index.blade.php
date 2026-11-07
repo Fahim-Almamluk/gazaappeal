@@ -49,8 +49,8 @@
                                     </div>
                                 </td>
                                 <td class="px-3 py-3.5">
-                                    <x-ui.badge :tone="$user->isAdmin() ? 'brand' : 'neutral'" :icon="$user->isAdmin() ? 'shield-check' : null">{{ $user->role?->name ?? __('ui.common.none') }}</x-ui.badge>
-                                    @if (! $user->isAdmin() && ($user->granted_count > 0 || $user->revoked_count > 0))
+                                    <x-ui.badge :tone="$user->isSuperAdmin() ? 'brand' : 'neutral'" :icon="$user->isSuperAdmin() ? 'shield-check' : null">{{ $user->role?->name ?? __('ui.common.none') }}</x-ui.badge>
+                                    @if (! $user->isSuperAdmin() && ($user->granted_count > 0 || $user->revoked_count > 0))
                                         <div class="mt-1.5 flex flex-wrap gap-1">
                                             @if ($user->granted_count > 0)
                                                 <x-ui.badge tone="success" icon="plus">{{ trans_choice('admin.users.permissions.granted_count', $user->granted_count, ['count' => $user->granted_count]) }}</x-ui.badge>

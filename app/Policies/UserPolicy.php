@@ -24,7 +24,7 @@ final class UserPolicy
             return $actor->is($user);
         }
 
-        return $actor->hasPermission('users.update') && ($actor->isAdmin() || ! $user->isAdmin());
+        return $actor->hasPermission('users.update') && ($actor->isSuperAdmin() || ! $user->isSuperAdmin());
     }
 
     public function toggle(User $actor, User $user): bool
@@ -34,7 +34,7 @@ final class UserPolicy
 
     public function permissions(User $actor, User $user): bool
     {
-        return $this->update($actor, $user) && $actor->isNot($user) && ! $user->isAdmin();
+        return $this->update($actor, $user) && $actor->isNot($user) && ! $user->isSuperAdmin();
     }
 
     public function impersonate(User $actor, User $user): bool

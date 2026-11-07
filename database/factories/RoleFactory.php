@@ -19,7 +19,7 @@ final class RoleFactory extends Factory
 
     public function system(): static
     {
-        return $this->state(['name' => ['ar' => 'مدير النظام', 'en' => 'System administrator']])
+        return $this->state(['name' => ['ar' => 'سوبر أدمن', 'en' => 'Super admin']])
             ->afterMaking(fn (Role $role) => $role->forceFill(['is_system' => true]));
     }
 
@@ -29,6 +29,12 @@ final class RoleFactory extends Factory
     public function withPermissions(array $permissions): static
     {
         return $this->afterCreating(fn (Role $role) => $role->syncPermissions($permissions));
+    }
+
+    public function administrator(): static
+    {
+        return $this->state(['name' => ['ar' => 'أدمن', 'en' => 'Admin']])
+            ->afterCreating(fn (Role $role) => $role->syncPermissions(app(Permissions::class)->all()));
     }
 
     public function editor(): static

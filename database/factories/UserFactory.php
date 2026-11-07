@@ -31,6 +31,11 @@ final class UserFactory extends Factory
         return $this->state(['role_id' => Role::factory()->system()]);
     }
 
+    public function administrator(): static
+    {
+        return $this->state(['role_id' => Role::factory()->administrator()]);
+    }
+
     public function superAdmin(): static
     {
         return $this->admin()->afterMaking(fn (User $user) => $user->forceFill(['is_super_admin' => true]));

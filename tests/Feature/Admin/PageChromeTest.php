@@ -24,7 +24,8 @@ final class PageChromeTest extends TestCase
 
         $this->assertSame(1, substr_count($html, 'aria-label="breadcrumb"'));
         $this->assertSame(1, substr_count($html, '<h1'));
-        $this->assertStringContainsString('<header class="rounded-panel bg-linear-to-l from-brand-700 via-brand-600 to-brand-500', $html);
+        $this->assertMatchesRegularExpression('/<header class="[^"]*from-brand-700 via-brand-600 to-brand-500/', $html);
+        $this->assertStringContainsString('dot-grid', $html);
     }
 
     public function test_detail_pages_use_the_same_header_card_and_no_inline_error_alert(): void

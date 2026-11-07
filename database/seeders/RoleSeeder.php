@@ -24,10 +24,12 @@ final class RoleSeeder extends Seeder
             fn (string $permission): bool => in_array(Str::before($permission, '.'), $modules, true) && in_array(Str::after($permission, '.'), $actions, true),
         ));
 
-        $administrator = $this->seedTranslated(Role::class, ['name', ['ar' => 'مدير النظام', 'en' => 'System administrator']], []);
-        $administrator->forceFill(['is_system' => true])->save();
+        $superAdmin = Role::query()->where('is_system', true)->first() ?? new Role;
+        $superAdmin->name = ['ar' => 'سوبر أدمن', 'en' => 'Super admin'];
+        $superAdmin->forceFill(['is_system' => true])->save();
 
         $defaults = [
+            [['ar' => 'أدمن', 'en' => 'Admin'], $all],
             [['ar' => 'محرر المحتوى', 'en' => 'Content editor'], [...$within(self::CONTENT, ['view', 'create', 'update', 'delete']), ...$within(self::INBOX, ['view', 'update'])]],
             [['ar' => 'مدخل بيانات', 'en' => 'Data entry'], [...$within(self::CONTENT, ['view', 'create', 'update']), ...$within(self::INBOX, ['view'])]],
             [['ar' => 'مشاهد', 'en' => 'Viewer'], $within([...self::CONTENT, ...self::INBOX], ['view'])],

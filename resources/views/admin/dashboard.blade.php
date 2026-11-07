@@ -6,12 +6,7 @@
 
 <x-layouts.admin :title="__('admin.dashboard.title')">
     <div class="space-y-8">
-        <section class="relative isolate overflow-hidden rounded-panel bg-linear-to-l from-brand-700 via-brand-600 to-brand-500 p-7 text-white sm:p-9">
-            <div class="pointer-events-none absolute -top-24 start-10 -z-10 size-72 rounded-full bg-brand-300/30 blur-3xl"></div>
-            <div class="grain pointer-events-none absolute inset-0 -z-10 opacity-[0.15] mix-blend-overlay"></div>
-
-            <div class="dot-grid pointer-events-none absolute inset-0 -z-10 opacity-30 [mask-image:linear-gradient(to_left,transparent_35%,#000)] ltr:[mask-image:linear-gradient(to_right,transparent_35%,#000)]"></div>
-
+        <x-ui.brand-card tag="section" class="p-7 sm:p-9">
             <x-brand.power-line class="pointer-events-none absolute bottom-0 end-4 -z-10 hidden h-auto w-[36%] max-w-[460px] md:block lg:end-8" />
 
             <div class="max-w-xl space-y-4 md:max-w-[58%]">
@@ -31,7 +26,7 @@
                     {{ $user->role?->name }}
                 </span>
             </div>
-        </section>
+        </x-ui.brand-card>
 
         <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             @can('projects.view')

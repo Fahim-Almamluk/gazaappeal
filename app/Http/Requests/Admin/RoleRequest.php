@@ -53,6 +53,6 @@ final class RoleRequest extends FormRequest
     {
         $actor = $this->user();
 
-        return $actor->isAdmin() ? app(Permissions::class)->all() : $actor->permissions();
+        return $actor->isSuperAdmin() ? app(Permissions::class)->all() : $actor->permissions();
     }
 }

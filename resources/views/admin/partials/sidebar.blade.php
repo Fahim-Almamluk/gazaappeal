@@ -26,12 +26,12 @@
     x-on:keydown.escape.window="closeMobile"
     aria-label="{{ __('ui.common.menu') }}"
 >
-    <div class="flex h-16 shrink-0 items-center gap-2 px-6 lg:group-data-[collapsed=true]/shell:justify-center lg:group-data-[collapsed=true]/shell:px-0">
+    <div class="relative flex h-16 shrink-0 items-center justify-center px-6 lg:group-data-[collapsed=true]/shell:px-0">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center rounded-lg">
             <x-brand.logo class="h-10 lg:group-data-[collapsed=true]/shell:hidden" />
             <x-brand.mark :size="36" class="hidden lg:group-data-[collapsed=true]/shell:block" />
         </a>
-        <x-ui.button variant="ghost" size="icon-sm" class="ms-auto lg:hidden" x-on:click="closeMobile" aria-label="{{ __('ui.common.close') }}">
+        <x-ui.button variant="ghost" size="icon-sm" class="absolute end-3 top-1/2 -translate-y-1/2 lg:hidden" x-on:click="closeMobile" aria-label="{{ __('ui.common.close') }}">
             <x-ui.icon name="x" />
         </x-ui.button>
     </div>

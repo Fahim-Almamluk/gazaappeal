@@ -47,7 +47,7 @@ final class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function isAdmin(): bool
+    public function isSuperAdmin(): bool
     {
         return $this->is_super_admin || (bool) $this->role?->is_system;
     }
@@ -75,7 +75,7 @@ final class User extends Authenticatable
 
         $catalog = app(Permissions::class);
 
-        if ($this->isAdmin()) {
+        if ($this->isSuperAdmin()) {
             return $this->resolvedPermissions = $catalog->all();
         }
 

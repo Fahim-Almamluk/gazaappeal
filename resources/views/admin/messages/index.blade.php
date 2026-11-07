@@ -39,7 +39,7 @@
                                 <td class="tabular px-4 py-3.5 text-xs font-semibold text-ink-subtle">{{ $messages->firstItem() + $loop->index }}</td>
                                 <td class="px-6 py-3.5">
                                     <p @class(['text-ink', 'font-bold' => $messageState === MessageState::Unread, 'font-semibold' => $messageState !== MessageState::Unread])>{{ $message->name }}</p>
-                                    <p class="text-xs text-ink-subtle" dir="ltr">{{ $message->email }}</p>
+                                    <p class="text-xs text-ink-subtle"><bdi dir="ltr">{{ $message->email }}</bdi></p>
                                 </td>
                                 <td class="px-3 py-3.5"><p class="max-w-md truncate text-ink-muted">{{ $message->body }}</p></td>
                                 <td class="px-3 py-3.5"><x-ui.badge :tone="$messageState->tone()" :icon="$messageState->icon()">{{ $messageState->label() }}</x-ui.badge></td>

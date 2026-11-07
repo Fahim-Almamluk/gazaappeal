@@ -50,7 +50,7 @@
                                                     <x-ui.badge tone="brand" class="ms-1">{{ __('admin.users.you') }}</x-ui.badge>
                                                 @endif
                                             </p>
-                                            <p class="truncate text-xs text-ink-subtle" dir="ltr">{{ $user->email }}</p>
+                                            <p class="truncate text-xs text-ink-subtle"><bdi dir="ltr">{{ $user->email }}</bdi></p>
                                         </div>
                                     </div>
                                 </td>

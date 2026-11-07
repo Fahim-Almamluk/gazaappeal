@@ -8,7 +8,7 @@
                 <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-soft text-base font-bold text-primary-soft-ink">{{ $user->initial() }}</span>
                 <div class="min-w-0 flex-1">
                     <p class="truncate font-bold text-ink">{{ $user->name }}</p>
-                    <p class="truncate text-xs text-ink-subtle" dir="ltr">{{ $user->email }}</p>
+                    <p class="truncate text-xs text-ink-subtle"><bdi dir="ltr">{{ $user->email }}</bdi></p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <x-ui.badge tone="brand" icon="users">{{ $user->role?->name ?? __('ui.common.none') }}</x-ui.badge>

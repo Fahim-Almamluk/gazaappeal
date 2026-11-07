@@ -136,7 +136,7 @@ npm run build
 
 ## 9. الاختبارات
 
-174 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
+177 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 
@@ -232,3 +232,4 @@ npm run build
 - الدالة `User::isSuperAdmin()` (كانت `isAdmin`) تعني من يملك كل الصلاحيات (علم `is_super_admin` أو دور النظام). `Role::assignableBy()` يستثني دور النظام لكل المستخدمين حتى السوبر أدمن.
 - **كارد الترويسة**: يستعمل `x-ui.brand-card` المشترك مع بطاقة لوحة المعلومات (التدرّج والتوهّج والحبيبات والنقاط) بلا رسمة «خط الكهرباء»؛ الأيقونة في مربع أبيض بحلقة شفافة. شعار السايدبار بالوسط.
 - **فلاتر شاشتي المستخدمين والأدوار**: المستخدمون (بحث، الدور، الحالة فعّال/موقوف) والأدوار (بحث بالاسم، النوع نظام/مخصص، الاستخدام مرتبط/بلا مستخدمين) بنفس `x-ui.filter-bar` وتمسح باراميتراتها من شريط العنوان.
+- **قاعدة المستوى**: غير السوبر أدمن يسند ويدير فقط ما هو **أدنى منه** (صلاحيات الدور مجموعة جزئية فعلية من صلاحياته: `User::canManageRole()`). لذلك لا ينشئ الأدمن أدمن مثله ولا يعدّل أدمن زميلًا (تعديل/إيقاف/صلاحيات)، بينما السوبر أدمن يستطيع. لإنشاء أدمن استعمل حساب السوبر أدمن.

@@ -24,7 +24,8 @@ final class UserPolicy
             return $actor->is($user);
         }
 
-        return $actor->hasPermission('users.update') && ($actor->isSuperAdmin() || ! $user->isSuperAdmin());
+        return $actor->hasPermission('users.update')
+            && ($actor->isSuperAdmin() || $actor->is($user) || ($user->role !== null && $actor->canManageRole($user->role)));
     }
 
     public function toggle(User $actor, User $user): bool

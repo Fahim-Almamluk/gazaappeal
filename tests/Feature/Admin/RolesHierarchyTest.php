@@ -86,16 +86,18 @@ final class RolesHierarchyTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'new@example.test']);
     }
 
-    public function test_an_admin_can_only_assign_roles_within_their_own_permissions(): void
+    public function test_a_non_super_admin_can_only_assign_strictly_lower_roles(): void
     {
-        $limited = Role::factory()->withPermissions(['users.view', 'users.create'])->create(['name' => ['ar' => 'محدود']]);
-        $viewer = Role::factory()->withPermissions(['users.view'])->create();
-        $admin = User::factory()->create(['role_id' => Role::factory()->withPermissions(['users.view', 'users.create'])]);
+        $lower = Role::factory()->withPermissions(['users.view'])->create();
+        $same = Role::factory()->withPermissions(['users.view', 'users.create', 'faqs.view'])->create();
+        $higher = Role::factory()->withPermissions(['users.view', 'users.create', 'faqs.view', 'faqs.create'])->create();
+        $actor = User::factory()->create(['role_id' => Role::factory()->withPermissions(['users.view', 'users.create', 'faqs.view'])]);
 
-        $ids = Role::assignableBy($admin)->modelKeys();
+        $ids = Role::assignableBy($actor)->modelKeys();
 
-        $this->assertContains($limited->id, $ids);
-        $this->assertContains($viewer->id, $ids);
+        $this->assertContains($lower->id, $ids);
+        $this->assertNotContains($same->id, $ids);
+        $this->assertNotContains($higher->id, $ids);
     }
 
     public function test_roles_screen_lists_both_roles_with_the_system_one_locked(): void
@@ -114,23 +116,64 @@ final class RolesHierarchyTest extends TestCase
         $this->delete(route('admin.roles.destroy', $systemRole))->assertForbidden();
     }
 
-    public function test_admin_can_create_another_admin_but_never_a_super_admin(): void
+    private function newUserData(int $roleId, string $email): array
     {
-        $adminRole = Role::factory()->administrator()->create();
-        $admin = User::factory()->create(['role_id' => $adminRole]);
-        $this->actingAs($admin);
-
-        $this->post(route('admin.users.store'), [
-            'name' => 'أدمن ثاني',
-            'email' => 'second@example.test',
-            'role_id' => $adminRole->id,
+        return [
+            'name' => 'مستخدم جديد',
+            'email' => $email,
+            'role_id' => $roleId,
             'password' => 'Abcdefg1',
             'password_confirmation' => 'Abcdefg1',
-        ])->assertSessionHasNoErrors();
+        ];
+    }
 
-        $second = User::query()->where('email', 'second@example.test')->firstOrFail();
-        $this->assertSame($adminRole->id, $second->role_id);
-        $this->assertFalse($second->isSuperAdmin());
+    public function test_admin_cannot_create_another_admin_or_a_super_admin(): void
+    {
+        $adminRole = Role::factory()->administrator()->create();
+        $systemRole = Role::query()->where('is_system', true)->sole();
+        $this->actingAs(User::factory()->create(['role_id' => $adminRole]));
+
+        $this->post(route('admin.users.store'), $this->newUserData($adminRole->id, 'peer@example.test'))->assertSessionHasErrors('role_id');
+        $this->post(route('admin.users.store'), $this->newUserData($systemRole->id, 'super@example.test'))->assertSessionHasErrors('role_id');
+
+        $this->assertDatabaseMissing('users', ['email' => 'peer@example.test']);
+        $this->assertDatabaseMissing('users', ['email' => 'super@example.test']);
+    }
+
+    public function test_admin_can_create_lower_level_users(): void
+    {
+        $this->actingAs(User::factory()->administrator()->create());
+        $editor = Role::factory()->editor()->create();
+
+        $this->post(route('admin.users.store'), $this->newUserData($editor->id, 'editor@example.test'))->assertSessionHasNoErrors();
+
+        $this->assertSame($editor->id, User::query()->where('email', 'editor@example.test')->value('role_id'));
+    }
+
+    public function test_only_the_super_admin_can_create_an_admin(): void
+    {
+        $adminRole = Role::factory()->administrator()->create();
+        $this->actingAs(User::factory()->superAdmin()->create());
+
+        $this->post(route('admin.users.store'), $this->newUserData($adminRole->id, 'admin2@example.test'))->assertSessionHasNoErrors();
+
+        $created = User::query()->where('email', 'admin2@example.test')->firstOrFail();
+        $this->assertSame($adminRole->id, $created->role_id);
+        $this->assertFalse($created->isSuperAdmin());
+    }
+
+    public function test_admin_cannot_manage_another_admin_but_can_manage_lower_users(): void
+    {
+        $admin = User::factory()->administrator()->create();
+        $peer = User::factory()->administrator()->create();
+        $editor = User::factory()->create();
+        $this->actingAs($admin);
+
+        $this->get(route('admin.users.edit', $peer))->assertForbidden();
+        $this->patch(route('admin.users.toggle', $peer))->assertForbidden();
+        $this->get(route('admin.users.permissions', $peer))->assertForbidden();
+        $this->get(route('admin.users.edit', $editor))->assertOk();
+        $this->get(route('admin.users.edit', $admin))->assertOk();
     }
 
     public function test_restricted_admin_cannot_create_an_admin_with_more_permissions_than_their_own(): void
@@ -139,13 +182,7 @@ final class RolesHierarchyTest extends TestCase
         $restricted = Role::factory()->withPermissions(['users.view', 'users.create'])->create();
         $actor = User::factory()->create(['role_id' => $restricted]);
 
-        $this->actingAs($actor)->post(route('admin.users.store'), [
-            'name' => 'أدمن',
-            'email' => 'escalated@example.test',
-            'role_id' => $adminRole->id,
-            'password' => 'Abcdefg1',
-            'password_confirmation' => 'Abcdefg1',
-        ])->assertSessionHasErrors('role_id');
+        $this->actingAs($actor)->post(route('admin.users.store'), $this->newUserData($adminRole->id, 'escalated@example.test'))->assertSessionHasErrors('role_id');
 
         $this->assertDatabaseMissing('users', ['email' => 'escalated@example.test']);
     }

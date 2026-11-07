@@ -44,7 +44,7 @@
                                 <td class="tabular px-4 py-3.5 text-xs font-semibold text-ink-subtle">{{ $volunteers->firstItem() + $loop->index }}</td>
                                 <td class="px-6 py-3.5">
                                     <p class="font-semibold text-ink">{{ $volunteer->name }}</p>
-                                    <p class="text-xs text-ink-subtle" dir="ltr">{{ $volunteer->email }}</p>
+                                    <p class="text-xs text-ink-subtle"><bdi dir="ltr">{{ $volunteer->email }}</bdi></p>
                                 </td>
                                 <td class="px-3 py-3.5">
                                     <span class="inline-flex items-center gap-2 text-ink-muted"><x-ui.icon :name="$volunteer->expertise->displayIcon()" :size="16" class="text-primary" />{{ $volunteer->expertise->name }}</span>

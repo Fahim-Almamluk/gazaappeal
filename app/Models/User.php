@@ -86,6 +86,22 @@ final class User extends Authenticatable
         return $this->resolvedPermissions = $catalog->only(array_diff([...($this->role?->permissions() ?? []), ...$granted], $revoked));
     }
 
+    public function canManageRole(Role $role): bool
+    {
+        if ($role->is_system) {
+            return false;
+        }
+
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        $own = $this->permissions();
+        $granted = $role->permissions();
+
+        return array_diff($granted, $own) === [] && count($granted) < count($own);
+    }
+
     public function hasPermission(string $permission): bool
     {
         return in_array($permission, $this->permissions(), true);

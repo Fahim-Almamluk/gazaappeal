@@ -46,9 +46,12 @@ return [
         'select_all' => 'تحديد الكل',
         'clear_all' => 'إلغاء الكل',
         'toggle' => 'فتح أو طي قسم :name',
+        'all' => 'الكل',
     ],
 
     'legend' => [
+        'active' => 'فعّالة',
+        'inactive' => 'غير فعّالة',
         'inherited' => 'من الدور',
         'granted' => 'مضافة لهذا المستخدم',
         'revoked' => 'محجوبة عن هذا المستخدم',

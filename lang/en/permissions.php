@@ -45,10 +45,13 @@ return [
         'search' => 'Search for a module or permission…',
         'select_all' => 'Select all',
         'clear_all' => 'Clear all',
+        'all' => 'All',
         'toggle' => 'Expand or collapse :name',
     ],
 
     'legend' => [
+        'active' => 'Enabled',
+        'inactive' => 'Disabled',
         'inherited' => 'From role',
         'granted' => 'Granted to this user',
         'revoked' => 'Revoked from this user',

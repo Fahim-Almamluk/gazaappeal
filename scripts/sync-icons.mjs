@@ -12,7 +12,7 @@ const icons = [
     'circle-alert', 'circle-check', 'circle-help', 'clipboard-check', 'clock', 'copy', 'credit-card', 'crown', 'download', 'droplets', 'external-link',
     'eye', 'eye-off', 'factory', 'file-text', 'flag', 'globe', 'hand-coins', 'handshake', 'heart', 'heart-handshake',
     'heart-pulse', 'house', 'languages', 'image', 'images', 'inbox', 'info', 'landmark', 'layout-dashboard', 'lightbulb', 'link',
-    'list', 'lock', 'log-in', 'log-out', 'mail', 'mail-open', 'map-pin', 'maximize-2', 'menu', 'message-circle', 'moon',
+    'list', 'lock', 'log-in', 'log-out', 'mail', 'mail-open', 'map-pin', 'maximize-2', 'menu', 'minus', 'message-circle', 'moon',
     'panel-right', 'pencil', 'phone', 'plus', 'quote', 'rotate-ccw', 'school', 'search', 'send', 'settings', 'shield-check',
     'smartphone', 'solar-panel', 'sparkles', 'sun', 'tags', 'target', 'tent', 'trash-2', 'triangle-alert', 'truck', 'undo-2', 'user-plus',
     'user-round', 'users', 'utility-pole', 'wallet', 'waves', 'wrench', 'x', 'zap', 'zap-off',

@@ -1,7 +1,6 @@
 const ACTION = '[data-level="action"]';
 
-const syncBox = (scope, box) => {
-    const actions = [...scope.querySelectorAll(ACTION)];
+const syncBox = (box, actions) => {
     const checked = actions.filter((action) => action.checked).length;
 
     if (box) {
@@ -11,6 +10,10 @@ const syncBox = (scope, box) => {
 
     return [checked, actions.length];
 };
+
+const actionsIn = (scope, selector = ACTION) => [...scope.querySelectorAll(selector)];
+
+const editable = (action) => !action.disabled && action.closest('[data-module]').dataset.filtered !== 'true';
 
 const stateOf = (action) => {
     if (action.dataset.inherited === undefined) {
@@ -27,6 +30,8 @@ const stateOf = (action) => {
 };
 
 export default () => ({
+    query: '',
+
     init() {
         this.refresh();
     },
@@ -34,25 +39,23 @@ export default () => ({
     change(event) {
         const box = event.target;
         const level = box.dataset.level;
+        const scopes = {
+            group: () => actionsIn(box.closest('[data-group]')),
+            module: () => actionsIn(box.closest('[data-module]')),
+        };
 
-        if (level === 'group' || level === 'module') {
-            box.closest(level === 'group' ? '[data-group]' : '[data-module]')
-                .querySelectorAll(ACTION)
-                .forEach((action) => {
-                    if (!action.disabled && !action.closest('[data-module]').hidden) {
-                        action.checked = box.checked;
-                    }
-                });
+        if (level in scopes) {
+            scopes[level]().filter(editable).forEach((action) => {
+                action.checked = box.checked;
+            });
         }
 
         this.refresh();
     },
 
     setAll(value) {
-        this.$root.querySelectorAll(ACTION).forEach((action) => {
-            if (!action.disabled) {
-                action.checked = value;
-            }
+        actionsIn(this.$root).filter(editable).forEach((action) => {
+            action.checked = value;
         });
         this.refresh();
     },
@@ -67,44 +70,51 @@ export default () => ({
 
     toggle(event) {
         const group = event.currentTarget.closest('[data-group]');
-        const open = group.getAttribute('aria-expanded') !== 'true';
 
-        group.setAttribute('aria-expanded', String(open));
-        group.querySelector('[data-group-panel]').hidden = !open;
+        group.setAttribute('aria-expanded', String(group.getAttribute('aria-expanded') !== 'true'));
+        this.layout();
     },
 
     filter(event) {
-        const query = event.target.value.trim().toLowerCase();
+        this.query = event.target.value.trim().toLowerCase();
 
+        if (this.query !== '') {
+            this.$root.querySelectorAll('[data-group]').forEach((group) => group.setAttribute('aria-expanded', 'true'));
+        }
+
+        this.layout();
+    },
+
+    layout() {
         this.$root.querySelectorAll('[data-group]').forEach((group) => {
+            const open = group.getAttribute('aria-expanded') === 'true';
             const modules = [...group.querySelectorAll('[data-module]')];
+            const matches = (module) => this.query === '' || module.dataset.search.toLowerCase().includes(this.query);
 
             modules.forEach((module) => {
-                module.hidden = query !== '' && !module.dataset.search.toLowerCase().includes(query);
+                module.dataset.filtered = String(!matches(module));
+                module.hidden = !open || !matches(module);
             });
 
-            group.hidden = modules.every((module) => module.hidden);
-
-            if (query !== '' && !group.hidden) {
-                group.setAttribute('aria-expanded', 'true');
-                group.querySelector('[data-group-panel]').hidden = false;
-            }
+            group.hidden = !modules.some(matches);
         });
+
+        this.refresh();
     },
 
     refresh() {
-        this.$root.querySelectorAll('[data-module]').forEach((module) => syncBox(module, module.querySelector('[data-level="module"]')));
+        this.$root.querySelectorAll('[data-module]').forEach((module) => syncBox(module.querySelector('[data-level="module"]'), actionsIn(module)));
 
         this.$root.querySelectorAll('[data-group]').forEach((group) => {
-            const [checked, total] = syncBox(group, group.querySelector('[data-level="group"]'));
+            const [checked, total] = syncBox(group.querySelector('[data-level="group"]'), actionsIn(group));
             group.querySelector('[data-group-count]').textContent = `${checked}/${total}`;
         });
 
-        this.$root.querySelectorAll(ACTION).forEach((action) => {
+        actionsIn(this.$root).forEach((action) => {
             action.closest('[data-chip]').dataset.state = stateOf(action);
         });
 
-        const [checked, total] = syncBox(this.$root, null);
+        const [checked, total] = syncBox(null, actionsIn(this.$root));
         this.$root.querySelector('[data-counter]').textContent = `${checked} / ${total}`;
     },
 });

@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <svg viewBox="0 0 430 540" class="mx-auto mt-2 w-full max-w-[320px] overflow-visible" role="group" aria-label="{{ __('site.damage.map') }}">
+            <svg viewBox="0 0 430 540" class="mx-auto mt-2 w-full max-w-[360px] overflow-visible" role="group" aria-label="{{ __('site.damage.map') }}">
                 <defs>
                     <linearGradient id="damage-map-active" x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0" stop-color="#2F8FE0"/>
@@ -70,13 +70,20 @@
                 @endforeach
 
                 @foreach ($governorates as $key => $governorate)
-                    @php([$x, $y] = $governorate['case']->anchor())
                     <g data-governorate="{{ $key }}" data-active="false" x-on:click="select" x-on:keydown.enter.prevent="select" x-on:keydown.space.prevent="select" role="button" tabindex="0" aria-pressed="false" aria-label="{{ $governorate['case']->label() }} {{ Money::short($governorate['total']) }}" class="group/gov cursor-pointer outline-none">
-                        <path d="{{ $governorate['case']->outline() }}" class="{{ $heat($governorate['total']) }} stroke-surface transition-[translate,fill] duration-300 ease-out-soft group-hover/gov:-translate-y-1 group-focus-visible/gov:stroke-ring group-data-[active=true]/gov:-translate-y-1.5 group-data-[active=true]/gov:fill-[url(#damage-map-active)]" stroke-width="2.5" stroke-linejoin="round"/>
-                        <g class="pointer-events-none transition-[translate] duration-300 ease-out-soft group-hover/gov:-translate-y-1 group-data-[active=true]/gov:-translate-y-1.5">
-                            <text x="{{ $x }}" y="{{ $y - 4 }}" text-anchor="middle" class="fill-ink text-[17px] font-extrabold group-data-[active=true]/gov:fill-white">{{ $governorate['case']->label() }}</text>
-                            <text x="{{ $x }}" y="{{ $y + 15 }}" text-anchor="middle" class="tabular fill-primary text-[14px] font-bold group-data-[active=true]/gov:fill-white/85">{{ Money::short($governorate['total']) }}</text>
-                        </g>
+                        <path d="{{ $governorate['case']->outline() }}" class="{{ $heat($governorate['total']) }} stroke-surface transition-[translate,fill,stroke] duration-300 ease-out-soft group-hover/gov:stroke-brand-400 group-focus-visible/gov:stroke-ring group-data-[active=true]/gov:-translate-y-1.5 group-data-[active=true]/gov:fill-[url(#damage-map-active)]" stroke-width="2.5" stroke-linejoin="round"/>
+                    </g>
+                @endforeach
+
+                @foreach ($governorates as $key => $governorate)
+                    @php
+                        [$x, $y] = $governorate['case']->anchor();
+                        $label = $governorate['case']->label();
+                        $size = max(11, min(17, intdiv(160, max(1, mb_strlen($label)))));
+                    @endphp
+                    <g data-governorate="{{ $key }}" data-active="false" aria-hidden="true" class="group/label pointer-events-none transition-[translate] duration-300 ease-out-soft data-[active=true]:-translate-y-1.5">
+                        <text x="{{ $x }}" y="{{ $y - 4 }}" text-anchor="middle" font-size="{{ $size }}" class="fill-ink font-extrabold [paint-order:stroke] stroke-surface/70 stroke-[3px] [stroke-linejoin:round] group-data-[active=true]/label:fill-white group-data-[active=true]/label:stroke-brand-700/60">{{ $label }}</text>
+                        <text x="{{ $x }}" y="{{ $y + 15 }}" text-anchor="middle" font-size="{{ $size - 3 }}" class="tabular fill-primary font-bold group-data-[active=true]/label:fill-white/90">{{ Money::short($governorate['total']) }}</text>
                     </g>
                 @endforeach
             </svg>

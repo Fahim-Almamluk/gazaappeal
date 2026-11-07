@@ -82,7 +82,7 @@
                         $size = max(11, min(17, intdiv(160, max(1, mb_strlen($label)))));
                     @endphp
                     <g data-governorate="{{ $key }}" data-active="false" aria-hidden="true" class="group/label pointer-events-none transition-[translate] duration-300 ease-out-soft data-[active=true]:-translate-y-1.5">
-                        <text x="{{ $x }}" y="{{ $y - 4 }}" text-anchor="middle" font-size="{{ $size }}" class="fill-ink font-extrabold [paint-order:stroke] stroke-surface/70 stroke-[3px] [stroke-linejoin:round] group-data-[active=true]/label:fill-white group-data-[active=true]/label:stroke-brand-700/60">{{ $label }}</text>
+                        <text x="{{ $x }}" y="{{ $y - 4 }}" text-anchor="middle" font-size="{{ $size }}" class="fill-ink font-extrabold group-data-[active=true]/label:fill-white">{{ $label }}</text>
                         <text x="{{ $x }}" y="{{ $y + 15 }}" text-anchor="middle" font-size="{{ $size - 3 }}" class="tabular fill-primary font-bold group-data-[active=true]/label:fill-white/90">{{ Money::short($governorate['total']) }}</text>
                     </g>
                 @endforeach

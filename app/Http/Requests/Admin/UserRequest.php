@@ -30,7 +30,9 @@ final class UserRequest extends FormRequest
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'string', 'email:rfc', 'max:190', Rule::unique(User::class)->ignore($user)],
             'role_id' => ['required', 'integer', Rule::in($editingSelf ? [$user->role_id] : Role::assignableBy($this->user())->modelKeys())],
-            'password' => [$user instanceof User ? 'nullable' : 'required', 'string', 'confirmed', Password::defaults()],
+            'password' => $editingSelf
+                ? ['prohibited']
+                : [$user instanceof User ? 'nullable' : 'required', 'string', 'confirmed', Password::defaults()],
         ];
     }
 }

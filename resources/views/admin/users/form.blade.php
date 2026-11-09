@@ -25,8 +25,13 @@
                 @endif
             </x-ui.form-section>
 
-            <x-ui.form-section step="2" :title="__('admin.users.sections.password')" :description="$editing ? __('admin.users.sections.password_edit_hint') : __('admin.users.sections.password_hint')">
-                @if ($editing)
+            <x-ui.form-section step="2" :title="__('admin.users.sections.password')" :description="$editingSelf ? null : ($editing ? __('admin.users.sections.password_edit_hint') : __('admin.users.sections.password_hint'))">
+                @if ($editingSelf)
+                    <p class="rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm text-ink-muted">
+                        {{ __('admin.users.sections.password_self') }}
+                        <a href="{{ route('admin.profile.edit') }}" class="font-semibold text-primary hover:underline">{{ __('admin.users.sections.password_self_link') }}</a>
+                    </p>
+                @elseif ($editing)
                     <x-ui.password name="password" :label="__('admin.users.fields.password')" autocomplete="new-password" strength />
                     <x-ui.password name="password_confirmation" :label="__('admin.users.fields.password_confirmation')" autocomplete="new-password" />
                 @else

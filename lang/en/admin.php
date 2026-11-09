@@ -461,6 +461,8 @@ return [
             'password' => 'Password',
             'password_hint' => 'Choose a strong password.',
             'password_edit_hint' => 'Leave empty to keep the current password.',
+            'password_self' => 'Changing your own password needs your current password, from your',
+            'password_self_link' => 'profile page',
         ],
         'fields' => [
             'name' => 'Name',

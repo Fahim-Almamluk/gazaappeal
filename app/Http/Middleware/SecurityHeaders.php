@@ -32,6 +32,10 @@ final class SecurityHeaders
 
         $response->headers->remove('X-Powered-By');
 
+        if (! headers_sent()) {
+            header_remove('X-Powered-By');
+        }
+
         return $response;
     }
 

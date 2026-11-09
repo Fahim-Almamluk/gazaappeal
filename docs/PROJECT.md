@@ -141,9 +141,25 @@ npm run build
 
 `/robots.txt` و`/sitemap.xml` ديناميكيان (`Site\RobotsController` و`Site\SitemapController`؛ حُذف `public/robots.txt` الثابت): الأول يمنع `/admin` و`/login` ويشير للخريطة، والثانية تسرد الصفحات العامة بالعربية والإنجليزية مع المشاريع والقصص المنشورة فقط. الترويسة العامة فيها `canonical` و`og:url` و`og:image` (أيقونة الشعار) إضافة إلى `hreflang`.
 
+### فحص أمني 2026-11-09 (كمهاجم)
+
+ما وُجد وأُغلق (لكل بند اختبار في `SecurityHardeningTest`، وثبت أن اختباري الصلاحيات يفشلان على الكود القديم):
+- **تصعيد صلاحيات بالاستيلاء على حساب**: من يملك `users.update` كان يستطيع تغيير كلمة مرور مستخدم دوره أدنى لكن مُنح صلاحيات إضافية فردية أقوى منه، ثم الدخول بحسابه. الآن `User::canManageUser()` يقارن **الصلاحيات الفعلية** (الدور + الإضافات − المحجوبات): يدير فقط من صلاحياته مجموعة جزئية فعلية أصغر من صلاحياته، ويُستعمل في `UserPolicy::update` (ومنه التعطيل والصلاحيات).
+- **العبث بأدوار أعلى**: `RolePolicy::update/delete` لم يفحص المستوى، فكان أدنى مستوى يملك `roles.update` يستطيع تفريغ دور أقوى منه أو إعادة تسميته. الآن يشترط `canManageRole()` (دور أدنى فعليًا).
+- **جلسات بعد تغيير كلمة المرور**: تغيير المدير لكلمة مرور مستخدم لم يكن يُخرج جلساته، وتغيير كلمة المرور من الملف الشخصي لم يُبطل كوكي «تذكرني». الآن `User::revokeSessions()` يحذف الجلسات ويبدّل `remember_token` (عند تغيير الكلمة من المدير، ومن الملف الشخصي مع الإبقاء على الجلسة الحالية، وعند الإيقاف).
+- **تغيير كلمة مرورك من شاشة المستخدمين بلا الكلمة الحالية**: صار ممنوعًا (`prohibited`)، ويظهر رابط للملف الشخصي الذي يطلب الكلمة الحالية.
+- **تخمين كلمات المرور بتغيير البريد**: الحد كان لكل (بريد + IP) فقط. أُضيف حد لكل IP (20 محاولة فاشلة خلال 15 دقيقة) في `LoginRequest`.
+- **تسميم ترويسة Host**: `sitemap.xml` وروابط `canonical/og:url` كانت تأخذ النطاق من الطلب. في الإنتاج: `trustHosts()` في `bootstrap/app.php` يرفض النطاقات الغريبة، و`URL::forceRootUrl(APP_URL)` (و`https` إن كان `APP_URL` آمنًا) في `AppServiceProvider`.
+- **مكتبات مصابة**: `composer audit` وجد 7 ثغرات في `symfony/http-foundation|http-kernel|routing|yaml` 8.1.10؛ حُدّثت إلى 8.1.11 (تحديث إصلاحي فقط في `composer.lock`). `npm audit` نظيف.
+- **تقوية إضافية**: عناوين SweetAlert صارت `titleText` (نص لا HTML) في `flash.js` و`confirm.js`؛ إزالة `X-Powered-By` حتى من خادم PHP؛ `public/.htaccess`: `Options -Indexes` دائمًا، منع الملفات المخفية، ومنع تنفيذ أي سكربت داخل `storage/`.
+
+ما فُحص ووُجد سليمًا: CSRF (419)، الوصول للوحة بلا دخول، `.env` والملفات الحساسة والتنقل بين المجلدات، XSS المنعكس والمخزّن (كل المخرجات مُهرَّبة، `{!! !!}` على نصوص ثابتة أو `e()` فقط)، حقن SQL (لا مدخلات في SQL خام، الترتيب بقائمة مسموحة)، الإسناد الجماعي، الروابط (`https` فقط)، الرفع (صور فقط بأسماء عشوائية بلا SVG)، إعادة التوجيه المفتوح، الإجراءات الجماعية، سجل النشاط، وتوقيت الدخول (Laravel يستعمل timebox).
+
+**قبل النشر (إلزامي)**: `.env` الإنتاج بقيم `.env.example` (`APP_ENV=production`، `APP_DEBUG=false`، `SESSION_SECURE_COOKIE=true`، `APP_URL=https://النطاق`)، و`composer install --no-dev` (فلا يُحمَّل `laravel/boost` ومساره `/_boost/browser-logs`)، و`php artisan config:cache`.
+
 ## 9. الاختبارات
 
-226 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest, SeoTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest, SiteLayoutTest, ListFiltersTest, BulkActionsTest, ActivityLogTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
+233 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest, SeoTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest, SiteLayoutTest, ListFiltersTest, BulkActionsTest, ActivityLogTest, SecurityHardeningTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 

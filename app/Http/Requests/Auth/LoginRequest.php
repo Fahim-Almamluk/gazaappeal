@@ -15,6 +15,10 @@ final class LoginRequest extends FormRequest
 {
     private const int MAX_ATTEMPTS = 5;
 
+    private const int MAX_ATTEMPTS_PER_IP = 20;
+
+    private const int IP_DECAY_SECONDS = 900;
+
     public function authorize(): bool
     {
         return true;
@@ -38,6 +42,7 @@ final class LoginRequest extends FormRequest
 
         if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey(), 60);
+            RateLimiter::hit($this->ipThrottleKey(), self::IP_DECAY_SECONDS);
 
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
@@ -47,15 +52,26 @@ final class LoginRequest extends FormRequest
 
     private function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), self::MAX_ATTEMPTS)) {
+        $key = match (true) {
+            RateLimiter::tooManyAttempts($this->throttleKey(), self::MAX_ATTEMPTS) => $this->throttleKey(),
+            RateLimiter::tooManyAttempts($this->ipThrottleKey(), self::MAX_ATTEMPTS_PER_IP) => $this->ipThrottleKey(),
+            default => null,
+        };
+
+        if ($key === null) {
             return;
         }
 
         event(new Lockout($this));
 
         throw ValidationException::withMessages([
-            'email' => __('auth.throttle', ['seconds' => RateLimiter::availableIn($this->throttleKey())]),
+            'email' => __('auth.throttle', ['seconds' => RateLimiter::availableIn($key)]),
         ]);
+    }
+
+    private function ipThrottleKey(): string
+    {
+        return 'login-ip|'.$this->ip();
     }
 
     private function throttleKey(): string

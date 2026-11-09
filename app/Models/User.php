@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 #[Fillable(['name', 'email', 'password', 'role_id', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
@@ -102,6 +103,36 @@ final class User extends Authenticatable
         $granted = $role->permissions();
 
         return array_diff($granted, $own) === [] && count($granted) < count($own);
+    }
+
+    public function canManageUser(self $user): bool
+    {
+        if ($user->is_super_admin || $this->is($user)) {
+            return false;
+        }
+
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        if ($user->role === null || ! $this->canManageRole($user->role)) {
+            return false;
+        }
+
+        $own = $this->permissions();
+        $theirs = $user->permissions();
+
+        return array_diff($theirs, $own) === [] && count($theirs) < count($own);
+    }
+
+    public function revokeSessions(?string $except = null): void
+    {
+        DB::table('sessions')
+            ->where('user_id', $this->getKey())
+            ->when($except !== null, fn ($query) => $query->where('id', '!=', $except))
+            ->delete();
+
+        $this->forceFill(['remember_token' => Str::random(60)])->save();
     }
 
     public function hasPermission(string $permission): bool

@@ -21,11 +21,11 @@ final class RolePolicy
 
     public function update(User $actor, Role $role): bool
     {
-        return $actor->hasPermission('roles.update') && ! $role->is_system && $actor->role_id !== $role->getKey();
+        return $actor->hasPermission('roles.update') && $actor->role_id !== $role->getKey() && $actor->canManageRole($role);
     }
 
     public function delete(User $actor, Role $role): bool
     {
-        return $actor->hasPermission('roles.delete') && ! $role->is_system && $role->users()->doesntExist();
+        return $actor->hasPermission('roles.delete') && $actor->canManageRole($role) && $role->users()->doesntExist();
     }
 }

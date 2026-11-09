@@ -7,7 +7,7 @@ const ask = (source) => {
 
     return Swal.fire({
         icon: ICONS[tone] ?? 'question',
-        title: confirmTitle,
+        titleText: confirmTitle,
         text: confirmText,
         showCancelButton: true,
         confirmButtonText: confirmOk,

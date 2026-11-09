@@ -18,7 +18,7 @@ export const notify = ({ type, title, lines = [] }) => {
         toast: true,
         position: 'top',
         icon: type,
-        title,
+        titleText: title,
         html: lines.length > 0 ? details : undefined,
         showConfirmButton: false,
         showCloseButton: true,

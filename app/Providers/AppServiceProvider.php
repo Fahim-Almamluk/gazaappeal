@@ -39,6 +39,14 @@ final class AppServiceProvider extends ServiceProvider
 
         Model::shouldBeStrict(! $this->app->isProduction());
 
+        if ($this->app->isProduction()) {
+            URL::forceRootUrl(config('app.url'));
+
+            if (str_starts_with((string) config('app.url'), 'https://')) {
+                URL::forceScheme('https');
+            }
+        }
+
         Blade::directive('confirm', fn (string $expression): string => "<?php echo \\App\\Support\\Confirm::attributes({$expression}); ?>");
 
         Gate::before(fn (User $user, string $ability): ?bool => $this->app->make(Permissions::class)->exists($ability) ? $user->hasPermission($ability) : null);

@@ -9,7 +9,6 @@ use App\Http\Requests\Admin\PasswordRequest;
 use App\Http\Requests\Admin\ProfileRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 final class ProfileController extends Controller
@@ -30,11 +29,7 @@ final class ProfileController extends Controller
     {
         $user = $request->user();
         $user->update(['password' => $request->validated('password')]);
-
-        DB::table('sessions')
-            ->where('user_id', $user->id)
-            ->where('id', '!=', $request->session()->getId())
-            ->delete();
+        $user->revokeSessions(except: $request->session()->getId());
 
         $request->session()->regenerate();
 

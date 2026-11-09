@@ -71,11 +71,17 @@ final class UserController extends Controller
     {
         $user->fill($request->safe()->except('password'));
 
-        if ($request->filled('password')) {
+        $passwordChanged = $request->filled('password');
+
+        if ($passwordChanged) {
             $user->password = $request->validated('password');
         }
 
         $user->save();
+
+        if ($passwordChanged) {
+            $user->revokeSessions();
+        }
 
         return to_route('admin.users.index')->with('success', __('admin.users.updated'));
     }
@@ -88,7 +94,7 @@ final class UserController extends Controller
             $user->forceFill(['is_active' => ! $user->is_active])->save();
 
             if (! $user->is_active) {
-                DB::table('sessions')->where('user_id', $user->id)->delete();
+                $user->revokeSessions();
             }
         });
 

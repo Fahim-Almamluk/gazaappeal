@@ -37,12 +37,16 @@ return [
                 'roles' => ['icon' => 'shield-check', 'actions' => $crud],
                 'lookups' => ['icon' => 'tags', 'actions' => $crud],
                 'settings' => ['icon' => 'settings', 'actions' => ['update']],
+                'site_menu' => ['icon' => 'list-tree', 'actions' => $crud],
+                'home_sections' => ['icon' => 'layout-list', 'actions' => ['update']],
             ],
         ],
     ],
 
     'route_modules' => [
         'donation-methods' => 'donation_methods',
+        'menu' => 'site_menu',
+        'home-sections' => 'home_sections',
     ],
 
     'route_actions' => [
@@ -57,9 +61,13 @@ return [
         'archive' => 'update',
         'restore' => 'update',
         'permissions' => 'update',
+        'reorder' => 'update',
+        'reset' => 'update',
         'impersonate' => 'update',
         'destroy' => 'delete',
     ],
+
+    'super_admin_modules' => ['site_menu', 'home_sections'],
 
     'public_routes' => ['admin.dashboard', 'admin.profile.edit', 'admin.profile.update', 'admin.profile.password', 'admin.impersonation.leave'],
 ];

@@ -27,7 +27,7 @@ final class RolesHierarchyTest extends TestCase
 
         $admin = Role::query()->whereTranslation('name', 'أدمن')->sole();
         $this->assertFalse($admin->is_system);
-        $this->assertCount(count(app(Permissions::class)->all()), $admin->permissions());
+        $this->assertCount(count(app(Permissions::class)->all()) - count(app(Permissions::class)->restricted()), $admin->permissions());
         $this->assertSame(1, Role::query()->whereTranslation('name', 'أدمن')->count());
     }
 

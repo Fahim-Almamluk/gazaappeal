@@ -82,11 +82,11 @@
                                         @can('impersonate', $user)
                                             <form method="POST" action="{{ route('admin.users.impersonate', $user) }}" @confirm('warning', 'impersonate', ['name' => $user->name])>
                                                 @csrf
-                                                <x-ui.icon-button type="submit" icon="log-in" tone="primary" :label="__('admin.users.impersonate')" />
+                                                <x-ui.icon-button type="submit" icon="log-in" tone="warning" :label="__('admin.users.impersonate')" />
                                             </form>
                                         @endcan
                                         @can('permissions', $user)
-                                            <x-ui.icon-button icon="shield-check" tone="primary" :label="__('admin.users.permissions.title')" :href="route('admin.users.permissions', $user)" />
+                                            <x-ui.icon-button icon="shield-check" tone="success" :label="__('admin.users.permissions.title')" :href="route('admin.users.permissions', $user)" />
                                         @endcan
                                         @can('update', $user)
                                             <x-ui.icon-button icon="pencil" tone="primary" :label="__('ui.actions.edit')" :href="route('admin.users.edit', $user)" />

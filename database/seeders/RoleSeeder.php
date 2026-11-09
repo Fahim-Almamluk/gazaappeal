@@ -29,7 +29,7 @@ final class RoleSeeder extends Seeder
         $superAdmin->forceFill(['is_system' => true])->save();
 
         $defaults = [
-            [['ar' => 'أدمن', 'en' => 'Admin'], $all],
+            [['ar' => 'أدمن', 'en' => 'Admin'], array_values(array_diff($all, $permissions->restricted()))],
             [['ar' => 'محرر المحتوى', 'en' => 'Content editor'], [...$within(self::CONTENT, ['view', 'create', 'update', 'delete']), ...$within(self::INBOX, ['view', 'update'])]],
             [['ar' => 'مدخل بيانات', 'en' => 'Data entry'], [...$within(self::CONTENT, ['view', 'create', 'update']), ...$within(self::INBOX, ['view'])]],
             [['ar' => 'مشاهد', 'en' => 'Viewer'], $within([...self::CONTENT, ...self::INBOX], ['view'])],

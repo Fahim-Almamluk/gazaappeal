@@ -1,11 +1,13 @@
 @php
     $hideWhenCollapsed = 'lg:group-data-[collapsed=true]/shell:sr-only';
     $user = auth()->user();
+    $settingsTabs = collect(config('navigation.settings_tabs'))->filter(fn (array $tab): bool => $user->hasPermission($tab['permission']))->values();
     $groups = collect(config('navigation.admin'))
-        ->map(function (array $group) use ($user): array {
+        ->map(function (array $group) use ($user, $settingsTabs): array {
             $items = collect($group['items'])
-                ->reject(fn (array $item): bool => isset($item['permission']) && ! $user->hasPermission($item['permission']))
-                ->map(fn (array $item): array => [...$item, 'active' => request()->routeIs($item['active'] ?? $item['route'])])
+                ->reject(fn (array $item): bool => (isset($item['permission']) && ! $user->hasPermission($item['permission'])) || (isset($item['tabs']) && $settingsTabs->isEmpty()))
+                ->map(fn (array $item): array => isset($item['tabs']) ? [...$item, 'route' => $settingsTabs->first()['route']] : $item)
+                ->map(fn (array $item): array => [...$item, 'active' => request()->routeIs(...(array) ($item['active'] ?? $item['route']))])
                 ->values();
 
             return [...$group, 'items' => $items, 'current' => $items->contains('active', true)];
@@ -26,7 +28,7 @@
     x-on:keydown.escape.window="closeMobile"
     aria-label="{{ __('ui.common.menu') }}"
 >
-    <div class="relative flex h-16 shrink-0 items-center justify-center px-6 lg:group-data-[collapsed=true]/shell:px-0">
+    <div class="relative flex h-16 shrink-0 items-center justify-center border-b border-line px-6 lg:group-data-[collapsed=true]/shell:px-0">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center rounded-lg">
             <x-brand.logo class="h-10 lg:group-data-[collapsed=true]/shell:hidden" />
             <x-brand.mark :size="36" class="hidden lg:group-data-[collapsed=true]/shell:block" />

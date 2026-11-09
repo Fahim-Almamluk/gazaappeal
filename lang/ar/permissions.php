@@ -24,6 +24,8 @@ return [
         'roles' => 'الأدوار والصلاحيات',
         'lookups' => 'الثوابت',
         'settings' => 'إعدادات الموقع',
+        'site_menu' => 'قائمة الموقع',
+        'home_sections' => 'أقسام الرئيسية',
     ],
 
     'actions' => [
@@ -39,6 +41,8 @@ return [
         'pages' => ['update' => 'تعديل نصوص الصفحات'],
         'users' => ['update' => 'تعديل وتفعيل وصلاحيات'],
         'settings' => ['update' => 'إدارة الإعدادات'],
+        'site_menu' => ['update' => 'ترتيب وتعديل القائمة'],
+        'home_sections' => ['update' => 'ترتيب الأقسام وإخفاؤها'],
     ],
 
     'tree' => [

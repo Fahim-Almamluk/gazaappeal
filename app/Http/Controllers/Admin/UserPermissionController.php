@@ -7,12 +7,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserPermissionsRequest;
 use App\Models\User;
+use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 final class UserPermissionController extends Controller
 {
+    public function __construct(private readonly Permissions $permissions) {}
+
     public function edit(User $user): View
     {
         Gate::authorize('permissions', $user);
@@ -29,7 +32,7 @@ final class UserPermissionController extends Controller
 
     public function update(UserPermissionsRequest $request, User $user): RedirectResponse
     {
-        $user->syncPermissions($request->validated('permissions', []));
+        $user->syncPermissions($this->permissions->withLockedKept($request->user(), $request->validated('permissions', []), $user->permissions()));
 
         return to_route('admin.users.permissions', $user)->with('success', __('admin.users.permissions.saved'));
     }

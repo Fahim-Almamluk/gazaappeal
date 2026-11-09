@@ -1,14 +1,31 @@
 <?php
 
 return [
-    'public' => [
-        ['route' => 'home', 'label' => 'site.nav.home'],
-        ['route' => 'about', 'label' => 'site.nav.about'],
-        ['route' => 'losses', 'label' => 'site.nav.losses'],
-        ['route' => 'projects.index', 'active' => 'projects.*', 'label' => 'site.nav.projects'],
-        ['route' => 'volunteer.create', 'active' => 'volunteer.*', 'label' => 'site.nav.volunteer'],
-        ['route' => 'stories.index', 'active' => 'stories.*', 'label' => 'site.nav.stories'],
-        ['route' => 'contact.create', 'active' => 'contact.*', 'label' => 'site.nav.contact'],
+    'limits' => [
+        'roots' => 8,
+        'children' => 10,
+    ],
+
+    'pages' => [
+        'home' => ['label' => 'site.nav.home', 'active' => 'home'],
+        'about' => ['label' => 'site.nav.about', 'active' => 'about'],
+        'losses' => ['label' => 'site.nav.losses', 'active' => 'losses'],
+        'projects.index' => ['label' => 'site.nav.projects', 'active' => 'projects.*'],
+        'stories.index' => ['label' => 'site.nav.stories', 'active' => 'stories.*'],
+        'gallery' => ['label' => 'site.nav.gallery', 'active' => 'gallery'],
+        'donate' => ['label' => 'site.nav.donate', 'active' => 'donate'],
+        'volunteer.create' => ['label' => 'site.nav.volunteer', 'active' => 'volunteer.*'],
+        'contact.create' => ['label' => 'site.nav.contact', 'active' => 'contact.*'],
+        'faq' => ['label' => 'site.nav.faq', 'active' => 'faq'],
+        'privacy' => ['label' => 'site.nav.privacy', 'active' => 'privacy'],
+    ],
+
+    'defaults' => ['home', 'about', 'losses', 'projects.index', 'volunteer.create', 'stories.index', 'contact.create'],
+
+    'settings_tabs' => [
+        ['route' => 'admin.settings.edit', 'active' => 'admin.settings.*', 'permission' => 'settings.update', 'icon' => 'settings', 'label' => 'admin.settings.tabs.general'],
+        ['route' => 'admin.menu.index', 'active' => 'admin.menu.*', 'permission' => 'site_menu.view', 'icon' => 'list-tree', 'label' => 'admin.settings.tabs.menu'],
+        ['route' => 'admin.home-sections.edit', 'active' => 'admin.home-sections.*', 'permission' => 'home_sections.update', 'icon' => 'layout-list', 'label' => 'admin.settings.tabs.home'],
     ],
 
     'admin' => [
@@ -56,7 +73,7 @@ return [
                 ['route' => 'admin.users.index', 'active' => 'admin.users.*', 'permission' => 'users.view', 'label' => 'ui.nav.users', 'icon' => 'users'],
                 ['route' => 'admin.roles.index', 'active' => 'admin.roles.*', 'permission' => 'roles.view', 'label' => 'ui.nav.roles', 'icon' => 'shield-check'],
                 ['route' => 'admin.lookups.index', 'active' => 'admin.lookups.*', 'permission' => 'lookups.view', 'label' => 'ui.nav.lookups', 'icon' => 'tags'],
-                ['route' => 'admin.settings.edit', 'active' => 'admin.settings.*', 'permission' => 'settings.update', 'label' => 'ui.nav.settings', 'icon' => 'settings'],
+                ['route' => 'admin.settings.edit', 'active' => ['admin.settings.*', 'admin.menu.*', 'admin.home-sections.*'], 'tabs' => true, 'label' => 'ui.nav.settings', 'icon' => 'settings'],
             ],
         ],
     ],

@@ -21,9 +21,10 @@ final class DamageController extends Controller
     {
         $governorate = Governorate::tryFrom($request->string('governorate')->toString());
         $category = $request->integer('category') ?: null;
+        $search = $request->string('q')->trim()->toString();
         $damages = $this->filtered($request)->paginate(config('appeal.per_page'))->withQueryString();
 
-        return view('admin.damages.index', compact('damages', 'governorate', 'category'));
+        return view('admin.damages.index', compact('damages', 'governorate', 'category', 'search'));
     }
 
     public function export(Request $request, SpreadsheetExport $export): StreamedResponse
@@ -42,8 +43,11 @@ final class DamageController extends Controller
 
     private function filtered(Request $request): Builder
     {
+        $search = $request->string('q')->trim()->toString();
+
         return Damage::query()
             ->with('category')
+            ->when($search !== '', fn ($query) => $query->whereLike('item', "%{$search}%"))
             ->when(Governorate::tryFrom($request->string('governorate')->toString()), fn ($query, Governorate $governorate) => $query->where('governorate', $governorate))
             ->when($request->integer('category') ?: null, fn ($query, int $category) => $query->where('category_id', $category))
             ->orderBy('governorate')

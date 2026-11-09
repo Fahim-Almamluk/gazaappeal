@@ -41,6 +41,8 @@ return [
         'add' => 'Add project',
         'edit' => 'Edit project',
         'search' => 'Search by project title',
+        'all_priority' => 'All priorities',
+        'priority' => ['urgent' => 'Urgent', 'regular' => 'Regular'],
         'form_subtitle' => 'Enter the project details as donors will see them.',
         'empty' => 'No matching projects.',
         'no_goal' => 'No funding goal',
@@ -121,6 +123,7 @@ return [
         'form_subtitle' => 'One item with its value in dollars, within a governorate and category.',
         'empty' => 'No matching items.',
         'all_governorates' => 'All governorates',
+        'search' => 'Search by item name',
         'all_categories' => 'All categories',
         'columns' => [
             'item' => 'Item',
@@ -155,6 +158,7 @@ return [
         'add' => 'Add story',
         'edit' => 'Edit story',
         'search' => 'Search by story title',
+        'all_projects' => 'All projects',
         'form_subtitle' => 'Share the real-world impact of donations.',
         'empty' => 'No matching stories.',
         'columns' => [
@@ -189,6 +193,7 @@ return [
         'subtitle' => 'Photos shown in the site gallery.',
         'add' => 'Add photo',
         'edit' => 'Edit photo',
+        'search' => 'Search by caption',
         'form_subtitle' => 'A photo from the field with a short caption.',
         'empty' => 'No photos.',
         'sections' => [
@@ -257,6 +262,8 @@ return [
         'subtitle' => 'Online donation links and bank accounts shown on the Donate page.',
         'add' => 'Add method',
         'edit' => 'Edit donation method',
+        'search' => 'Search by method name',
+        'all_types' => 'All types',
         'form_subtitle' => 'A donation platform link or bank account details.',
         'empty' => 'No donation methods.',
         'columns' => [

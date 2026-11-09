@@ -17,7 +17,8 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.damages.index')" :active="$governorate || $category">
+            <x-ui.filter-bar :action="route('admin.damages.index')" :active="filled($search) || $governorate || $category">
+                <x-ui.search-input :value="$search" :placeholder="__('admin.damages.search')" />
                 <div class="w-full sm:w-48">
                     <x-ui.select name="governorate" compact :options="Governorate::options()" :selected="$governorate?->value" :placeholder="__('admin.damages.all_governorates')" :aria-label="__('admin.damages.columns.governorate')" />
                 </div>

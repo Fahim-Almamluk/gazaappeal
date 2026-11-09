@@ -1,3 +1,7 @@
+@php
+    use App\Enums\DonationMethodType;
+@endphp
+
 <x-layouts.admin :title="__('admin.donation_methods.title')">
     <div class="space-y-6">
         <x-ui.page-header icon="hand-coins" :title="__('admin.donation_methods.title')" :subtitle="__('admin.donation_methods.subtitle')">
@@ -9,7 +13,11 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.donation-methods.index')" :active="request()->filled('visibility')">
+            <x-ui.filter-bar :action="route('admin.donation-methods.index')" :active="filled($search) || $type || request()->filled('visibility')">
+                <x-ui.search-input :value="$search" :placeholder="__('admin.donation_methods.search')" />
+                <div class="w-full sm:w-44">
+                    <x-ui.select name="type" compact :options="DonationMethodType::options()" :selected="$type?->value" :placeholder="__('admin.donation_methods.all_types')" :aria-label="__('admin.donation_methods.columns.type')" />
+                </div>
                 @include('admin.partials.visibility-filter')
             </x-ui.filter-bar>
 

@@ -9,7 +9,8 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.gallery.index')" :active="request()->filled('visibility')">
+            <x-ui.filter-bar :action="route('admin.gallery.index')" :active="filled($search) || request()->filled('visibility')">
+                <x-ui.search-input :value="$search" :placeholder="__('admin.gallery.search')" />
                 @include('admin.partials.visibility-filter')
             </x-ui.filter-bar>
 

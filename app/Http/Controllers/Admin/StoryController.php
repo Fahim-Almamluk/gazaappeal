@@ -23,15 +23,23 @@ final class StoryController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
 
+        $project = $request->integer('project') ?: null;
+
         $stories = Story::query()
             ->with('project:id,title')
             ->when($search !== '', fn ($query) => $query->whereLike('title', "%{$search}%"))
+            ->when($project, fn ($query, int $project) => $query->where('project_id', $project))
             ->visibility($request->query('visibility'))
             ->latest()
             ->paginate(config('appeal.per_page'))
             ->withQueryString();
 
-        return view('admin.stories.index', compact('stories', 'search'));
+        return view('admin.stories.index', [
+            'stories' => $stories,
+            'search' => $search,
+            'project' => $project,
+            'projects' => $this->projectOptions(),
+        ]);
     }
 
     public function create(): View

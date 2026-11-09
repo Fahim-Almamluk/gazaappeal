@@ -25,9 +25,10 @@ final class ProjectController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
         $status = $request->integer('status') ?: null;
+        $priority = in_array($request->query('priority'), ['urgent', 'regular'], true) ? $request->query('priority') : null;
         $projects = $this->filtered($request)->paginate(config('appeal.per_page'))->withQueryString();
 
-        return view('admin.projects.index', compact('projects', 'search', 'status'));
+        return view('admin.projects.index', compact('projects', 'search', 'status', 'priority'));
     }
 
     public function export(Request $request, SpreadsheetExport $export): StreamedResponse
@@ -56,6 +57,10 @@ final class ProjectController extends Controller
             ->with('status')
             ->when($search !== '', fn ($query) => $query->whereLike('title', "%{$search}%"))
             ->when($request->integer('status') ?: null, fn ($query, int $status) => $query->where('status_id', $status))
+            ->when(
+                in_array($request->query('priority'), ['urgent', 'regular'], true),
+                fn ($query) => $query->where('is_urgent', $request->query('priority') === 'urgent'),
+            )
             ->visibility($request->query('visibility'))
             ->ordered();
     }

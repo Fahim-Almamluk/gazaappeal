@@ -15,10 +15,13 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.projects.index')" :active="filled($search) || $status || request()->filled('visibility')">
+            <x-ui.filter-bar :action="route('admin.projects.index')" :active="filled($search) || $status || $priority || request()->filled('visibility')">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.projects.search')" />
                 <div class="w-full sm:w-44">
                     <x-ui.select name="status" compact :options="Lookup::options(LookupType::ProjectStatus)" :selected="$status" :placeholder="__('admin.common.all_statuses')" :aria-label="__('admin.projects.columns.status')" />
+                </div>
+                <div class="w-full sm:w-44">
+                    <x-ui.select name="priority" compact :options="['urgent' => __('admin.projects.priority.urgent'), 'regular' => __('admin.projects.priority.regular')]" :selected="$priority" :placeholder="__('admin.projects.all_priority')" :aria-label="__('admin.projects.columns.urgent')" />
                 </div>
                 @include('admin.partials.visibility-filter')
             </x-ui.filter-bar>

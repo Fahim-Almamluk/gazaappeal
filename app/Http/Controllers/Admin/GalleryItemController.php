@@ -20,13 +20,16 @@ final class GalleryItemController extends Controller
 
     public function index(Request $request): View
     {
+        $search = $request->string('q')->trim()->toString();
+
         $items = GalleryItem::query()
+            ->when($search !== '', fn ($query) => $query->whereLike('caption', "%{$search}%"))
             ->visibility($request->query('visibility'))
             ->ordered()
             ->paginate(24)
             ->withQueryString();
 
-        return view('admin.gallery.index', compact('items'));
+        return view('admin.gallery.index', compact('items', 'search'));
     }
 
     public function create(): View

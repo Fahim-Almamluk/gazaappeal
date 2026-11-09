@@ -9,8 +9,11 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.stories.index')" :active="filled($search) || request()->filled('visibility')">
+            <x-ui.filter-bar :action="route('admin.stories.index')" :active="filled($search) || $project || request()->filled('visibility')">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.stories.search')" />
+                <div class="w-full sm:w-56">
+                    <x-ui.select name="project" compact :options="$projects" :selected="$project" :placeholder="__('admin.stories.all_projects')" :aria-label="__('admin.stories.columns.project')" />
+                </div>
                 @include('admin.partials.visibility-filter')
             </x-ui.filter-bar>
 

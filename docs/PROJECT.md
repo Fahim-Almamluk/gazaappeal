@@ -1,7 +1,7 @@
 # نداء كهرباء غزة — توثيق المشروع
 
 > هذا الملف مرجع للجلسات القادمة حتى لا نعيد تحليل المشروع كل مرة. اقرأه كاملًا قبل أي تعديل، وحدّثه في نهاية أي عمل يغيّر البنية أو القرارات.
-> آخر تحديث: 2026-11-07.
+> آخر تحديث: 2026-11-09.
 
 ## 1. فكرة المشروع
 
@@ -125,6 +125,7 @@ npm run build
 - الحذف بتأكيد SweetAlert عبر الموجّه `@confirm`.
 - الأدوار والصلاحيات (القسم 16)؛ `EnsureUserIsActive` يمنع المعطّلين؛ `PreventCaching` على صفحات الإدارة.
 - «أضرار المحافظات»: جدول مع فلترة بالمحافظة والتصنيف؛ ومنه تُعدَّل أرقام الخريطة.
+- **فلاتر القوائم** (قاعدة: 2–4 عناصر كحد أقصى لكل شاشة، كلها في `x-ui.filter-bar`): المشاريع (بحث، الحالة، عاجل/عادي، الظهور)، القصص (بحث، المشروع، الظهور)، أضرار المحافظات (بحث بالبند، المحافظة، التصنيف)، طرق التبرع (بحث، النوع، الظهور)، المعرض (بحث بالوصف، الظهور)، الأسئلة والخسائر والشركاء (بحث، الظهور)، المتطوعون (بحث، الحالة، المجال)، الرسائل (بحث، الحالة)، المستخدمون والأدوار (القسم 19)، الثوابت (بحث). اختبارات الفلاتر الجديدة في `ListFiltersTest`.
 
 ## 8. الأمان
 
@@ -137,7 +138,7 @@ npm run build
 
 ## 9. الاختبارات
 
-201 اختبارًا ناجحًا (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest, SiteLayoutTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
+206 اختبارات ناجحة (PHPUnit، SQLite بالذاكرة): `tests/Feature/{PublicSiteTest, PublicFormsTest, AuthenticationTest}` و`tests/Feature/Admin/{AccessControlTest, AdminPagesTest, ContentManagementTest, InboxTest, PermissionsTest, LookupTest, SuperAdminTest, ExportTest, AlertsAndPasswordTest, PageChromeTest, RolesHierarchyTest, UserAndRoleFiltersTest, SiteLayoutTest, ListFiltersTest}` و`tests/Feature/LookupMigrationTest`. أي وحدة جديدة تُضاف لـ`AdminPagesTest` ومعها اختبار إنشاء/تحقق. بعد تعديل PHP شغّل Pint على الملفات المعدّلة (مرّر أسماء الملفات الموجودة فقط؛ Pint يفشل لو مرّرت ملفًا محذوفًا).
 
 ## 10. ملاحظات عمل مهمة
 

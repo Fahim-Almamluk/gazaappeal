@@ -12,6 +12,7 @@
         'primary' => 'text-primary hover:bg-primary-soft',
         'danger' => 'text-danger hover:bg-danger-soft',
         'success' => 'text-success hover:bg-success-soft',
+        'warning' => 'text-warning hover:bg-warning-soft',
         'excel' => 'text-excel hover:bg-excel-soft',
     ];
 

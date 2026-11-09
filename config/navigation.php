@@ -22,6 +22,12 @@ return [
 
     'defaults' => ['home', 'about', 'losses', 'projects.index', 'volunteer.create', 'stories.index', 'contact.create'],
 
+    'settings_tabs' => [
+        ['route' => 'admin.settings.edit', 'active' => 'admin.settings.*', 'permission' => 'settings.update', 'icon' => 'settings', 'label' => 'admin.settings.tabs.general'],
+        ['route' => 'admin.menu.index', 'active' => 'admin.menu.*', 'permission' => 'site_menu.view', 'icon' => 'list-tree', 'label' => 'admin.settings.tabs.menu'],
+        ['route' => 'admin.home-sections.edit', 'active' => 'admin.home-sections.*', 'permission' => 'home_sections.update', 'icon' => 'layout-list', 'label' => 'admin.settings.tabs.home'],
+    ],
+
     'admin' => [
         [
             'key' => 'main',
@@ -67,7 +73,7 @@ return [
                 ['route' => 'admin.users.index', 'active' => 'admin.users.*', 'permission' => 'users.view', 'label' => 'ui.nav.users', 'icon' => 'users'],
                 ['route' => 'admin.roles.index', 'active' => 'admin.roles.*', 'permission' => 'roles.view', 'label' => 'ui.nav.roles', 'icon' => 'shield-check'],
                 ['route' => 'admin.lookups.index', 'active' => 'admin.lookups.*', 'permission' => 'lookups.view', 'label' => 'ui.nav.lookups', 'icon' => 'tags'],
-                ['route' => 'admin.settings.edit', 'active' => ['admin.settings.*', 'admin.menu.*', 'admin.home-sections.*'], 'permission' => 'settings.update', 'label' => 'ui.nav.settings', 'icon' => 'settings'],
+                ['route' => 'admin.settings.edit', 'active' => ['admin.settings.*', 'admin.menu.*', 'admin.home-sections.*'], 'tabs' => true, 'label' => 'ui.nav.settings', 'icon' => 'settings'],
             ],
         ],
     ],

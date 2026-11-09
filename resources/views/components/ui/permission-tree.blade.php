@@ -7,7 +7,7 @@
 @inject('catalog', 'App\Support\Permissions')
 
 @php
-    $tree = $catalog->tree();
+    $tree = $catalog->tree(auth()->user()->isSuperAdmin());
     $selected = old('permissions', $selected);
     $isChecked = fn (string $key): bool => $disabled || in_array($key, $selected, true);
     $stateOf = function (string $key) use ($inherited, $isChecked): string {

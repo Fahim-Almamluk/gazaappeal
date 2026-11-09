@@ -51,8 +51,6 @@ final class RoleRequest extends FormRequest
      */
     private function grantable(): array
     {
-        $actor = $this->user();
-
-        return $actor->isSuperAdmin() ? app(Permissions::class)->all() : $actor->permissions();
+        return app(Permissions::class)->grantableBy($this->user());
     }
 }

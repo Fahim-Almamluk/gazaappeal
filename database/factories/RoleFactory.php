@@ -34,7 +34,7 @@ final class RoleFactory extends Factory
     public function administrator(): static
     {
         return $this->state(['name' => ['ar' => 'أدمن', 'en' => 'Admin']])
-            ->afterCreating(fn (Role $role) => $role->syncPermissions(app(Permissions::class)->all()));
+            ->afterCreating(fn (Role $role) => $role->syncPermissions(array_diff(app(Permissions::class)->all(), app(Permissions::class)->restricted())));
     }
 
     public function editor(): static

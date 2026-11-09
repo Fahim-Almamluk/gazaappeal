@@ -31,12 +31,6 @@ final class UserPermissionsRequest extends FormRequest
      */
     private function grantable(): array
     {
-        $actor = $this->user();
-
-        if ($actor->isSuperAdmin()) {
-            return app(Permissions::class)->all();
-        }
-
-        return array_values(array_unique([...$actor->permissions(), ...($this->route('user')->role?->permissions() ?? [])]));
+        return app(Permissions::class)->grantableBy($this->user(), $this->route('user')->role?->permissions() ?? []);
     }
 }

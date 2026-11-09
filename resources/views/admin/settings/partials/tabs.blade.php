@@ -1,12 +1,8 @@
-@if (auth()->user()->isSuperAdmin())
-    @php
-        $tabs = [
-            ['route' => 'admin.settings.edit', 'active' => 'admin.settings.*', 'icon' => 'settings', 'label' => 'admin.settings.tabs.general'],
-            ['route' => 'admin.menu.index', 'active' => 'admin.menu.*', 'icon' => 'list-tree', 'label' => 'admin.settings.tabs.menu'],
-            ['route' => 'admin.home-sections.edit', 'active' => 'admin.home-sections.*', 'icon' => 'layout-list', 'label' => 'admin.settings.tabs.home'],
-        ];
-    @endphp
+@php
+    $tabs = collect(config('navigation.settings_tabs'))->filter(fn (array $tab): bool => auth()->user()->hasPermission($tab['permission']));
+@endphp
 
+@if ($tabs->count() > 1)
     <nav class="flex gap-1 overflow-x-auto rounded-card border border-line bg-surface p-1.5 shadow-elevated" aria-label="{{ __('admin.settings.title') }}">
         @foreach ($tabs as $tab)
             @php($current = request()->routeIs($tab['active']))

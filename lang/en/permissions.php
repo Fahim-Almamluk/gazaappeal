@@ -24,6 +24,8 @@ return [
         'roles' => 'Roles & permissions',
         'lookups' => 'Constants',
         'settings' => 'Site settings',
+        'site_menu' => 'Site menu',
+        'home_sections' => 'Home sections',
     ],
 
     'actions' => [
@@ -39,6 +41,8 @@ return [
         'pages' => ['update' => 'Edit page texts'],
         'users' => ['update' => 'Edit, activate & permissions'],
         'settings' => ['update' => 'Manage settings'],
+        'site_menu' => ['update' => 'Edit & reorder menu'],
+        'home_sections' => ['update' => 'Reorder & hide sections'],
     ],
 
     'tree' => [

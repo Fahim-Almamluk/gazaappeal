@@ -4,11 +4,14 @@ namespace Tests\Feature\Admin;
 
 use App\Models\MenuItem;
 use App\Models\Project;
+use App\Models\Role;
 use App\Models\Setting;
 use App\Models\Story;
 use App\Models\User;
 use App\Support\HomeSections;
+use App\Support\Permissions;
 use App\Support\SiteSettings;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +37,7 @@ final class SiteLayoutTest extends TestCase
         ];
     }
 
-    public function test_only_the_super_admin_reaches_the_layout_screens(): void
+    public function test_layout_screens_need_their_own_permissions(): void
     {
         $item = MenuItem::query()->firstOrFail();
 
@@ -46,7 +49,9 @@ final class SiteLayoutTest extends TestCase
             $this->post(route('admin.menu.store'), $this->menuPayload())->assertForbidden();
             $this->delete(route('admin.menu.destroy', $item))->assertForbidden();
             $this->putJson(route('admin.menu.reorder'), ['items' => [['id' => $item->id, 'visible' => true]]])->assertForbidden();
+            $this->post(route('admin.menu.reset'))->assertForbidden();
             $this->get(route('admin.home-sections.edit'))->assertForbidden();
+            $this->post(route('admin.home-sections.reset'))->assertForbidden();
         }
 
         $this->actingAs($this->superAdmin());
@@ -57,12 +62,21 @@ final class SiteLayoutTest extends TestCase
         $this->get(route('admin.home-sections.edit'))->assertOk();
     }
 
-    public function test_layout_screens_live_as_tabs_inside_site_settings_for_the_super_admin_only(): void
+    public function test_layout_tabs_follow_the_granted_permissions(): void
     {
         $this->actingAs(User::factory()->administrator()->create())
             ->get(route('admin.settings.edit'))
             ->assertOk()
             ->assertDontSee(route('admin.menu.index'))
+            ->assertDontSee(route('admin.home-sections.edit'));
+
+        $role = Role::factory()->administrator()->create();
+        $role->syncPermissions([...$role->permissions(), 'site_menu.view', 'site_menu.update']);
+
+        $this->actingAs(User::factory()->create(['role_id' => $role]))
+            ->get(route('admin.menu.index'))
+            ->assertOk()
+            ->assertSee(route('admin.settings.edit'))
             ->assertDontSee(route('admin.home-sections.edit'));
 
         $this->actingAs($this->superAdmin());
@@ -72,6 +86,73 @@ final class SiteLayoutTest extends TestCase
         }
 
         $this->get(route('admin.dashboard'))->assertDontSee(route('admin.menu.index'));
+    }
+
+    public function test_site_settings_item_reaches_the_first_permitted_tab(): void
+    {
+        $user = User::factory()->create(['role_id' => Role::factory()->withPermissions(['home_sections.update'])]);
+
+        $this->actingAs($user)
+            ->get(route('admin.dashboard'))
+            ->assertSee(route('admin.home-sections.edit'))
+            ->assertDontSee(route('admin.settings.edit'));
+
+        $this->get(route('admin.home-sections.edit'))->assertOk();
+    }
+
+    public function test_only_the_super_admin_sees_and_grants_the_layout_permissions(): void
+    {
+        $admin = User::factory()->administrator()->create();
+        $target = User::factory()->create();
+
+        $this->actingAs($admin)
+            ->get(route('admin.roles.create'))
+            ->assertOk()
+            ->assertDontSee('site_menu.view')
+            ->assertDontSee('home_sections.update');
+
+        $this->post(route('admin.roles.store'), ['name' => ['ar' => 'دور جديد'], 'permissions' => ['projects.view', 'site_menu.view']])
+            ->assertSessionHasErrors('permissions.1');
+        $this->put(route('admin.users.permissions.update', $target), ['permissions' => ['site_menu.update']])
+            ->assertSessionHasErrors('permissions.0');
+
+        $this->actingAs($this->superAdmin())
+            ->get(route('admin.roles.create'))
+            ->assertSee('site_menu.view')
+            ->assertSee('home_sections.update');
+
+        $this->put(route('admin.users.permissions.update', $target), ['permissions' => ['home_sections.update']])->assertRedirect();
+        $this->assertTrue($target->fresh()->hasPermission('home_sections.update'));
+    }
+
+    public function test_admin_holding_layout_permissions_cannot_grant_or_strip_them(): void
+    {
+        $role = Role::factory()->administrator()->create();
+        $role->syncPermissions([...$role->permissions(), 'site_menu.view', 'site_menu.update']);
+        $admin = User::factory()->create(['role_id' => $role]);
+        $editor = Role::factory()->withPermissions(['projects.view', 'site_menu.view'])->create();
+        $target = User::factory()->create(['role_id' => $editor]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.roles.store'), ['name' => ['ar' => 'دور جديد'], 'permissions' => ['site_menu.view']])
+            ->assertSessionHasErrors('permissions.0');
+
+        $this->put(route('admin.users.permissions.update', $target), ['permissions' => ['projects.view']])->assertRedirect();
+        $this->assertTrue($target->fresh()->hasPermission('site_menu.view'));
+
+        $this->put(route('admin.roles.update', $editor), ['name' => $editor->translations('name'), 'permissions' => ['projects.view', 'faqs.view']])->assertRedirect();
+        $this->assertContains('site_menu.view', $editor->fresh()->permissions());
+        $this->assertContains('faqs.view', $editor->fresh()->permissions());
+    }
+
+    public function test_default_admin_role_does_not_include_the_layout_permissions(): void
+    {
+        $this->seed(RoleSeeder::class);
+
+        $admin = Role::query()->whereTranslation('name', 'أدمن')->sole();
+
+        $this->assertSame([], array_values(array_intersect($admin->permissions(), app(Permissions::class)->restricted())));
+        $this->assertContains('settings.update', $admin->permissions());
     }
 
     public function test_default_menu_is_seeded_in_both_languages(): void

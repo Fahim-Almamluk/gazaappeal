@@ -68,7 +68,7 @@ final class RoleController extends Controller
     {
         DB::transaction(function () use ($request, $role): void {
             $role->update($request->safe()->only('name'));
-            $role->syncPermissions($request->validated('permissions', []));
+            $role->syncPermissions($this->permissions->withLockedKept($request->user(), $request->validated('permissions', []), $role->permissions()));
         });
 
         return to_route('admin.roles.index')->with('success', __('admin.roles.updated'));

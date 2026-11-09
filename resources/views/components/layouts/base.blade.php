@@ -18,6 +18,9 @@
         @endif
         <meta property="og:title" content="{{ $title ? $title.' · ' : '' }}{{ __('ui.brand.name') }}">
         <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image" content="{{ $settings->imageUrl('logo_mark') ?? asset('images/brand/mark.png') }}">
+        <link rel="canonical" href="{{ url()->current() }}">
         <meta property="og:locale" content="{{ $localization->ogLocale() }}">
         @foreach ($localization->alternates() as $locale => $url)
             <link rel="alternate" hreflang="{{ $locale }}" href="{{ $url }}">

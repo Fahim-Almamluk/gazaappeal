@@ -35,7 +35,7 @@
                             <th scope="col" class="w-14 px-4 py-3 text-start">#</th>
                             <th scope="col" class="px-6 py-3 text-start">{{ __('admin.projects.columns.project') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.projects.columns.status') }}</th>
-                            <th scope="col" class="px-3 py-3 text-start">{{ __('admin.projects.columns.funding') }}</th>
+                            <th scope="col" class="px-3 py-3 text-start"><x-ui.sort-link column="raised_amount" first="desc">{{ __('admin.projects.columns.funding') }}</x-ui.sort-link></th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.common.visibility') }}</th>
                             <th scope="col" class="px-6 py-3 text-end">{{ __('ui.actions.actions') }}</th>
                         </tr>

@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div class="hero-leave">
+        <div class="hero-leave order-first lg:order-none">
             <x-scene.solar class="hero-stage mx-auto max-w-[600px]" />
         </div>
     </div>

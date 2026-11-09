@@ -1,5 +1,6 @@
 @php
     use App\Enums\MessageState;
+    use App\Enums\Period;
 @endphp
 
 <x-layouts.admin :title="__('admin.messages.title')">
@@ -11,10 +12,13 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.messages.index')" :active="filled($search) || $state">
+            <x-ui.filter-bar :action="route('admin.messages.index')" :active="filled($search) || $state || $period">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.messages.search')" />
                 <div class="w-full sm:w-44">
                     <x-ui.select name="state" compact :options="MessageState::options()" :selected="$state?->value" :placeholder="__('admin.messages.inbox')" :aria-label="__('admin.messages.columns.state')" />
+                </div>
+                <div class="w-full sm:w-44">
+                    <x-ui.select name="period" compact :options="Period::options()" :selected="$period?->value" :placeholder="__('admin.common.all_periods')" :aria-label="__('admin.common.received_at')" />
                 </div>
             </x-ui.filter-bar>
 
@@ -25,10 +29,10 @@
                     <thead>
                         <tr class="border-b border-line bg-surface-2/60 text-xs font-semibold text-ink-subtle">
                             <th scope="col" class="w-14 px-4 py-3 text-start">#</th>
-                            <th scope="col" class="px-6 py-3 text-start">{{ __('admin.messages.columns.sender') }}</th>
+                            <th scope="col" class="px-6 py-3 text-start"><x-ui.sort-link column="name">{{ __('admin.messages.columns.sender') }}</x-ui.sort-link></th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.messages.columns.message') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.messages.columns.state') }}</th>
-                            <th scope="col" class="px-3 py-3 text-start">{{ __('admin.common.received_at') }}</th>
+                            <th scope="col" class="px-3 py-3 text-start"><x-ui.sort-link column="created_at" first="desc">{{ __('admin.common.received_at') }}</x-ui.sort-link></th>
                             <th scope="col" class="px-6 py-3 text-end">{{ __('ui.actions.actions') }}</th>
                         </tr>
                     </thead>

@@ -5,6 +5,7 @@ return [
         'visibility' => 'Visibility',
         'all_visibility' => 'All visibility states',
         'all_statuses' => 'All statuses',
+        'all_periods' => 'Any time',
         'choose' => 'Choose…',
         'help_title' => 'Filling guide',
         'body_hint' => 'Separate paragraphs with a blank line.',

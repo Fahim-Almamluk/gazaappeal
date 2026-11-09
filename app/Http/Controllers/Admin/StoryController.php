@@ -85,6 +85,6 @@ final class StoryController extends Controller
 
     private function projectOptions(): array
     {
-        return Project::query()->ordered()->pluck('title', 'id')->all();
+        return Project::query()->ordered()->get(['id', 'title'])->pluck('title', 'id')->all();
     }
 }

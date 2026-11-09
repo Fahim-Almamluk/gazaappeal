@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 $locales = array_keys(config('appeal.locales'));
 
 Route::get('/', Site\LocaleRedirectController::class)->name('root');
+Route::get('/robots.txt', Site\RobotsController::class)->name('robots');
+Route::get('/sitemap.xml', Site\SitemapController::class)->name('sitemap');
 Route::get('/locale/{locale}', Site\SwitchLocaleController::class)->whereIn('locale', $locales)->name('locale.switch');
 
 Route::prefix('{locale}')->whereIn('locale', $locales)->group(function () {

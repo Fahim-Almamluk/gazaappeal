@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Period;
 use App\Enums\VolunteerStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\VolunteerReviewRequest;
 use App\Models\Volunteer;
+use App\Support\ListSort;
 use App\Support\SpreadsheetExport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -22,10 +24,11 @@ final class VolunteerController extends Controller
         $search = $request->string('q')->trim()->toString();
         $status = VolunteerStatus::tryFrom($request->integer('status'));
         $expertise = $request->integer('expertise') ?: null;
+        $period = Period::tryFrom($request->integer('period'));
 
         $volunteers = $this->filtered($request)->paginate(config('appeal.per_page'))->withQueryString();
 
-        return view('admin.volunteers.index', compact('volunteers', 'search', 'status', 'expertise'));
+        return view('admin.volunteers.index', compact('volunteers', 'search', 'status', 'expertise', 'period'));
     }
 
     public function export(Request $request, SpreadsheetExport $export): StreamedResponse
@@ -51,14 +54,17 @@ final class VolunteerController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
 
-        return Volunteer::query()
+        $query = Volunteer::query()
             ->with('expertise')
             ->when($search !== '', fn ($query) => $query->where(
                 fn ($inner) => $inner->whereLike('name', "%{$search}%")->orWhereLike('email', "%{$search}%"),
             ))
             ->when(VolunteerStatus::tryFrom($request->integer('status')), fn ($query, VolunteerStatus $status) => $query->where('status', $status))
             ->when($request->integer('expertise') ?: null, fn ($query, int $expertise) => $query->where('expertise_id', $expertise))
+            ->when(Period::tryFrom($request->integer('period')), fn ($query, Period $period) => $query->where('created_at', '>=', $period->since()))
             ->latest();
+
+        return ListSort::apply($query, $request, ['name', 'created_at']);
     }
 
     public function show(Volunteer $volunteer): View

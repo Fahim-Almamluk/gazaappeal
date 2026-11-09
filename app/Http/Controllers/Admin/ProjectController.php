@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProjectRequest;
 use App\Models\Project;
 use App\Support\ImageStore;
+use App\Support\ListSort;
 use App\Support\SpreadsheetExport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -53,7 +54,7 @@ final class ProjectController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
 
-        return Project::query()
+        $query = Project::query()
             ->with('status')
             ->when($search !== '', fn ($query) => $query->whereLike('title', "%{$search}%"))
             ->when($request->integer('status') ?: null, fn ($query, int $status) => $query->where('status_id', $status))
@@ -63,6 +64,8 @@ final class ProjectController extends Controller
             )
             ->visibility($request->query('visibility'))
             ->ordered();
+
+        return ListSort::apply($query, $request, ['raised_amount']);
     }
 
     public function create(): View

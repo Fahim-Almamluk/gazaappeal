@@ -36,7 +36,7 @@
                             <th scope="col" class="w-14 px-4 py-3 text-start">#</th>
                             <th scope="col" class="px-6 py-3 text-start">{{ __('admin.damages.columns.item') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.damages.columns.governorate') }}</th>
-                            <th scope="col" class="px-3 py-3 text-start">{{ __('admin.damages.columns.amount') }}</th>
+                            <th scope="col" class="px-3 py-3 text-start"><x-ui.sort-link column="amount" first="desc">{{ __('admin.damages.columns.amount') }}</x-ui.sort-link></th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('ui.form.sort_order') }}</th>
                             <th scope="col" class="px-6 py-3 text-end">{{ __('ui.actions.actions') }}</th>
                         </tr>

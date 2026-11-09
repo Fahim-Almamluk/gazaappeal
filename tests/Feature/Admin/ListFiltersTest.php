@@ -3,12 +3,14 @@
 namespace Tests\Feature\Admin;
 
 use App\Enums\DonationMethodType;
+use App\Models\ContactMessage;
 use App\Models\Damage;
 use App\Models\DonationMethod;
 use App\Models\GalleryItem;
 use App\Models\Project;
 use App\Models\Story;
 use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -54,7 +56,29 @@ final class ListFiltersTest extends TestCase
         $this->get(route('admin.stories.index', ['project' => $first->id]))
             ->assertOk()
             ->assertSee('قصة المستشفى')
-            ->assertDontSee('قصة المدرسة');
+            ->assertDontSee('قصة المدرسة')
+            ->assertSee('مشروع المدرسة')
+            ->assertDontSee('{&quot;ar&quot;', false);
+
+        $this->get(route('admin.stories.create'))
+            ->assertOk()
+            ->assertSee('مشروع المستشفى')
+            ->assertDontSee('{&quot;ar&quot;', false);
+    }
+
+    public function test_long_filter_lists_get_a_searchable_dropdown_and_short_ones_stay_native(): void
+    {
+        $projects = Project::factory()->count(8)->create();
+        Story::factory()->for($projects->first())->create();
+
+        $this->get(route('admin.stories.index'))
+            ->assertOk()
+            ->assertSee('x-data="combobox"', false)
+            ->assertSee('data-option', false);
+
+        $this->get(route('admin.projects.index'))
+            ->assertOk()
+            ->assertDontSee('x-data="combobox"', false);
     }
 
     public function test_damages_are_searched_by_item(): void
@@ -82,6 +106,44 @@ final class ListFiltersTest extends TestCase
             ->assertOk()
             ->assertSee('منصة إنساني')
             ->assertDontSee('حساب بنك فلسطين');
+    }
+
+    public function test_volunteers_and_messages_are_filtered_by_period(): void
+    {
+        Volunteer::factory()->create(['name' => 'متطوع حديث', 'created_at' => now()->subDays(2)]);
+        Volunteer::factory()->create(['name' => 'متطوع قديم', 'created_at' => now()->subDays(60)]);
+        ContactMessage::factory()->create(['name' => 'مرسل حديث', 'created_at' => now()->subDay()]);
+        ContactMessage::factory()->create(['name' => 'مرسل قديم', 'created_at' => now()->subDays(60)]);
+
+        $this->get(route('admin.volunteers.index', ['period' => 7]))
+            ->assertOk()
+            ->assertSee('متطوع حديث')
+            ->assertDontSee('متطوع قديم');
+
+        $this->get(route('admin.volunteers.index', ['period' => 90]))
+            ->assertSee('متطوع قديم');
+
+        $this->get(route('admin.messages.index', ['period' => 30]))
+            ->assertOk()
+            ->assertSee('مرسل حديث')
+            ->assertDontSee('مرسل قديم');
+    }
+
+    public function test_columns_can_be_sorted_and_invalid_sort_is_ignored(): void
+    {
+        Volunteer::factory()->create(['name' => 'باسل']);
+        Volunteer::factory()->create(['name' => 'سمر']);
+
+        $this->get(route('admin.volunteers.index', ['sort' => 'name', 'dir' => 'asc']))
+            ->assertOk()
+            ->assertSeeInOrder(['باسل', 'سمر']);
+
+        $this->get(route('admin.volunteers.index', ['sort' => 'name', 'dir' => 'desc']))
+            ->assertOk()
+            ->assertSeeInOrder(['سمر', 'باسل']);
+
+        $this->get(route('admin.volunteers.index', ['sort' => 'password; drop table']))
+            ->assertOk();
     }
 
     public function test_gallery_is_searched_by_caption(): void

@@ -98,6 +98,8 @@ return [
     'filter' => [
         'apply' => 'بحث',
         'reset' => 'مسح',
+        'search_options' => 'ابحث في القائمة',
+        'no_results' => 'لا توجد نتائج مطابقة',
     ],
 
     'form' => [

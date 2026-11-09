@@ -221,3 +221,79 @@ export const navGroup = () => ({
         return !this.shown;
     },
 });
+
+const normalize = (text) =>
+    text
+        .normalize('NFD')
+        .replace(/\p{M}/gu, '')
+        .replace(/[أإآ]/g, 'ا')
+        .replace(/ى/g, 'ي')
+        .replace(/ة/g, 'ه')
+        .toLocaleLowerCase()
+        .trim();
+
+export const combobox = () => ({
+    open: false,
+
+    toggle() {
+        if (this.open) {
+            this.close();
+            return;
+        }
+
+        this.open = true;
+        this.$root.querySelector('[data-search]').value = '';
+        this.filter();
+        this.$nextTick(() => this.$root.querySelector('[data-search]').focus());
+    },
+
+    close() {
+        this.open = false;
+    },
+
+    visibleOptions() {
+        return [...this.$root.querySelectorAll('[data-option]')].filter((option) => !option.parentElement.hidden);
+    },
+
+    filter() {
+        const term = normalize(this.$root.querySelector('[data-search]').value);
+
+        this.$root.querySelectorAll('[data-option]').forEach((option) => {
+            option.parentElement.hidden = term !== '' && !normalize(option.dataset.text).includes(term);
+        });
+
+        this.$root.querySelector('[data-none]').hidden = this.visibleOptions().length > 0;
+    },
+
+    move(event) {
+        const options = this.visibleOptions();
+
+        if (options.length === 0) {
+            return;
+        }
+
+        const step = event.key === 'ArrowDown' ? 1 : -1;
+        const index = options.indexOf(document.activeElement);
+        const next = index === -1 ? (step === 1 ? 0 : options.length - 1) : (index + step + options.length) % options.length;
+
+        options[next].focus();
+    },
+
+    first() {
+        const [option] = this.visibleOptions();
+
+        if (option) {
+            option.click();
+        }
+    },
+
+    pick(event) {
+        const option = event.currentTarget;
+
+        this.$root.querySelector('[data-input]').value = option.dataset.value;
+        this.$root.querySelector('[data-label]').textContent = option.dataset.text;
+        this.$root.querySelectorAll('[data-option]').forEach((item) => item.setAttribute('aria-selected', String(item === option)));
+        this.close();
+        this.$root.querySelector('[data-trigger]').focus();
+    },
+});

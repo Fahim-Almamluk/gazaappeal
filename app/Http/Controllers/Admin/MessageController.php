@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\MessageState;
+use App\Enums\Period;
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
+use App\Support\ListSort;
 use App\Support\SpreadsheetExport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -20,10 +22,11 @@ final class MessageController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
         $state = MessageState::tryFrom($request->string('state')->toString());
+        $period = Period::tryFrom($request->integer('period'));
 
         $messages = $this->filtered($request)->paginate(config('appeal.per_page'))->withQueryString();
 
-        return view('admin.messages.index', compact('messages', 'search', 'state'));
+        return view('admin.messages.index', compact('messages', 'search', 'state', 'period'));
     }
 
     public function export(Request $request, SpreadsheetExport $export): StreamedResponse
@@ -46,7 +49,7 @@ final class MessageController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
 
-        return ContactMessage::query()
+        $query = ContactMessage::query()
             ->when($search !== '', fn ($query) => $query->where(
                 fn ($inner) => $inner->whereLike('name', "%{$search}%")->orWhereLike('email', "%{$search}%"),
             ))
@@ -55,7 +58,10 @@ final class MessageController extends Controller
                 fn ($query, MessageState $state) => $query->inState($state),
                 fn ($query) => $query->whereNull('archived_at'),
             )
+            ->when(Period::tryFrom($request->integer('period')), fn ($query, Period $period) => $query->where('created_at', '>=', $period->since()))
             ->latest();
+
+        return ListSort::apply($query, $request, ['name', 'created_at']);
     }
 
     public function show(ContactMessage $message): View

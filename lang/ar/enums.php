@@ -38,6 +38,12 @@ return [
         'Rafah' => 'رفح',
     ],
 
+    'period' => [
+        'Week' => 'آخر 7 أيام',
+        'Month' => 'آخر 30 يومًا',
+        'Quarter' => 'آخر 90 يومًا',
+    ],
+
     'message_state' => [
         'Unread' => 'غير مقروءة',
         'Read' => 'مقروءة',

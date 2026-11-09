@@ -98,6 +98,8 @@ return [
     'filter' => [
         'apply' => 'Search',
         'reset' => 'Clear',
+        'search_options' => 'Search the list',
+        'no_results' => 'No matching results',
     ],
 
     'form' => [

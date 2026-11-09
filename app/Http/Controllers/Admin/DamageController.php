@@ -8,6 +8,7 @@ use App\Enums\Governorate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DamageRequest;
 use App\Models\Damage;
+use App\Support\ListSort;
 use App\Support\SpreadsheetExport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -45,7 +46,7 @@ final class DamageController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
 
-        return Damage::query()
+        $query = Damage::query()
             ->with('category')
             ->when($search !== '', fn ($query) => $query->whereLike('item', "%{$search}%"))
             ->when(Governorate::tryFrom($request->string('governorate')->toString()), fn ($query, Governorate $governorate) => $query->where('governorate', $governorate))
@@ -53,6 +54,8 @@ final class DamageController extends Controller
             ->orderBy('governorate')
             ->orderBy('category_id')
             ->ordered();
+
+        return ListSort::apply($query, $request, ['amount']);
     }
 
     public function create(): View

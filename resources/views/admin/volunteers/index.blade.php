@@ -1,5 +1,6 @@
 @php
     use App\Enums\LookupType;
+    use App\Enums\Period;
     use App\Models\Lookup;
     use App\Enums\VolunteerStatus;
 @endphp
@@ -13,13 +14,16 @@
         </x-ui.page-header>
 
         <x-ui.card :padding="false" class="overflow-hidden">
-            <x-ui.filter-bar :action="route('admin.volunteers.index')" :active="filled($search) || $status || $expertise">
+            <x-ui.filter-bar :action="route('admin.volunteers.index')" :active="filled($search) || $status || $expertise || $period">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.volunteers.search')" />
                 <div class="w-full sm:w-44">
                     <x-ui.select name="status" compact :options="VolunteerStatus::options()" :selected="$status?->value" :placeholder="__('admin.common.all_statuses')" :aria-label="__('admin.volunteers.columns.status')" />
                 </div>
                 <div class="w-full sm:w-64">
                     <x-ui.select name="expertise" compact :options="Lookup::options(LookupType::VolunteerExpertise)" :selected="$expertise" :placeholder="__('admin.volunteers.all_expertise')" :aria-label="__('admin.volunteers.columns.expertise')" />
+                </div>
+                <div class="w-full sm:w-44">
+                    <x-ui.select name="period" compact :options="Period::options()" :selected="$period?->value" :placeholder="__('admin.common.all_periods')" :aria-label="__('admin.common.received_at')" />
                 </div>
             </x-ui.filter-bar>
 
@@ -30,11 +34,11 @@
                     <thead>
                         <tr class="border-b border-line bg-surface-2/60 text-xs font-semibold text-ink-subtle">
                             <th scope="col" class="w-14 px-4 py-3 text-start">#</th>
-                            <th scope="col" class="px-6 py-3 text-start">{{ __('admin.volunteers.columns.volunteer') }}</th>
+                            <th scope="col" class="px-6 py-3 text-start"><x-ui.sort-link column="name">{{ __('admin.volunteers.columns.volunteer') }}</x-ui.sort-link></th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.volunteers.columns.expertise') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.volunteers.columns.country') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.volunteers.columns.status') }}</th>
-                            <th scope="col" class="px-3 py-3 text-start">{{ __('admin.common.received_at') }}</th>
+                            <th scope="col" class="px-3 py-3 text-start"><x-ui.sort-link column="created_at" first="desc">{{ __('admin.common.received_at') }}</x-ui.sort-link></th>
                             <th scope="col" class="px-6 py-3 text-end">{{ __('ui.actions.actions') }}</th>
                         </tr>
                     </thead>

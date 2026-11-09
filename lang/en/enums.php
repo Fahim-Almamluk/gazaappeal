@@ -38,6 +38,12 @@ return [
         'Rafah' => 'Rafah',
     ],
 
+    'period' => [
+        'Week' => 'Last 7 days',
+        'Month' => 'Last 30 days',
+        'Quarter' => 'Last 90 days',
+    ],
+
     'message_state' => [
         'Unread' => 'Unread',
         'Read' => 'Read',

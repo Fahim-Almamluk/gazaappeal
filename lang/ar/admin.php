@@ -5,6 +5,7 @@ return [
         'visibility' => 'الظهور',
         'all_visibility' => 'كل حالات الظهور',
         'all_statuses' => 'كل الحالات',
+        'all_periods' => 'كل الأوقات',
         'choose' => 'اختر…',
         'help_title' => 'دليل التعبئة',
         'body_hint' => 'افصل بين الفقرات بسطر فارغ.',

@@ -12,7 +12,7 @@
             </x-slot:actions>
         </x-ui.page-header>
 
-        <x-ui.card :padding="false" class="overflow-hidden">
+        <x-ui.card :padding="false" class="overflow-hidden" x-data="bulkSelect" x-on:change="sync">
             <x-ui.filter-bar :action="route('admin.donation-methods.index')" :active="filled($search) || $type || request()->filled('visibility')">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.donation_methods.search')" />
                 <div class="w-full sm:w-44">
@@ -23,10 +23,13 @@
 
             <x-ui.results-count :paginator="$methods" />
 
+            <x-ui.bulk-bar module="donation_methods" route="donation-methods" />
+
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[720px] text-sm">
                     <thead>
                         <tr class="border-b border-line bg-surface-2/60 text-xs font-semibold text-ink-subtle">
+                            <th scope="col" class="w-10 ps-4 py-3 text-start"><x-ui.bulk-check module="donation_methods" /></th>
                             <th scope="col" class="w-14 px-4 py-3 text-start">#</th>
                             <th scope="col" class="px-6 py-3 text-start">{{ __('admin.donation_methods.columns.method') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.donation_methods.columns.type') }}</th>
@@ -38,6 +41,7 @@
                     <tbody class="divide-y divide-line">
                         @forelse ($methods as $method)
                             <tr class="transition hover:bg-surface-hover">
+                                <td class="ps-4 py-3.5"><x-ui.bulk-check module="donation_methods" :id="$method->id" /></td>
                                 <td class="tabular px-4 py-3.5 text-xs font-semibold text-ink-subtle">{{ $methods->firstItem() + $loop->index }}</td>
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center gap-3">
@@ -63,7 +67,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="6"><x-ui.empty-state icon="hand-coins" :title="__('admin.donation_methods.empty')" /></td></tr>
+                            <tr><td colspan="7"><x-ui.empty-state icon="hand-coins" :title="__('admin.donation_methods.empty')" /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

@@ -44,6 +44,10 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/', Admin\DashboardController::class)->name('dashboard');
 
+        foreach (array_keys(config('bulk')) as $bulkRoute) {
+            Route::post("{$bulkRoute}/bulk", Admin\BulkActionController::class)->defaults('module', $bulkRoute)->name("{$bulkRoute}.bulk");
+        }
+
         Route::get('projects/export', [Admin\ProjectController::class, 'export'])->name('projects.export');
         Route::get('losses/export', [Admin\LossController::class, 'export'])->name('losses.export');
         Route::get('damages/export', [Admin\DamageController::class, 'export'])->name('damages.export');
@@ -78,6 +82,8 @@ Route::prefix('admin')
 
         Route::resource('roles', Admin\RoleController::class)->except('show');
         Route::resource('lookups', Admin\LookupController::class)->except('show');
+
+        Route::get('activity', [Admin\ActivityLogController::class, 'index'])->name('activity.index');
 
         Route::put('menu/order', [Admin\MenuController::class, 'reorder'])->name('menu.reorder');
         Route::post('menu/reset', [Admin\MenuController::class, 'reset'])->name('menu.reset');

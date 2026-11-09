@@ -59,6 +59,7 @@ return [
     'confirm' => [
         'cancel' => 'Cancel',
         'delete' => ['title' => 'Confirm deletion', 'text' => '“:name” will be deleted and removed from the site and lists.', 'ok' => 'Yes, delete'],
+        'bulk_delete' => ['title' => 'Delete selected items', 'text' => 'All selected items will be deleted and removed from the site and lists.', 'ok' => 'Yes, delete'],
         'logout' => ['title' => 'Sign out', 'text' => 'Your current session will end and you will need to sign in again.', 'ok' => 'Sign out'],
         'archive' => ['title' => 'Archive message', 'text' => 'The message from “:name” will move to the archive and can be restored later.', 'ok' => 'Yes, archive'],
         'restore' => ['title' => 'Restore message', 'text' => 'The message from “:name” will return to the inbox.', 'ok' => 'Yes, restore'],
@@ -151,6 +152,7 @@ return [
         'roles' => 'Roles & permissions',
         'lookups' => 'Constants',
         'settings' => 'Site settings',
+        'activity' => 'Activity log',
     ],
 
     'footer' => [

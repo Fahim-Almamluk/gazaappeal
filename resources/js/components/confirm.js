@@ -2,8 +2,8 @@ import Swal from 'sweetalert2/dist/sweetalert2.esm.js';
 
 const ICONS = { danger: 'warning', warning: 'question', success: 'question', info: 'info' };
 
-const ask = (form) => {
-    const { confirmTone: tone = 'danger', confirmTitle, confirmText, confirmOk, confirmCancel } = form.dataset;
+const ask = (source) => {
+    const { confirmTone: tone = 'danger', confirmTitle, confirmText, confirmOk, confirmCancel } = source.dataset;
 
     return Swal.fire({
         icon: ICONS[tone] ?? 'question',
@@ -33,15 +33,16 @@ export const registerConfirmations = () => {
         'submit',
         async (event) => {
             const form = event.target;
+            const source = event.submitter?.hasAttribute('data-confirm') ? event.submitter : form;
 
-            if (!(form instanceof HTMLFormElement) || !form.hasAttribute('data-confirm') || form.dataset.confirmed === '1') {
+            if (!(form instanceof HTMLFormElement) || !source.hasAttribute('data-confirm') || form.dataset.confirmed === '1') {
                 return;
             }
 
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            const result = await ask(form);
+            const result = await ask(source);
 
             if (result.isConfirmed) {
                 form.dataset.confirmed = '1';

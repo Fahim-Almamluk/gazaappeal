@@ -51,7 +51,7 @@ final class RoleFactory extends Factory
     {
         return $this->withPermissions(array_values(array_filter(
             app(Permissions::class)->all(),
-            fn (string $permission): bool => str_ends_with($permission, '.view') && ! in_array(explode('.', $permission)[0], ['users', 'roles'], true),
+            fn (string $permission): bool => str_ends_with($permission, '.view') && ! in_array(explode('.', $permission)[0], ['users', 'roles'], true) && ! in_array($permission, app(Permissions::class)->restricted(), true),
         )));
     }
 }

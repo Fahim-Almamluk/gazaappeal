@@ -26,6 +26,7 @@ return [
         'settings' => 'إعدادات الموقع',
         'site_menu' => 'قائمة الموقع',
         'home_sections' => 'أقسام الرئيسية',
+        'activity_log' => 'سجل النشاط',
     ],
 
     'actions' => [

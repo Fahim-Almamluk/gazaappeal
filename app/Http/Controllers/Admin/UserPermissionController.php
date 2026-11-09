@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserPermissionsRequest;
 use App\Models\User;
+use App\Support\ActivityRecorder;
 use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -33,6 +34,7 @@ final class UserPermissionController extends Controller
     public function update(UserPermissionsRequest $request, User $user): RedirectResponse
     {
         $user->syncPermissions($this->permissions->withLockedKept($request->user(), $request->validated('permissions', []), $user->permissions()));
+        ActivityRecorder::record('updated', $user, ['permissions']);
 
         return to_route('admin.users.permissions', $user)->with('success', __('admin.users.permissions.saved'));
     }

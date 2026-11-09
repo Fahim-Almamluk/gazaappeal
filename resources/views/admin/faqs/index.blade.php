@@ -8,7 +8,7 @@
             </x-slot:actions>
         </x-ui.page-header>
 
-        <x-ui.card :padding="false" class="overflow-hidden">
+        <x-ui.card :padding="false" class="overflow-hidden" x-data="bulkSelect" x-on:change="sync">
             <x-ui.filter-bar :action="route('admin.faqs.index')" :active="filled($search) || request()->filled('visibility')">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.faqs.search')" />
                 @include('admin.partials.visibility-filter')
@@ -16,10 +16,13 @@
 
             <x-ui.results-count :paginator="$faqs" />
 
+            <x-ui.bulk-bar module="faqs" route="faqs" />
+
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[680px] text-sm">
                     <thead>
                         <tr class="border-b border-line bg-surface-2/60 text-xs font-semibold text-ink-subtle">
+                            <th scope="col" class="w-10 ps-4 py-3 text-start"><x-ui.bulk-check module="faqs" /></th>
                             <th scope="col" class="w-14 px-4 py-3 text-start">#</th>
                             <th scope="col" class="px-6 py-3 text-start">{{ __('admin.faqs.columns.question') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('ui.form.sort_order') }}</th>
@@ -30,6 +33,7 @@
                     <tbody class="divide-y divide-line">
                         @forelse ($faqs as $faq)
                             <tr class="transition hover:bg-surface-hover">
+                                <td class="ps-4 py-3.5"><x-ui.bulk-check module="faqs" :id="$faq->id" /></td>
                                 <td class="tabular px-4 py-3.5 text-xs font-semibold text-ink-subtle">{{ $faqs->firstItem() + $loop->index }}</td>
                                 <td class="px-6 py-3.5">
                                     <p class="font-semibold text-ink">{{ $faq->question }}</p>
@@ -49,7 +53,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5"><x-ui.empty-state icon="circle-help" :title="__('admin.faqs.empty')" /></td></tr>
+                            <tr><td colspan="6"><x-ui.empty-state icon="circle-help" :title="__('admin.faqs.empty')" /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

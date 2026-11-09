@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\LossIcon;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\LogsActivity;
 use App\Models\Concerns\Publishable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\LossFactory;
@@ -19,6 +20,7 @@ final class Loss extends Model
 {
     use HasFactory;
     use HasTranslations;
+    use LogsActivity;
     use Publishable;
     use SoftDeletes;
     use Sortable;

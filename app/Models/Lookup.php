@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\LookupType;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\LogsActivity;
 use App\Models\Concerns\Sortable;
 use Database\Factories\LookupFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -22,6 +23,7 @@ final class Lookup extends Model
 {
     use HasFactory;
     use HasTranslations;
+    use LogsActivity;
     use Sortable;
 
     public const array TONES = ['neutral', 'info', 'success', 'warning', 'danger', 'brand'];

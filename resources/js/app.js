@@ -13,7 +13,7 @@ import { registerConfirmations } from './components/confirm';
 import { registerFlash } from './components/flash';
 import { registerFormGuard } from './components/form-guard';
 import { registerScrollEffects } from './components/scroll-effects';
-import { combobox, copyText, dropdown, imagePreview, localeTabs, menuFields, methodFields, navGroup, passwordField, passwordStrength, submitGuard, tabs } from './components/ui';
+import { bulkSelect, combobox, copyText, dropdown, imagePreview, localeTabs, menuFields, methodFields, navGroup, passwordField, passwordStrength, submitGuard, tabs } from './components/ui';
 
 Alpine.plugin(focus);
 
@@ -26,6 +26,7 @@ Alpine.data('gallery', gallery);
 Alpine.data('permissionTree', permissionTree);
 Alpine.data('dropdown', dropdown);
 Alpine.data('combobox', combobox);
+Alpine.data('bulkSelect', bulkSelect);
 Alpine.data('passwordField', passwordField);
 Alpine.data('passwordStrength', passwordStrength);
 Alpine.data('submitGuard', submitGuard);

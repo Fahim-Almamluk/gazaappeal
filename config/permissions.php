@@ -39,6 +39,7 @@ return [
                 'settings' => ['icon' => 'settings', 'actions' => ['update']],
                 'site_menu' => ['icon' => 'list-tree', 'actions' => $crud],
                 'home_sections' => ['icon' => 'layout-list', 'actions' => ['update']],
+                'activity_log' => ['icon' => 'clipboard-check', 'actions' => ['view']],
             ],
         ],
     ],
@@ -47,12 +48,14 @@ return [
         'donation-methods' => 'donation_methods',
         'menu' => 'site_menu',
         'home-sections' => 'home_sections',
+        'activity' => 'activity_log',
     ],
 
     'route_actions' => [
         'index' => 'view',
         'show' => 'view',
         'export' => 'view',
+        'bulk' => 'update',
         'create' => 'create',
         'store' => 'create',
         'edit' => 'update',
@@ -67,7 +70,7 @@ return [
         'destroy' => 'delete',
     ],
 
-    'super_admin_modules' => ['site_menu', 'home_sections'],
+    'super_admin_modules' => ['site_menu', 'home_sections', 'activity_log'],
 
     'public_routes' => ['admin.dashboard', 'admin.profile.edit', 'admin.profile.update', 'admin.profile.password', 'admin.impersonation.leave'],
 ];

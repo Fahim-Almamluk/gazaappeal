@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasImage;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\LogsActivity;
 use App\Models\Concerns\Publishable;
 use Database\Factories\StoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -20,6 +21,7 @@ final class Story extends Model
     use HasFactory;
     use HasImage;
     use HasTranslations;
+    use LogsActivity;
     use Publishable;
     use SoftDeletes;
 

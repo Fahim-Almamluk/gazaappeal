@@ -35,6 +35,13 @@ final class Impersonation
         return $impersonator;
     }
 
+    public function impersonatorId(): ?int
+    {
+        $id = $this->session->get(self::KEY);
+
+        return $id === null ? null : (int) $id;
+    }
+
     public function active(): bool
     {
         return $this->session->has(self::KEY);

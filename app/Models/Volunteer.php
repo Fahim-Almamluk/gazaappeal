@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\VolunteerStatus;
+use App\Models\Concerns\LogsActivity;
 use Database\Factories\VolunteerFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 final class Volunteer extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $attributes = [
         'status' => VolunteerStatus::New->value,

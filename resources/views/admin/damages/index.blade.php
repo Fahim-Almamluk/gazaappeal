@@ -16,7 +16,7 @@
             </x-slot:actions>
         </x-ui.page-header>
 
-        <x-ui.card :padding="false" class="overflow-hidden">
+        <x-ui.card :padding="false" class="overflow-hidden" x-data="bulkSelect" x-on:change="sync">
             <x-ui.filter-bar :action="route('admin.damages.index')" :active="filled($search) || $governorate || $category">
                 <x-ui.search-input :value="$search" :placeholder="__('admin.damages.search')" />
                 <div class="w-full sm:w-48">
@@ -29,10 +29,13 @@
 
             <x-ui.results-count :paginator="$damages" />
 
+            <x-ui.bulk-bar module="damages" route="damages" :publishable="false" />
+
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[760px] text-sm">
                     <thead>
                         <tr class="border-b border-line bg-surface-2/60 text-xs font-semibold text-ink-subtle">
+                            <th scope="col" class="w-10 ps-4 py-3 text-start"><x-ui.bulk-check module="damages" /></th>
                             <th scope="col" class="w-14 px-4 py-3 text-start">#</th>
                             <th scope="col" class="px-6 py-3 text-start">{{ __('admin.damages.columns.item') }}</th>
                             <th scope="col" class="px-3 py-3 text-start">{{ __('admin.damages.columns.governorate') }}</th>
@@ -44,6 +47,7 @@
                     <tbody class="divide-y divide-line">
                         @forelse ($damages as $damage)
                             <tr class="transition hover:bg-surface-hover">
+                                <td class="ps-4 py-3.5"><x-ui.bulk-check module="damages" :id="$damage->id" /></td>
                                 <td class="tabular px-4 py-3.5 text-xs font-semibold text-ink-subtle">{{ $damages->firstItem() + $loop->index }}</td>
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center gap-3">
@@ -69,7 +73,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="6"><x-ui.empty-state icon="map-pin" :title="__('admin.damages.empty')" /></td></tr>
+                            <tr><td colspan="7"><x-ui.empty-state icon="map-pin" :title="__('admin.damages.empty')" /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

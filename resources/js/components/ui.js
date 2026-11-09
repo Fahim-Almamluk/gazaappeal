@@ -297,3 +297,50 @@ export const combobox = () => ({
         this.$root.querySelector('[data-trigger]').focus();
     },
 });
+
+export const bulkSelect = () => ({
+    count: 0,
+
+    init() {
+        this.sync();
+    },
+
+    rows() {
+        return [...this.$root.querySelectorAll('[data-row-check]')];
+    },
+
+    sync() {
+        const rows = this.rows();
+        const checked = rows.filter((row) => row.checked).length;
+        const all = this.$root.querySelector('[data-all-check]');
+
+        this.count = checked;
+
+        if (all) {
+            all.checked = rows.length > 0 && checked === rows.length;
+            all.indeterminate = checked > 0 && checked < rows.length;
+        }
+    },
+
+    toggleAll(event) {
+        this.rows().forEach((row) => {
+            row.checked = event.target.checked;
+        });
+        this.sync();
+    },
+
+    clear() {
+        this.rows().forEach((row) => {
+            row.checked = false;
+        });
+        this.sync();
+    },
+
+    get any() {
+        return this.count > 0;
+    },
+
+    get label() {
+        return this.$root.querySelector('[data-template]').dataset.template.replace('{count}', this.count);
+    },
+});

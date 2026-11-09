@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\Governorate;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\LogsActivity;
 use App\Models\Concerns\Sortable;
 use Database\Factories\DamageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -18,6 +19,7 @@ final class Damage extends Model
 {
     use HasFactory;
     use HasTranslations;
+    use LogsActivity;
     use Sortable;
 
     /**

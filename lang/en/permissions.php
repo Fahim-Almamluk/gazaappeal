@@ -26,6 +26,7 @@ return [
         'settings' => 'Site settings',
         'site_menu' => 'Site menu',
         'home_sections' => 'Home sections',
+        'activity_log' => 'Activity log',
     ],
 
     'actions' => [

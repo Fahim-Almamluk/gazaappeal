@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasImage;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\LogsActivity;
 use App\Models\Concerns\Publishable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\GalleryItemFactory;
@@ -20,6 +21,7 @@ final class GalleryItem extends Model
     use HasFactory;
     use HasImage;
     use HasTranslations;
+    use LogsActivity;
     use Publishable;
     use SoftDeletes;
     use Sortable;

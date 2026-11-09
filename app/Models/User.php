@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\LogsActivity;
 use App\Support\Permissions;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 final class User extends Authenticatable
 {
     use HasFactory;
+    use LogsActivity;
     use Notifiable;
 
     protected $attributes = [

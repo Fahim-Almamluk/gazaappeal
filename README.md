@@ -16,7 +16,7 @@
 ## التثبيت
 
 ```bash
-git clone https://github.com/fahim-almamluk/gazaappeal.git
+git clone https://github.com/Fahim-Almamluk/gazaappeal.git
 cd gazaappeal
 composer install
 npm install
@@ -72,6 +72,21 @@ npm run dev
 - لوحة التحكم: `http://127.0.0.1:8000/login` ثم `/admin` ببيانات `ADMIN_EMAIL` و`ADMIN_PASSWORD`.
 
 أبقِ `npm run dev` يعمل أثناء التطوير؛ الصفحة تتحدّث تلقائيًا عند تعديل الواجهة.
+
+## تحديث نسخة موجودة
+
+عند وصول تعديلات جديدة من GitHub:
+
+```bash
+git pull
+composer install
+npm install
+php artisan migrate
+npm run build
+php artisan optimize:clear
+```
+
+بعد التحديث يمنح السوبر أدمن الصلاحيات الجديدة (مثل «سجل النشاط») للأدوار الأخرى عند الحاجة.
 
 ## الاختبارات
 
